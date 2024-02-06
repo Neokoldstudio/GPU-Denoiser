@@ -1,2 +1,1 @@
 # GPU-Denoiser
-# GPU-Denoiser
