@@ -1,0 +1,11 @@
+### Clean and Compile
+### -----------------
+rm -i *.o Tp5_IFT3205
+./compilegcc Tp5_IFT3205
+
+### Bruite l'image lenna.ppm avec un bruit blanc Gaussien sigma=30 et
+### débruite cette image bruitée avec DCT seuillage [3 sigma=90]
+### -----------------------------------------------------------
+./Tp5_IFT3205
+
+
