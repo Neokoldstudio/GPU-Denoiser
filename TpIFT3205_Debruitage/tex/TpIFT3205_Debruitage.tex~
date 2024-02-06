@@ -1,0 +1,424 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                       %
+% Nom   : Max Mignotte                                  %
+% Cours : IFT3205                                       %
+% Tp    : TP_3                                          %
+% Date  :                                               %
+%                                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%
+%%% STYLE %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+\documentclass[10pt]{article}
+\bibliographystyle{unsrt}
+\usepackage{psfig}
+\usepackage{latexsym}
+\usepackage{a4}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage[french]{babel} 
+\usepackage[latin1]{inputenc}
+\usepackage{t1enc}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{algorithm2e}
+\usepackage{fancybox}
+\usepackage{color}
+
+%%%%%%%%%%%%%%%%%%%%%
+%%% OPTIONS %%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+\pssilent
+\pagestyle{empty}
+\definecolor{violet}{rgb}{0.5,0,0.5}
+\definecolor{myred}{rgb}{0.5,0,0.25}
+\definecolor{myblue}{rgb}{0.125,0.125,0.75}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%% DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% ENTETE %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tabular}[t]{c}
+\shadowbox{\psfig{figure=image/UdeM_logo2.ps,width=1.5cm}}\\ 
+{\bf \large DIRO}
+\end{tabular}
+
+{\bf \large IFT 3205}
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% TITRE %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+\vspace{1ex}
+\begin{center}
+{\LARGE \bf  TRAVAIL PRATIQUE}
+
+\vspace{1ex}
+\textcolor{myred}{\bf \large Débruitage - Compression}\\
+
+\vspace{2ex}
+{\it Max Mignotte }
+
+\vspace{1.5ex}
+{DIRO, Département d'Informatique et de Recherche Opérationnelle.}\\
+{http: //www.iro.umontreal.ca/$\thicksim$mignotte/ift3205}\\
+{\it e-mail: mignotte@iro.umontreal.ca}\\
+\vspace{3ex}
+\end{center}
+%%%%%%%%%%%%
+
+
+%%%%%%
+% 1 %%
+%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+%%%% Introduction %%%%
+%%%%%%%%%%%%%%%%%%%%%%
+\vspace{0ex}
+\section{Introduction}
+
+On à déjà vu quel était l'intérêt, en filtrage, de représenter un
+signal observé comme une superposition adéquate de fonctions
+élémentaires. Une fois en possession de ces ``fonctions
+élémentaires'', on peut essayer d'obtenir une bonne reconstitution du
+signal étudié en n'utilisant qu'un nombre limité de ces fonctions de
+base.  Cela permet soit de {\bf compresser le signal} en ne
+transmettant que les coefficients fréquentiels concernés) ou de
+reconstruire ce signal en éliminant le bruit qui l'a éventuellement
+dégradé et ainsi {\bf débruiter ce signal} ou encore l'approximer.  Si
+on se rappelle de plus que les coefficients fréquentiels $|c_{n}(f)|$
+obtenus (issus par exemple d'une TF classique, d'une Transformé en
+Cosinus Discrète (TCD), ou d'une autre transformée) sont décroissant
+lorsque $n$ tend vers $\infty$ (théorème de Riemann-Lebesgue
+\footnotemark[1]), alors deux stratégies co-existent pour obtenir une
+bonne restitution du signal original à des fins de compression ou de
+débruitage à partir de l'utilisation (i.e., la somme) d'un nombre
+limité de ces fonctions élémentaires.
+%
+\footnotetext[1]{Il existe même un théorème  qui montre
+que si la fonction est de classe $\mathcal C^{k}$, ses coefficients
+spectrales sont négligeables devant $\frac{1}{n^k}$.}
+%
+%%%%--ENUM--%%%%
+\begin{enumerate}
+\item La première stratégie consiste à éliminer (i.e., ne pas
+  transmettre dans le cas de la compression ou annuler dans le cas du
+  débruitage) tous les coefficients fréquentiels associés à une
+  fréquence spatiale supérieure à une fréquence donnée. C'est le
+  principe du filtrage passe-bas traditionnel.
+\item La seconde stratégie, plus efficace, consiste à considérer
+  (i.e., transmettre pour une stratégie de compression ou utiliser
+  pour une reconstruction du signal à débruiter) seulement les
+  coefficients fréquentiels les plus élevés en amplitude (i.e., en
+  valeur absolue). C'est le principe du seuillage dur ({\em hard
+  thresholding}) dans lequel tous les coefficients plus petits qu'un
+  seuil donné sont considérés comme étant soit non informatif (pour une
+  application de compression) ou soit essentiellement du bruit (pour une
+  stratégie de débruitage du signal).
+\end{enumerate}
+%%%%%%%%%%%%%%%
+%
+
+Pour augmenter l'efficacité de la compression ou du débruitage, on
+préfere découper l'image en petits blocs de taille $8\times8$ (en
+pixels) et utiliser la TCD (qui est la partie réelle de la TF).  Le
+principal avantage de la TCD est de pouvoir concentrer au maximum
+l'information contenue dans un bloc au niveau des coefficients basses
+fréquences\footnotemark[2]
+%
+\footnotetext[2]{ En utilisant la transformée en cosinus discrète, on
+  doit en fait considérer implicitement que cette imagette $8\times8$
+  se réplique avec une symétrie paire en ligne et en colonne. De ce
+  fait, on minimise les transitions rapides qui se produiraient à la
+  frontière de chaque duplication, donc les hautes fréquences
+  associées aux discontinuitées qui pouraient ainsi se créer lors de
+  cette réplication, et par conséquent on maximise l'information
+  contenue dans un bloc au niveau des coefficients basses fréquences.}
+%
+De même, on préfére calculer cette TCD sur des blocs de petite taille
+(des expériences empiriques on montrés que $8\times8$ était optimal)
+sur lesquels de grandes variations de l'image sont peu probables
+(plutôt que sur toute l'image) dans le but encore et toujours de
+maximiser l'information contenue dans un bloc au niveau des
+coefficients basses fréquences.
+
+
+%%%%%%
+% 3 %%
+%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+%%% Débruitage %%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+\vspace{0ex}
+\section{Débruitage Par TCD Locale}
+
+%%%%%%%%%%
+%% ENUM %%
+%%%%%%%%%%%%%%%%%
+\begin{enumerate}
+\item Ajouter à l'image {\sc Lena.pgm} un bruit additif Gaussien blanc
+  (indépendant du signal) d'écart type $\sigma=30$. Dans ce cas, le
+  modèle de dégradation est le modèle linéaire de dégradation suivant:
+%
+%%%%%%%%%
+%% EQ. %%
+%%%%%%%%%
+\begin{eqnarray*}
+\label{conv}
+g(x,y)=f(x,y)+ n(x,y),
+\end{eqnarray*}
+%%%%%%%%%%%%%%
+%
+dans lequel $f(x,y)$ représente l'image originale, $g(x,y)$ l'image
+bruité (cf. Fig. \ref{LenaNoise}), et $n(x,y)$ représente le bruit
+additif Gaussien.
+%
+%%%%%%%%
+% FIG. %
+%%%%%%%%%%%%%%%%%%%%
+\vspace{-0.5ex}
+\begin{figure}[!htbp]
+\begin{center}
+\begin{tabular}{ccc}
+ \shadowbox{\psfig{figure=image/lena512.ps,width=7.5cm}}
+&\hspace{-2ex}\shadowbox{\psfig{figure=image/lena512_NoiseV30.ps,width=7.5cm}}\\
+({\bf a}) & ({\bf b})
+\end{tabular}
+\end{center}
+\vspace{-6ex}
+\begin{center}
+\begin{minipage}{12.5cm}
+  \textcolor{myblue}{\caption{\label{LenaNoise} \em ({\bf a}) Image
+      originale {\bf Lena.pgm}.  ({\bf b}) Image dégradée par un
+      bruit additif Gaussien blanc d'écart type $\sigma=30$.}}
+\end{minipage}
+\end{center}
+\vspace{-1ex}
+\end{figure}
+%%%%%%%%%%%%
+%
+\item Réaliser un débruitage de cette image bruitée en utilisant la
+  TCD sur l'ensemble des blocs (ne se chevauchant pas) qui composent
+  cette image (bloc de taille $8\times8$ pixels) et en annulant les
+  coefficients de la TCD qui se situent au delà du $n$-ième ($n<64$)
+  coefficient rangé en ``zigzag'' comme le montre la Fig.
+  \ref{ZigZag}\footnotemark[3]. Trouver la valeur de $n$ qui permet de
+  trouver l'image débruitée optimale au sens du MSE (Minimal Square
+  Error) ou des moindres carrés.
+%
+\footnotetext[3]{Pour l'implémentation de l'ordre  en ``zigzag'', vous
+ pouvez, si vous le souhaitez, vous inspirez du code situé à
+ l'addresse http://rosettacode.org/wiki/Zig-zag$\_$matrix}
+%
+%%%%%%%%%
+%% EQ. %%
+%%%%%%%%%%%%%%%%%
+\vspace{0ex}
+\begin{eqnarray*}
+\mbox{MSE}= \frac{1}{N}
+\sum_{x} \sum_{y} \Bigl ( \hat{f}(x,y)- f(x,y) \Bigr )^{2}
+\end{eqnarray*}
+%%%%%%%%%%%%%%%
+%
+où $N$ est le nombre de pixels de l'image débruitée, $\hat{f}$ est
+l'image débruitée (restorée) et $f$ l'image originale non dégradée.
+%
+%%%%%%%%
+% FIG. %
+%%%%%%%%%%%%%%%%%%%%
+\vspace{0ex}
+\begin{figure}[!htbp]
+\centerline{\shadowbox{\psfig{figure=image/JPEG_ZigZag.ps,width=5.1cm}}}
+\vspace{-2ex}
+\begin{center}
+\begin{minipage}{12.5cm}
+  \textcolor{myblue}{\caption{\label{ZigZag} \em Ordre `zigzag'' des
+  coefficients de la TCD sur un bloc $8\times8$ pixels}}
+\end{minipage}
+\end{center}
+\vspace{-2ex}
+\end{figure}
+%%%%%%%%%%%%
+%
+\item Réaliser un débruitage de cette image bruitée en utilisant la
+  TCD sur l'ensemble des blocs $8\times8$ (sans chevauchement) qui
+  composent cette image et en annulant les coefficients de la TCD qui
+  sont moins élevés en amplitude qu'un seuil $T$ ({\em hard
+    thresholding}).  Trouvé la valeur du seuil $T$ qui permet de
+  trouver l'image débruitée optimale au sens du MSE.
+\item Pour éviter l'effet ``mosaique'' désagréable que l'on peut
+  constater lorsqu'on débruite une image fortement bruitée (et qui
+  demanderait donc une valeur de seuil élevé), on utilise des
+  blocs ($8\times8$) qui cette fois se chevauchent et sur lesquels on
+  réalise l'opération de seuillage expliquée précedemment. De façon
+  équivalente, cela équivaut à réaliser l'opération de la question
+  précedente pour les $64=8\times8$ ($8$ horiz. and $8$ vert.)
+  décalages toroidales \footnotemark[4] possibles de l'image de départ
+  (cf. Algorithme
+  1). \\ 
+  %
+  \footnotetext[4]{Ume image est considérée comme toroidale si elle se
+  répète indefiniment verticalement et horizontalement comme si elle
+  était enroulée sur elle-même, i.e., une image  dont les extrémités
+  verticales et horizontales finissent par se rejoindre. Par exemple, 
+  pour le vecteur 1D $[1:2:3:4]$, ces différent décalage
+  toroidal sont $[4:1:2:3]$, $[3:4:1:2]$, $[2:3:4:1]$.\\
+ }
+  %
+ Réaliser un débruitage de cette image bruitée en utilisant cette
+ technique sur l'image et trouver la valeur du seuil $T$ qui permet de
+ trouver l'image débruitée optimale au sens du MSE.
+\end{enumerate}
+%%-END--ENUM-%%
+
+
+%
+%%%%%%%%
+% ALGO %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% DCT-based Denoising Step  %%%%%%%%%%%%%%%%%%%%%%%%%
+%%% -------------------------  %%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ \vspace{1ex}
+ \begin{algorithm}
+ \hspace{25ex}
+ \shadowbox{
+ \colorbox[gray]{0.9}{
+ \begin{minipage}{7.8cm}
+ \begin{center}
+ \begin{tabular}{p{4cm}}
+ \vspace{-0.5ex}
+ \centerline{\bf Algorithm 1}
+ \centerline{\bf Débruitage à base de DCT locale}
+ \vspace{-1.5ex}\\
+ \hline
+ \end{tabular}
+ \end{center}
+ \SetVline
+
+ \vspace{1ex}
+ {\bf Initialisation}
+
+ $\hat{f} \leftarrow g$
+
+ 
+ \vspace{2ex}
+ {\bf Débruitage par DCT} 
+
+\vspace{1ex}  
+ \For{tous les décalage ($8$ horiz. and $8$ vert.) de $\hat{f}$}
+     {
+
+     \vspace{-1ex}
+     \For{tous les blocks $[8\times8]$ extraits de $\hat{f}$}
+      { 
+       \vspace{-0.5ex}
+       {\bf 1.} Calcule la TCD  
+
+       \vspace{1ex}
+       {\bf 2.} Seuil les coefficients TCD $c_{n}$ 
+       avec la règle 
+        %
+        %%%%%%% 
+        % EQ. %
+        %%%%%%%%%%%%%%%%
+        \vspace{-3ex}
+        \begin{eqnarray*}
+          \left\{ \begin{array}{cl}
+                 0     &  \quad \mbox{si} \;\; |c_{n}| \leq T \\
+                 c_{n} &  \quad \mbox{autrement}\\ 
+        \end{array}\right.%
+        \end{eqnarray*}
+        %%%%%%%%%%%%%%%
+        %     
+
+       \vspace{-1ex}
+       {\bf 3.}  Calcule la TCD$^{-1}$ de ces coef. seuillés
+       \vspace{0.5ex}
+      }
+
+       \vspace{1ex}
+       {\bf $\triangleright$} Décalage inverse de l'image filtrée et stocke la 
+     }
+
+ \vspace{1ex}    
+ $\hat{f} \leftarrow $ Moyennage de ces $64$ images débruitées \vspace{0.5ex}
+
+ \vspace{2ex}
+ \end{minipage}
+ }
+ }
+ \vspace{4ex}
+ \end{algorithm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+
+
+%%%%%%
+% 5 %%
+%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Remise & Rapport %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\footnotetext[1]{
+\\
+\colorbox[gray]{0.9}{
+\begin{minipage}{15.5cm}
+{\bf \large Remise \& Rapport}\\ 
+Vous devez rendre 
+électroniquement le(s) programme(s) fait en C avant
+la date de remise spécifiée dans le fichier {\em barême} situé sur la
+page web du cours. Pour
+la remise électronique, utilisez le programme {\em remise} ({\em man
+remise} pour plus de détails) pour remettre votre code dans le
+répertoire TP$<$Numéro du Tp$>$.  N'oubliez pas d'inscrire vos noms,
+courrier électronique en commentaire en haut du fichier .c remis. Les
+noms des programmes à remettre devront avoir le format suivant 
+{\em Tp<$Numéro \; du \; Tp$>-IFT3205-<Numéro de la question>.c}. Les programmes
+devront se compiler et s'executer sur Linux tel qu'indiqué dans le
+barême. 
+\end{minipage}
+}
+}
+
+%
+%%%%%%%%
+% FIG. %
+%%%%%%%%%%%%%%%%%%%%
+\vspace{1ex}
+\begin{figure}[!htbp]
+\begin{center}
+\begin{tabular}{ccc}
+\multicolumn{2}{c}{\shadowbox{\psfig{figure=image/lena512.ps,width=7.25cm}}}\\
+\shadowbox{\psfig{figure=image/lena512_NoiseV30.ps,width=7.25cm}}
+&\hspace{-1.5ex}\shadowbox{\psfig{figure=image/lena512_NoiseV30_DCT_MSE65.ps,width=7.25cm}}\\
+({\bf a}) & ({\bf b})
+\end{tabular}
+\end{center}
+\vspace{-8ex}
+\begin{center}
+\begin{minipage}{13cm}
+  \textcolor{myblue}{\caption{\label{LenaNoise} \em En haut image
+  originale non dégradée ({\bf a}) Image dégradée par un bruit
+  additif Gaussien blanc d'écart type $\sigma=30$. ({\bf b}) Image
+  débruitée avec la méthode de l'Algo. 1 et $T=90 \; (\approx
+  3\sigma)$, MSE $\approx 65$.}}
+\end{minipage}
+\end{center}
+\vspace{-1ex}
+\end{figure}
+%%%%%%%%%%%%
+%
+
+%%%%%%%%%%%%%
+\end{document}
+
+
+

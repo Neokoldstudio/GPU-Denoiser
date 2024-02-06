@@ -1,0 +1,5 @@
+echo 
+echo compilation du programme ${a=${1}.c}
+
+gcc -c FonctionDemo5.c
+gcc -o $1 $a FonctionDemo5.o -lm
