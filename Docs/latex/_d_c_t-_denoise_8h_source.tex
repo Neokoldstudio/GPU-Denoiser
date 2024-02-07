@@ -1,0 +1,112 @@
+\doxysection{DCT-\/\+Denoise.h}
+\hypertarget{_d_c_t-_denoise_8h_source}{}\label{_d_c_t-_denoise_8h_source}\index{TpIFT3205\_Debruitage/solutionCPP/DCT-\/Denoise.h@{TpIFT3205\_Debruitage/solutionCPP/DCT-\/Denoise.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ module\ \ :\ DCT-\/Denoise.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ author\ \ :\ Mignotte\ Max}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ date\ \ \ \ :\ }}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ version\ :\ 1.0}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ language:\ C++}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ labo\ \ \ \ :\ DIRO}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ note\ \ \ \ :\ }}
+\DoxyCodeLine{00009\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#ifndef\ DCT\_DENOISE\_H}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ DCT\_DENOISE\_H}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ INCLUDED\ FILES\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <new>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}DCTFunction.h"{}}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ PARAMETERS\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ Question\ 2.2}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ NB\_ITERATIONS\ \ [1]}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ THRESHOLD\ \ \ \ \ \ [6]}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ OVERLAP\ \ \ \ \ \ \ \ [8]\ \ }}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ HARD\_THRESHOLD\ [0]}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ MSE=157}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00041\ \textcolor{comment}{//\ Question\ 2.3}}
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ NB\_ITERATIONS\ \ [1]}}
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ THRESHOLD\ \ \ \ \ \ [100]}}
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ OVERLAP\ \ \ \ \ \ \ \ [8]\ }}
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ HARD\_THRESHOLD\ [1]}}
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ MSE=140.28}}
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00051\ \textcolor{comment}{//\ Question\ 2.4}}
+\DoxyCodeLine{00052\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00053\ \textcolor{comment}{//\ NB\_ITERATIONS\ \ [1]}}
+\DoxyCodeLine{00054\ \textcolor{comment}{//\ THRESHOLD\ \ \ \ \ \ [90]}}
+\DoxyCodeLine{00055\ \textcolor{comment}{//\ OVERLAP\ \ \ \ \ \ \ \ [1]\ }}
+\DoxyCodeLine{00056\ \textcolor{comment}{//\ HARD\_THRESHOLD\ [1]}}
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ MSE=65}}
+\DoxyCodeLine{00058\ \textcolor{comment}{//}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ Question\ X.X}}
+\DoxyCodeLine{00062\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ NB\_ITERATIONS\ \ [5]}}
+\DoxyCodeLine{00064\ \textcolor{comment}{//\ THRESHOLD\ \ \ \ \ \ [SigmaNoise=30]}}
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ OVERLAP\ \ \ \ \ \ \ \ [1]\ }}
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ HARD\_THRESHOLD\ [1]}}
+\DoxyCodeLine{00067\ \textcolor{comment}{//\ MSE=58.06}}
+\DoxyCodeLine{00068\ \textcolor{comment}{//}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ NB\_ITERATIONS\ \ \ 1}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ THRESHOLD\ \ \ \ \ 90.0\ \ \ \ }\textcolor{comment}{//SigmaNoise=30}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ OVERLAP\ \ \ \ \ \ \ \ \ 1\ \ \ \ \ }\textcolor{comment}{//1}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ HARD\_THRESHOLD\ \ 1\ \ \ \ \ }\textcolor{comment}{//0>ZIGZAG}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00076\ \textcolor{comment}{//\ CLASS\ DCTDenoise\ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00077\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00078\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_d_c_t_denoise}{DCTDenoise}}}
+\DoxyCodeLine{00079\ \ \{\ }
+\DoxyCodeLine{00080\ \ \ \textcolor{keyword}{public}:\ }
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \textcolor{comment}{//Matrix}}
+\DoxyCodeLine{00083\ \ \ \textcolor{keywordtype}{float}**\ \ DataDegraded;}
+\DoxyCodeLine{00084\ \ \ \textcolor{keywordtype}{float}**\ \ DataFiltered;}
+\DoxyCodeLine{00085\ \ \ \textcolor{keywordtype}{float}**\ \ DataWithoutNoise;}
+\DoxyCodeLine{00086\ ;}
+\DoxyCodeLine{00087\ \ \ \textcolor{keywordtype}{float}**\ \ SquWinImg;}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \textcolor{comment}{//>Image}}
+\DoxyCodeLine{00090\ \ \ \textcolor{keywordtype}{int}\ \ length,width;}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \textcolor{comment}{//>Noise}}
+\DoxyCodeLine{00093\ \ \ \textcolor{keywordtype}{float}\ SigmaNoise;}
+\DoxyCodeLine{00094\ \ \ \textcolor{keywordtype}{float}\ Threshold\_Dct;}
+\DoxyCodeLine{00095\ \ \ \ }
+\DoxyCodeLine{00096\ \ \textcolor{comment}{//Functions}}
+\DoxyCodeLine{00097\ \ \ \textcolor{keyword}{public}:\ \ }
+\DoxyCodeLine{00098\ \ \ \mbox{\hyperlink{class_d_c_t_denoise}{DCTDenoise}}(\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00099\ \ \ \ \mbox{\hyperlink{class_d_c_t_denoise}{\string~DCTDenoise}}();\ }
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \textcolor{keywordtype}{void}\ Options(\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{float},\textcolor{keywordtype}{float});}
+\DoxyCodeLine{00102\ \ \ \textcolor{keywordtype}{void}\ IterDctDenoise();}
+\DoxyCodeLine{00103\ \};}
+\DoxyCodeLine{00104\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,63 @@
+\doxysection{Fonction\+Demo5.\+h}
+\hypertarget{solution_2_fonction_demo5_8h_source}{}\label{solution_2_fonction_demo5_8h_source}\index{TpIFT3205\_Debruitage/solution/FonctionDemo5.h@{TpIFT3205\_Debruitage/solution/FonctionDemo5.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ module\ \ :\ FunctionDemo5.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ auteur\ \ :\ Mignotte\ Max}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ date\ \ \ \ :}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ version\ :\ 1.0}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ langage\ :\ C++}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ labo\ \ \ \ :\ DIRO}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ note\ \ \ \ :}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ INCLUDED\ FILES\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ CONSTANTS\ \&\ DEFINITIONS\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ CARRE(X)\ ((X)*(X))}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ PI\ \ 3.1415926535897}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ GREY\_LEVEL\ 255}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ NBCHAR\ 200}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ PROTOTYPE\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{//>Matrix}}
+\DoxyCodeLine{00033\ \textcolor{keywordtype}{float}*\ \ \ \ fmatrix\_allocate\_1d(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00034\ \textcolor{keywordtype}{float}**\ \ \ fmatrix\_allocate\_2d(\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00035\ \textcolor{keywordtype}{float}***\ \ fmatrix\_allocate\_3d(\textcolor{keywordtype}{int},\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00036\ \textcolor{keywordtype}{void}\ \ \ \ \ \ free\_fmatrix\_1d(\textcolor{keywordtype}{float}*);}
+\DoxyCodeLine{00037\ \textcolor{keywordtype}{void}\ \ \ \ \ \ free\_fmatrix\_2d(\textcolor{keywordtype}{float}**);}
+\DoxyCodeLine{00038\ \textcolor{keywordtype}{void}\ \ \ \ \ \ free\_fmatrix\_3d(\textcolor{keywordtype}{float}***,\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{//>Load/Save\ File}}
+\DoxyCodeLine{00041\ \textcolor{keywordtype}{float}**\ LoadImagePgm(\textcolor{keywordtype}{char}*,\textcolor{keywordtype}{int}*,\textcolor{keywordtype}{int}*);}
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{void}\ SaveImagePgm(\textcolor{keywordtype}{char}*,\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{//>Fourier}}
+\DoxyCodeLine{00045\ \textcolor{keywordtype}{void}\ ddct8x8s(\textcolor{keywordtype}{int},\textcolor{keywordtype}{float}**);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{//>Degradation}}
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{float}\ gaussian\_noise(\textcolor{keywordtype}{float},\textcolor{keywordtype}{float});}
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{void}\ \ add\_gaussian\_noise(\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{int},\textcolor{keywordtype}{int},\textcolor{keywordtype}{float});}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{comment}{//>Mesure}}
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{float}\ computeMMSE(\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ }
+
+\end{DoxyCode}
