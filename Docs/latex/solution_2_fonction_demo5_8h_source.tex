@@ -1,63 +1,63 @@
 \doxysection{Fonction\+Demo5.\+h}
 \hypertarget{solution_2_fonction_demo5_8h_source}{}\label{solution_2_fonction_demo5_8h_source}\index{TpIFT3205\_Debruitage/solution/FonctionDemo5.h@{TpIFT3205\_Debruitage/solution/FonctionDemo5.h}}
-
+\mbox{\hyperlink{solution_2_fonction_demo5_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00001\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00002\ \textcolor{comment}{//\ module\ \ :\ FunctionDemo5.h}}
-\DoxyCodeLine{00003\ \textcolor{comment}{//\ auteur\ \ :\ Mignotte\ Max}}
-\DoxyCodeLine{00004\ \textcolor{comment}{//\ date\ \ \ \ :}}
-\DoxyCodeLine{00005\ \textcolor{comment}{//\ version\ :\ 1.0}}
-\DoxyCodeLine{00006\ \textcolor{comment}{//\ langage\ :\ C++}}
-\DoxyCodeLine{00007\ \textcolor{comment}{//\ labo\ \ \ \ :\ DIRO}}
-\DoxyCodeLine{00008\ \textcolor{comment}{//\ note\ \ \ \ :}}
-\DoxyCodeLine{00009\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00010\ \textcolor{comment}{//}}
-\DoxyCodeLine{00011\ }
-\DoxyCodeLine{00012\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00013\ \textcolor{comment}{//\ INCLUDED\ FILES\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00014\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
-\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <math.h>}}
-\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <string.h>}}
-\DoxyCodeLine{00019\ }
-\DoxyCodeLine{00020\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00021\ \textcolor{comment}{//\ CONSTANTS\ \&\ DEFINITIONS\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00022\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ CARRE(X)\ ((X)*(X))}}
-\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ PI\ \ 3.1415926535897}}
-\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ GREY\_LEVEL\ 255}}
-\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ NBCHAR\ 200}}
-\DoxyCodeLine{00027\ }
-\DoxyCodeLine{00028\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00029\ \textcolor{comment}{//\ PROTOTYPE\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00030\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00031\ }
-\DoxyCodeLine{00032\ \textcolor{comment}{//>Matrix}}
-\DoxyCodeLine{00033\ \textcolor{keywordtype}{float}*\ \ \ \ fmatrix\_allocate\_1d(\textcolor{keywordtype}{int});}
-\DoxyCodeLine{00034\ \textcolor{keywordtype}{float}**\ \ \ fmatrix\_allocate\_2d(\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
-\DoxyCodeLine{00035\ \textcolor{keywordtype}{float}***\ \ fmatrix\_allocate\_3d(\textcolor{keywordtype}{int},\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
-\DoxyCodeLine{00036\ \textcolor{keywordtype}{void}\ \ \ \ \ \ free\_fmatrix\_1d(\textcolor{keywordtype}{float}*);}
-\DoxyCodeLine{00037\ \textcolor{keywordtype}{void}\ \ \ \ \ \ free\_fmatrix\_2d(\textcolor{keywordtype}{float}**);}
-\DoxyCodeLine{00038\ \textcolor{keywordtype}{void}\ \ \ \ \ \ free\_fmatrix\_3d(\textcolor{keywordtype}{float}***,\textcolor{keywordtype}{int});}
-\DoxyCodeLine{00039\ }
-\DoxyCodeLine{00040\ \textcolor{comment}{//>Load/Save\ File}}
-\DoxyCodeLine{00041\ \textcolor{keywordtype}{float}**\ LoadImagePgm(\textcolor{keywordtype}{char}*,\textcolor{keywordtype}{int}*,\textcolor{keywordtype}{int}*);}
-\DoxyCodeLine{00042\ \textcolor{keywordtype}{void}\ SaveImagePgm(\textcolor{keywordtype}{char}*,\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
-\DoxyCodeLine{00043\ }
-\DoxyCodeLine{00044\ \textcolor{comment}{//>Fourier}}
-\DoxyCodeLine{00045\ \textcolor{keywordtype}{void}\ ddct8x8s(\textcolor{keywordtype}{int},\textcolor{keywordtype}{float}**);}
-\DoxyCodeLine{00046\ }
-\DoxyCodeLine{00047\ \textcolor{comment}{//>Degradation}}
-\DoxyCodeLine{00048\ \textcolor{keywordtype}{float}\ gaussian\_noise(\textcolor{keywordtype}{float},\textcolor{keywordtype}{float});}
-\DoxyCodeLine{00049\ \textcolor{keywordtype}{void}\ \ add\_gaussian\_noise(\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{int},\textcolor{keywordtype}{int},\textcolor{keywordtype}{float});}
-\DoxyCodeLine{00050\ }
-\DoxyCodeLine{00051\ \textcolor{comment}{//>Mesure}}
-\DoxyCodeLine{00052\ \textcolor{keywordtype}{float}\ computeMMSE(\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{int});}
-\DoxyCodeLine{00053\ }
-\DoxyCodeLine{00054\ }
-\DoxyCodeLine{00055\ }
-\DoxyCodeLine{00056\ }
-\DoxyCodeLine{00057\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00001}00001\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00002}00002\ \textcolor{comment}{//\ module\ \ :\ FunctionDemo5.h}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00003}00003\ \textcolor{comment}{//\ auteur\ \ :\ Mignotte\ Max}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00004}00004\ \textcolor{comment}{//\ date\ \ \ \ :}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00005}00005\ \textcolor{comment}{//\ version\ :\ 1.0}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00006}00006\ \textcolor{comment}{//\ langage\ :\ C++}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00007}00007\ \textcolor{comment}{//\ labo\ \ \ \ :\ DIRO}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00008}00008\ \textcolor{comment}{//\ note\ \ \ \ :}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00009}00009\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00010}00010\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00012}00012\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00013}00013\ \textcolor{comment}{//\ INCLUDED\ FILES\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00014}00014\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00015}00015\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00016}00016\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00017}00017\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00018}00018\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00020}00020\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00021}00021\ \textcolor{comment}{//\ CONSTANTS\ \&\ DEFINITIONS\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00022}00022\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00023}\mbox{\hyperlink{solution_2_fonction_demo5_8h_a1012795bee869077776aa970ab974857}{00023}}\ \textcolor{preprocessor}{\#define\ CARRE(X)\ ((X)*(X))}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00024}\mbox{\hyperlink{solution_2_fonction_demo5_8h_a598a3330b3c21701223ee0ca14316eca}{00024}}\ \textcolor{preprocessor}{\#define\ PI\ \ 3.1415926535897}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00025}\mbox{\hyperlink{solution_2_fonction_demo5_8h_aed025d29b111ce5f751b4814a0b94e66}{00025}}\ \textcolor{preprocessor}{\#define\ GREY\_LEVEL\ 255}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00026}\mbox{\hyperlink{solution_2_fonction_demo5_8h_ad0e609be60dd499ca0e16cda372b0b69}{00026}}\ \textcolor{preprocessor}{\#define\ NBCHAR\ 200}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00028}00028\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00029}00029\ \textcolor{comment}{//\ PROTOTYPE\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00030}00030\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00032}00032\ \textcolor{comment}{//>Matrix}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00033}00033\ \textcolor{keywordtype}{float}*\ \ \ \ \mbox{\hyperlink{prog__init_2_fonction_demo5_8h_afe52cf51eb48f0179b791ae93b2031ca}{fmatrix\_allocate\_1d}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00034}00034\ \textcolor{keywordtype}{float}**\ \ \ \mbox{\hyperlink{prog__init_2_fonction_demo5_8h_a305e7ba7b814fa3d9886afcd5a10caae}{fmatrix\_allocate\_2d}}(\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00035}00035\ \textcolor{keywordtype}{float}***\ \ \mbox{\hyperlink{prog__init_2_fonction_demo5_8h_a951c558d1da0b1c6ab91d4046713008d}{fmatrix\_allocate\_3d}}(\textcolor{keywordtype}{int},\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00036}00036\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \mbox{\hyperlink{prog__init_2_fonction_demo5_8h_a2638eb8ffb36eb3fd4043135bea46d36}{free\_fmatrix\_1d}}(\textcolor{keywordtype}{float}*);}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00037}00037\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \mbox{\hyperlink{prog__init_2_fonction_demo5_8h_af1c6860c348ece5a139ff0ca2571290f}{free\_fmatrix\_2d}}(\textcolor{keywordtype}{float}**);}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00038}00038\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \mbox{\hyperlink{prog__init_2_fonction_demo5_8h_ae45860f7f22c42329f9df82bcf19e6dc}{free\_fmatrix\_3d}}(\textcolor{keywordtype}{float}***,\textcolor{keywordtype}{int});}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00040}00040\ \textcolor{comment}{//>Load/Save\ File}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00041}00041\ \textcolor{keywordtype}{float}**\ \mbox{\hyperlink{prog__init_2_fonction_demo5_8h_a209e15f755707e69b378ed70f58abd10}{LoadImagePgm}}(\textcolor{keywordtype}{char}*,\textcolor{keywordtype}{int}*,\textcolor{keywordtype}{int}*);}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00042}00042\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{prog__init_2_fonction_demo5_8h_a481b1f2101c6962036efd48aa6753d5c}{SaveImagePgm}}(\textcolor{keywordtype}{char}*,\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00044}00044\ \textcolor{comment}{//>Fourier}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00045}00045\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{prog__init_2_fonction_demo5_8h_a23f40d6123098eaf70022e14728e72fc}{ddct8x8s}}(\textcolor{keywordtype}{int},\textcolor{keywordtype}{float}**);}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00047}00047\ \textcolor{comment}{//>Degradation}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00048}00048\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{prog__init_2_fonction_demo5_8h_a53291be503767f06ecaa0ff49200a06c}{gaussian\_noise}}(\textcolor{keywordtype}{float},\textcolor{keywordtype}{float});}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00049}00049\ \textcolor{keywordtype}{void}\ \ \mbox{\hyperlink{prog__init_2_fonction_demo5_8h_a76b68fee65fc6b1828ed2d238e9e50a3}{add\_gaussian\_noise}}(\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{int},\textcolor{keywordtype}{int},\textcolor{keywordtype}{float});}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00051}00051\ \textcolor{comment}{//>Mesure}}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00052}00052\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{prog__init_2_fonction_demo5_8h_a75c11c219cecc756716cdc381060b9ec}{computeMMSE}}(\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{int});}
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{solution_2_fonction_demo5_8h_source_l00057}00057\ }
 
 \end{DoxyCode}

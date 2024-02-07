@@ -1,0 +1,13 @@
+<map id="HardThreshold" name="HardThreshold">
+<area shape="rect" id="Node000001" title=" " alt="" coords="522,31,629,56"/>
+<area shape="rect" id="Node000002" href="$_tp5___i_f_t3205_8c.html#a6768d4d38d6462d3265f8639f4f3f46a" title=" " alt="" coords="348,5,471,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="506,36,471,30,472,25,507,30"/>
+<area shape="rect" id="Node000003" href="$_tp5___i_f_t3205_8c.html#a277e6b2f38061fedda05553f8807135f" title=" " alt="" coords="344,55,474,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="507,56,475,61,474,55,506,51"/>
+<area shape="rect" id="Node000004" href="$_tp5___i_f_t3205_8c.html#aa66405390a67d972f0876e853ff74ee3" title=" " alt="" coords="154,29,245,55"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="328,60,244,50,245,45,329,55"/>
+<area shape="rect" id="Node000006" href="$class_d_c_t_denoise.html#a43f4e874829b46e8d55859cfe2318e75" title=" " alt="" coords="103,79,296,104"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="329,79,297,83,296,78,328,74"/>
+<area shape="rect" id="Node000005" href="$_tp5___i_f_t3205_8c.html#a3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="5,29,55,55"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="139,45,55,45,55,40,139,40"/>
+</map>

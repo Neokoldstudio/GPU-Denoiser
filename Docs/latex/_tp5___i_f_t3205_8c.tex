@@ -1,0 +1,311 @@
+\doxysection{Tp\+IFT3205\+\_\+\+Debruitage/solution/\+Tp5\+\_\+\+IFT3205.c File Reference}
+\hypertarget{_tp5___i_f_t3205_8c}{}\label{_tp5___i_f_t3205_8c}\index{TpIFT3205\_Debruitage/solution/Tp5\_IFT3205.c@{TpIFT3205\_Debruitage/solution/Tp5\_IFT3205.c}}
+{\ttfamily \#include "{}Fonction\+Demo5.\+h"{}}\newline
+Include dependency graph for Tp5\+\_\+\+IFT3205.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=322pt]{_tp5___i_f_t3205_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205_8c_a58b4209748807ea5752f811dc1fac4b5}{NAME\+\_\+\+VISUALISER}}~"{}display "{}
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205_8c_a81e0d64a3e0512b1db2a0d4e8a67944c}{NAME\+\_\+\+IMG\+\_\+\+IN}}~"{}lena512"{}
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205_8c_a7b8acdebd19e178dc38ad3aaa92b20ae}{NAME\+\_\+\+IMG\+\_\+\+OUT}}~"{}lena512\+\_\+\+Restored"{}
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205_8c_af8bd010713c3629b2947234239de57b6}{NAME\+\_\+\+IMG\+\_\+\+DEG}}~"{}lena512\+\_\+\+Degraded"{}
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205_8c_aec329df85e9a89d7664164ec55ce7a30}{SIGMA\+\_\+\+NOISE}}~30
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205_8c_adb1a274a291c41a2e9537d0755fa693e}{NB\+\_\+\+ITERATIONS}}~1
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205_8c_a4679d8ea8690999a6c6c7c0cb245c879}{THRESHOLD}}~90
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205_8c_a7f59a274ef5dd963eb5011bfb790a7fd}{OVERLAP}}~1
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205_8c_a6fd911e7deb6f42fafc5e84f4e2bd9d0}{HARD\+\_\+\+THRESHOLD}}~1
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205_8c_abeecfb58b7689ac52248465a6502c106}{ZOOM}}~1
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205_8c_ad24e2b54375e12474e65ebf7175988fb}{QUIT}}~0
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{_tp5___i_f_t3205_8c_aa66405390a67d972f0876e853ff74ee3}{Dct\+Denoise}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int, int, float)
+\item 
+void \mbox{\hyperlink{_tp5___i_f_t3205_8c_a0622ec4e9d9d6fd257ae3f2ffed9e24d}{copy\+\_\+matrix}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int, int)
+\item 
+void \mbox{\hyperlink{_tp5___i_f_t3205_8c_a277e6b2f38061fedda05553f8807135f}{Filtering\+DCT\+\_\+8x8\+\_\+}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float, int, int, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*})
+\item 
+void \mbox{\hyperlink{_tp5___i_f_t3205_8c_a6768d4d38d6462d3265f8639f4f3f46a}{Filtering\+DCT\+\_\+8x8}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float, int, int, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*})
+\item 
+void \mbox{\hyperlink{_tp5___i_f_t3205_8c_af91c76b18238b6c06457aa0dd13e133a}{Hard\+Threshold}} (float, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int)
+\item 
+void \mbox{\hyperlink{_tp5___i_f_t3205_8c_a74d92250c7b4a84f63605fb88502cbfa}{Zig\+Zag\+Threshold}} (float, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int)
+\item 
+int \mbox{\hyperlink{_tp5___i_f_t3205_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}argv)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{_tp5___i_f_t3205_8c_a6fd911e7deb6f42fafc5e84f4e2bd9d0}\label{_tp5___i_f_t3205_8c_a6fd911e7deb6f42fafc5e84f4e2bd9d0} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!HARD\_THRESHOLD@{HARD\_THRESHOLD}}
+\index{HARD\_THRESHOLD@{HARD\_THRESHOLD}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{HARD\_THRESHOLD}{HARD\_THRESHOLD}}
+{\footnotesize\ttfamily \#define HARD\+\_\+\+THRESHOLD~1}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00072}{72}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205_8c_af8bd010713c3629b2947234239de57b6}\label{_tp5___i_f_t3205_8c_af8bd010713c3629b2947234239de57b6} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!NAME\_IMG\_DEG@{NAME\_IMG\_DEG}}
+\index{NAME\_IMG\_DEG@{NAME\_IMG\_DEG}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{NAME\_IMG\_DEG}{NAME\_IMG\_DEG}}
+{\footnotesize\ttfamily \#define NAME\+\_\+\+IMG\+\_\+\+DEG~"{}lena512\+\_\+\+Degraded"{}}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00022}{22}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205_8c_a81e0d64a3e0512b1db2a0d4e8a67944c}\label{_tp5___i_f_t3205_8c_a81e0d64a3e0512b1db2a0d4e8a67944c} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!NAME\_IMG\_IN@{NAME\_IMG\_IN}}
+\index{NAME\_IMG\_IN@{NAME\_IMG\_IN}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{NAME\_IMG\_IN}{NAME\_IMG\_IN}}
+{\footnotesize\ttfamily \#define NAME\+\_\+\+IMG\+\_\+\+IN~"{}lena512"{}}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00020}{20}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205_8c_a7b8acdebd19e178dc38ad3aaa92b20ae}\label{_tp5___i_f_t3205_8c_a7b8acdebd19e178dc38ad3aaa92b20ae} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!NAME\_IMG\_OUT@{NAME\_IMG\_OUT}}
+\index{NAME\_IMG\_OUT@{NAME\_IMG\_OUT}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{NAME\_IMG\_OUT}{NAME\_IMG\_OUT}}
+{\footnotesize\ttfamily \#define NAME\+\_\+\+IMG\+\_\+\+OUT~"{}lena512\+\_\+\+Restored"{}}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00021}{21}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205_8c_a58b4209748807ea5752f811dc1fac4b5}\label{_tp5___i_f_t3205_8c_a58b4209748807ea5752f811dc1fac4b5} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!NAME\_VISUALISER@{NAME\_VISUALISER}}
+\index{NAME\_VISUALISER@{NAME\_VISUALISER}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{NAME\_VISUALISER}{NAME\_VISUALISER}}
+{\footnotesize\ttfamily \#define NAME\+\_\+\+VISUALISER~"{}display "{}}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00019}{19}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205_8c_adb1a274a291c41a2e9537d0755fa693e}\label{_tp5___i_f_t3205_8c_adb1a274a291c41a2e9537d0755fa693e} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!NB\_ITERATIONS@{NB\_ITERATIONS}}
+\index{NB\_ITERATIONS@{NB\_ITERATIONS}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{NB\_ITERATIONS}{NB\_ITERATIONS}}
+{\footnotesize\ttfamily \#define NB\+\_\+\+ITERATIONS~1}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00069}{69}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205_8c_a7f59a274ef5dd963eb5011bfb790a7fd}\label{_tp5___i_f_t3205_8c_a7f59a274ef5dd963eb5011bfb790a7fd} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!OVERLAP@{OVERLAP}}
+\index{OVERLAP@{OVERLAP}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{OVERLAP}{OVERLAP}}
+{\footnotesize\ttfamily \#define OVERLAP~1}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00071}{71}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205_8c_ad24e2b54375e12474e65ebf7175988fb}\label{_tp5___i_f_t3205_8c_ad24e2b54375e12474e65ebf7175988fb} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!QUIT@{QUIT}}
+\index{QUIT@{QUIT}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{QUIT}{QUIT}}
+{\footnotesize\ttfamily \#define QUIT~0}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00091}{91}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205_8c_aec329df85e9a89d7664164ec55ce7a30}\label{_tp5___i_f_t3205_8c_aec329df85e9a89d7664164ec55ce7a30} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!SIGMA\_NOISE@{SIGMA\_NOISE}}
+\index{SIGMA\_NOISE@{SIGMA\_NOISE}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{SIGMA\_NOISE}{SIGMA\_NOISE}}
+{\footnotesize\ttfamily \#define SIGMA\+\_\+\+NOISE~30}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00068}{68}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205_8c_a4679d8ea8690999a6c6c7c0cb245c879}\label{_tp5___i_f_t3205_8c_a4679d8ea8690999a6c6c7c0cb245c879} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!THRESHOLD@{THRESHOLD}}
+\index{THRESHOLD@{THRESHOLD}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{THRESHOLD}{THRESHOLD}}
+{\footnotesize\ttfamily \#define THRESHOLD~90}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00070}{70}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205_8c_abeecfb58b7689ac52248465a6502c106}\label{_tp5___i_f_t3205_8c_abeecfb58b7689ac52248465a6502c106} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!ZOOM@{ZOOM}}
+\index{ZOOM@{ZOOM}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{ZOOM}{ZOOM}}
+{\footnotesize\ttfamily \#define ZOOM~1}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00090}{90}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_tp5___i_f_t3205_8c_a0622ec4e9d9d6fd257ae3f2ffed9e24d}\label{_tp5___i_f_t3205_8c_a0622ec4e9d9d6fd257ae3f2ffed9e24d} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!copy\_matrix@{copy\_matrix}}
+\index{copy\_matrix@{copy\_matrix}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{copy\_matrix()}{copy\_matrix()}}
+{\footnotesize\ttfamily void copy\+\_\+matrix (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat1,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat2,  }\item[{int}]{lgth,  }\item[{int}]{wdth }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00148}{148}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=326pt]{_tp5___i_f_t3205_8c_a0622ec4e9d9d6fd257ae3f2ffed9e24d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_tp5___i_f_t3205_8c_aa66405390a67d972f0876e853ff74ee3}\label{_tp5___i_f_t3205_8c_aa66405390a67d972f0876e853ff74ee3} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!DctDenoise@{DctDenoise}}
+\index{DctDenoise@{DctDenoise}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{DctDenoise()}{DctDenoise()}}
+{\footnotesize\ttfamily void Dct\+Denoise (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{Data\+Degraded,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{Data\+Filtered,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{Data,  }\item[{int}]{lgth,  }\item[{int}]{wdth,  }\item[{float}]{Thresh }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00102}{102}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_tp5___i_f_t3205_8c_aa66405390a67d972f0876e853ff74ee3_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=221pt]{_tp5___i_f_t3205_8c_aa66405390a67d972f0876e853ff74ee3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_tp5___i_f_t3205_8c_a6768d4d38d6462d3265f8639f4f3f46a}\label{_tp5___i_f_t3205_8c_a6768d4d38d6462d3265f8639f4f3f46a} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!FilteringDCT\_8x8@{FilteringDCT\_8x8}}
+\index{FilteringDCT\_8x8@{FilteringDCT\_8x8}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{FilteringDCT\_8x8()}{FilteringDCT\_8x8()}}
+{\footnotesize\ttfamily void Filtering\+DCT\+\_\+8x8 (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{imgin,  }\item[{float}]{sigma,  }\item[{int}]{length,  }\item[{int}]{width,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{Squ\+Win,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat3d }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00159}{159}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=288pt]{_tp5___i_f_t3205_8c_a6768d4d38d6462d3265f8639f4f3f46a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_tp5___i_f_t3205_8c_a277e6b2f38061fedda05553f8807135f}\label{_tp5___i_f_t3205_8c_a277e6b2f38061fedda05553f8807135f} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!FilteringDCT\_8x8\_@{FilteringDCT\_8x8\_}}
+\index{FilteringDCT\_8x8\_@{FilteringDCT\_8x8\_}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{FilteringDCT\_8x8\_()}{FilteringDCT\_8x8\_()}}
+{\footnotesize\ttfamily void Filtering\+DCT\+\_\+8x8\+\_\+ (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{imgin,  }\item[{float}]{sigma,  }\item[{int}]{length,  }\item[{int}]{width,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{Squ\+Win,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat3d }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00224}{224}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=303pt]{_tp5___i_f_t3205_8c_a277e6b2f38061fedda05553f8807135f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_tp5___i_f_t3205_8c_a277e6b2f38061fedda05553f8807135f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_tp5___i_f_t3205_8c_af91c76b18238b6c06457aa0dd13e133a}\label{_tp5___i_f_t3205_8c_af91c76b18238b6c06457aa0dd13e133a} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!HardThreshold@{HardThreshold}}
+\index{HardThreshold@{HardThreshold}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{HardThreshold()}{HardThreshold()}}
+{\footnotesize\ttfamily void Hard\+Threshold (\begin{DoxyParamCaption}\item[{float}]{sigma,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{coef,  }\item[{int}]{N }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00303}{303}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_tp5___i_f_t3205_8c_af91c76b18238b6c06457aa0dd13e133a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_tp5___i_f_t3205_8c_a3c04138a5bfe5d72780bb7e82a18e627}\label{_tp5___i_f_t3205_8c_a3c04138a5bfe5d72780bb7e82a18e627} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!main@{main}}
+\index{main@{main}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{argv }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00352}{352}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_tp5___i_f_t3205_8c_a3c04138a5bfe5d72780bb7e82a18e627_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_tp5___i_f_t3205_8c_a74d92250c7b4a84f63605fb88502cbfa}\label{_tp5___i_f_t3205_8c_a74d92250c7b4a84f63605fb88502cbfa} 
+\index{Tp5\_IFT3205.c@{Tp5\_IFT3205.c}!ZigZagThreshold@{ZigZagThreshold}}
+\index{ZigZagThreshold@{ZigZagThreshold}!Tp5\_IFT3205.c@{Tp5\_IFT3205.c}}
+\doxysubsubsection{\texorpdfstring{ZigZagThreshold()}{ZigZagThreshold()}}
+{\footnotesize\ttfamily void Zig\+Zag\+Threshold (\begin{DoxyParamCaption}\item[{float}]{sigma,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{coef,  }\item[{int}]{N }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00313}{313}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_tp5___i_f_t3205_8c_a74d92250c7b4a84f63605fb88502cbfa_icgraph}
+\end{center}
+\end{figure}

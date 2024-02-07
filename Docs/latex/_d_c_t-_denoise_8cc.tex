@@ -1,0 +1,345 @@
+\doxysection{Tp\+IFT3205\+\_\+\+Debruitage/solution\+CPP/\+DCT-\/\+Denoise.cc File Reference}
+\hypertarget{_d_c_t-_denoise_8cc}{}\label{_d_c_t-_denoise_8cc}\index{TpIFT3205\_Debruitage/solutionCPP/DCT-\/Denoise.cc@{TpIFT3205\_Debruitage/solutionCPP/DCT-\/Denoise.cc}}
+{\ttfamily \#include "{}DCT-\/\+Denoise.\+h"{}}\newline
+{\ttfamily \#include $<$X11/\+X.\+h$>$}\newline
+{\ttfamily \#include $<$X11/\+Xlib.\+h$>$}\newline
+{\ttfamily \#include $<$X11/\+Xutil.\+h$>$}\newline
+{\ttfamily \#include $<$X11/\+Xos.\+h$>$}\newline
+{\ttfamily \#include $<$X11/\+Xatom.\+h$>$}\newline
+{\ttfamily \#include $<$X11/cursorfont.\+h$>$}\newline
+Include dependency graph for DCT-\/\+Denoise.cc\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_d_c_t-_denoise_8cc__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{_d_c_t-_denoise_8cc_aad27174881137779332ea0f7138c6e43}{open\+\_\+display}} ()
+\item 
+Window \mbox{\hyperlink{_d_c_t-_denoise_8cc_a8170bb6f91c6b6c8356fa2e8c8355140}{fabrique\+\_\+window}} (char \texorpdfstring{$\ast$}{*}nom\+\_\+fen, int x, int y, int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a2474a5474cbff19523a51eb1de01cda4}{width}}, int height, int \mbox{\hyperlink{_d_c_t-_denoise_8cc_ab8ff3a3394ef6cb005072ea5dc6ecc24}{zoom}})
+\item 
+XImage \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{_d_c_t-_denoise_8cc_ac3a6e6de2ab7e5f397a4550a1e823764}{cree\+\_\+\+Ximage2}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}mat, int z, int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a9f59b34b1f25fe00023291b678246bcc}{length}}, int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a2474a5474cbff19523a51eb1de01cda4}{width}})
+\item 
+void \mbox{\hyperlink{_d_c_t-_denoise_8cc_a7d440a1653361f1a24bbc5dd434b5f18}{read\+\_\+arguments}} (int argc, char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}argv)
+\item 
+int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}argv)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a3166bb8af25e8c3ed92b68e2bd869d40}{ZOOM}} =1
+\item 
+const int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a3c18e64ca07cf21278f4189cd4c2732f}{QUIT}} =0
+\item 
+const float \mbox{\hyperlink{_d_c_t-_denoise_8cc_a300fe9ffb20b965809303a8321942a59}{SIGMA\+\_\+\+NOISE}} =30
+\item 
+const float \mbox{\hyperlink{_d_c_t-_denoise_8cc_a0337b60fac5e95111ebc975b5bdd3c8a}{THRESHOLD\+\_\+\+DCT}} =3\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_aec329df85e9a89d7664164ec55ce7a30}{SIGMA\+\_\+\+NOISE}}
+\item 
+char \mbox{\hyperlink{_d_c_t-_denoise_8cc_a7a23b72315747a989fcb72a53ce01c9f}{Name\+\_\+img}} \mbox{[}100\mbox{]}
+\item 
+int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a7dd24385186de7dc2db6658cfca252a2}{flag\+\_\+save}}
+\item 
+int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a171ecdb5cab1f5ccba8bb286122763be}{flag\+\_\+quit}}
+\item 
+int \mbox{\hyperlink{_d_c_t-_denoise_8cc_ab8ff3a3394ef6cb005072ea5dc6ecc24}{zoom}}
+\item 
+int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a9f59b34b1f25fe00023291b678246bcc}{length}}
+\item 
+int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a2474a5474cbff19523a51eb1de01cda4}{width}}
+\item 
+float \mbox{\hyperlink{_d_c_t-_denoise_8cc_a040a08af10753a1767ce3cdda72bea61}{Sigma\+Noise}}
+\item 
+float \mbox{\hyperlink{_d_c_t-_denoise_8cc_a6171d7a640e6ad2f42417925bad314da}{Threshold\+DCT}}
+\item 
+Display \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{_d_c_t-_denoise_8cc_a854f9eb314f72feecf68ba03c6f0e5d5}{display}}
+\item 
+int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a80a50b0eff10ca625769bac2a9e15cd3}{screen\+\_\+num}}
+\item 
+int \mbox{\hyperlink{_d_c_t-_denoise_8cc_acb5ba97551079e0b072c62c21d784ac5}{depth}}
+\item 
+Window \mbox{\hyperlink{_d_c_t-_denoise_8cc_a67efd2aa4387dcb1b33df1f044512a16}{root}}
+\item 
+Visual \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{_d_c_t-_denoise_8cc_a6ff21403d498574a0185ea2e360e66e9}{visual}}
+\item 
+GC \mbox{\hyperlink{_d_c_t-_denoise_8cc_a5da9d24666f1955a9b5ce3d2583b823a}{gc}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_d_c_t-_denoise_8cc_ac3a6e6de2ab7e5f397a4550a1e823764}\label{_d_c_t-_denoise_8cc_ac3a6e6de2ab7e5f397a4550a1e823764} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!cree\_Ximage2@{cree\_Ximage2}}
+\index{cree\_Ximage2@{cree\_Ximage2}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{cree\_Ximage2()}{cree\_Ximage2()}}
+{\footnotesize\ttfamily XImage \texorpdfstring{$\ast$}{*} cree\+\_\+\+Ximage2 (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat,  }\item[{int}]{z,  }\item[{int}]{length,  }\item[{int}]{width }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00121}{121}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=231pt]{_d_c_t-_denoise_8cc_ac3a6e6de2ab7e5f397a4550a1e823764_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_d_c_t-_denoise_8cc_a8170bb6f91c6b6c8356fa2e8c8355140}\label{_d_c_t-_denoise_8cc_a8170bb6f91c6b6c8356fa2e8c8355140} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!fabrique\_window@{fabrique\_window}}
+\index{fabrique\_window@{fabrique\_window}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{fabrique\_window()}{fabrique\_window()}}
+{\footnotesize\ttfamily Window fabrique\+\_\+window (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{nom\+\_\+fen,  }\item[{int}]{x,  }\item[{int}]{y,  }\item[{int}]{width,  }\item[{int}]{height,  }\item[{int}]{zoom }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00076}{76}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=242pt]{_d_c_t-_denoise_8cc_a8170bb6f91c6b6c8356fa2e8c8355140_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_d_c_t-_denoise_8cc_a3c04138a5bfe5d72780bb7e82a18e627}\label{_d_c_t-_denoise_8cc_a3c04138a5bfe5d72780bb7e82a18e627} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!main@{main}}
+\index{main@{main}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{argv }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00240}{240}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_d_c_t-_denoise_8cc_a3c04138a5bfe5d72780bb7e82a18e627_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_d_c_t-_denoise_8cc_aad27174881137779332ea0f7138c6e43}\label{_d_c_t-_denoise_8cc_aad27174881137779332ea0f7138c6e43} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!open\_display@{open\_display}}
+\index{open\_display@{open\_display}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{open\_display()}{open\_display()}}
+{\footnotesize\ttfamily int open\+\_\+display (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00058}{58}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=226pt]{_d_c_t-_denoise_8cc_aad27174881137779332ea0f7138c6e43_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_d_c_t-_denoise_8cc_a7d440a1653361f1a24bbc5dd434b5f18}\label{_d_c_t-_denoise_8cc_a7d440a1653361f1a24bbc5dd434b5f18} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!read\_arguments@{read\_arguments}}
+\index{read\_arguments@{read\_arguments}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{read\_arguments()}{read\_arguments()}}
+{\footnotesize\ttfamily void read\+\_\+arguments (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{argv }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00192}{192}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=239pt]{_d_c_t-_denoise_8cc_a7d440a1653361f1a24bbc5dd434b5f18_icgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{_d_c_t-_denoise_8cc_acb5ba97551079e0b072c62c21d784ac5}\label{_d_c_t-_denoise_8cc_acb5ba97551079e0b072c62c21d784ac5} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!depth@{depth}}
+\index{depth@{depth}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{depth}{depth}}
+{\footnotesize\ttfamily int depth}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00050}{50}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a854f9eb314f72feecf68ba03c6f0e5d5}\label{_d_c_t-_denoise_8cc_a854f9eb314f72feecf68ba03c6f0e5d5} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!display@{display}}
+\index{display@{display}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{display}{display}}
+{\footnotesize\ttfamily Display\texorpdfstring{$\ast$}{*} display}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00048}{48}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a171ecdb5cab1f5ccba8bb286122763be}\label{_d_c_t-_denoise_8cc_a171ecdb5cab1f5ccba8bb286122763be} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!flag\_quit@{flag\_quit}}
+\index{flag\_quit@{flag\_quit}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{flag\_quit}{flag\_quit}}
+{\footnotesize\ttfamily int flag\+\_\+quit}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00031}{31}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a7dd24385186de7dc2db6658cfca252a2}\label{_d_c_t-_denoise_8cc_a7dd24385186de7dc2db6658cfca252a2} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!flag\_save@{flag\_save}}
+\index{flag\_save@{flag\_save}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{flag\_save}{flag\_save}}
+{\footnotesize\ttfamily int flag\+\_\+save}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00030}{30}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a5da9d24666f1955a9b5ce3d2583b823a}\label{_d_c_t-_denoise_8cc_a5da9d24666f1955a9b5ce3d2583b823a} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!gc@{gc}}
+\index{gc@{gc}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{gc}{gc}}
+{\footnotesize\ttfamily GC gc}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00053}{53}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a9f59b34b1f25fe00023291b678246bcc}\label{_d_c_t-_denoise_8cc_a9f59b34b1f25fe00023291b678246bcc} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!length@{length}}
+\index{length@{length}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{length}{length}}
+{\footnotesize\ttfamily int length}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00034}{34}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a7a23b72315747a989fcb72a53ce01c9f}\label{_d_c_t-_denoise_8cc_a7a23b72315747a989fcb72a53ce01c9f} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!Name\_img@{Name\_img}}
+\index{Name\_img@{Name\_img}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{Name\_img}{Name\_img}}
+{\footnotesize\ttfamily char Name\+\_\+img\mbox{[}100\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00028}{28}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a3c18e64ca07cf21278f4189cd4c2732f}\label{_d_c_t-_denoise_8cc_a3c18e64ca07cf21278f4189cd4c2732f} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!QUIT@{QUIT}}
+\index{QUIT@{QUIT}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{QUIT}{QUIT}}
+{\footnotesize\ttfamily const int QUIT =0}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00021}{21}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a67efd2aa4387dcb1b33df1f044512a16}\label{_d_c_t-_denoise_8cc_a67efd2aa4387dcb1b33df1f044512a16} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!root@{root}}
+\index{root@{root}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{root}{root}}
+{\footnotesize\ttfamily Window root}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00051}{51}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a80a50b0eff10ca625769bac2a9e15cd3}\label{_d_c_t-_denoise_8cc_a80a50b0eff10ca625769bac2a9e15cd3} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!screen\_num@{screen\_num}}
+\index{screen\_num@{screen\_num}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{screen\_num}{screen\_num}}
+{\footnotesize\ttfamily int screen\+\_\+num}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00049}{49}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a300fe9ffb20b965809303a8321942a59}\label{_d_c_t-_denoise_8cc_a300fe9ffb20b965809303a8321942a59} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!SIGMA\_NOISE@{SIGMA\_NOISE}}
+\index{SIGMA\_NOISE@{SIGMA\_NOISE}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{SIGMA\_NOISE}{SIGMA\_NOISE}}
+{\footnotesize\ttfamily const float SIGMA\+\_\+\+NOISE =30}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00022}{22}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a040a08af10753a1767ce3cdda72bea61}\label{_d_c_t-_denoise_8cc_a040a08af10753a1767ce3cdda72bea61} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!SigmaNoise@{SigmaNoise}}
+\index{SigmaNoise@{SigmaNoise}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{SigmaNoise}{SigmaNoise}}
+{\footnotesize\ttfamily float Sigma\+Noise}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00035}{35}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a0337b60fac5e95111ebc975b5bdd3c8a}\label{_d_c_t-_denoise_8cc_a0337b60fac5e95111ebc975b5bdd3c8a} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!THRESHOLD\_DCT@{THRESHOLD\_DCT}}
+\index{THRESHOLD\_DCT@{THRESHOLD\_DCT}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{THRESHOLD\_DCT}{THRESHOLD\_DCT}}
+{\footnotesize\ttfamily const float THRESHOLD\+\_\+\+DCT =3\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_aec329df85e9a89d7664164ec55ce7a30}{SIGMA\+\_\+\+NOISE}}}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00023}{23}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a6171d7a640e6ad2f42417925bad314da}\label{_d_c_t-_denoise_8cc_a6171d7a640e6ad2f42417925bad314da} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!ThresholdDCT@{ThresholdDCT}}
+\index{ThresholdDCT@{ThresholdDCT}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{ThresholdDCT}{ThresholdDCT}}
+{\footnotesize\ttfamily float Threshold\+DCT}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00036}{36}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a6ff21403d498574a0185ea2e360e66e9}\label{_d_c_t-_denoise_8cc_a6ff21403d498574a0185ea2e360e66e9} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!visual@{visual}}
+\index{visual@{visual}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{visual}{visual}}
+{\footnotesize\ttfamily Visual\texorpdfstring{$\ast$}{*} visual}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00052}{52}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a2474a5474cbff19523a51eb1de01cda4}\label{_d_c_t-_denoise_8cc_a2474a5474cbff19523a51eb1de01cda4} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!width@{width}}
+\index{width@{width}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{width}{width}}
+{\footnotesize\ttfamily int width}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00034}{34}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_a3166bb8af25e8c3ed92b68e2bd869d40}\label{_d_c_t-_denoise_8cc_a3166bb8af25e8c3ed92b68e2bd869d40} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!ZOOM@{ZOOM}}
+\index{ZOOM@{ZOOM}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{ZOOM}{ZOOM}}
+{\footnotesize\ttfamily const int ZOOM =1}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00020}{20}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+
+\Hypertarget{_d_c_t-_denoise_8cc_ab8ff3a3394ef6cb005072ea5dc6ecc24}\label{_d_c_t-_denoise_8cc_ab8ff3a3394ef6cb005072ea5dc6ecc24} 
+\index{DCT-\/Denoise.cc@{DCT-\/Denoise.cc}!zoom@{zoom}}
+\index{zoom@{zoom}!DCT-\/Denoise.cc@{DCT-\/Denoise.cc}}
+\doxysubsubsection{\texorpdfstring{zoom}{zoom}}
+{\footnotesize\ttfamily int zoom}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t-_denoise_8cc_source_l00032}{32}} of file \mbox{\hyperlink{_d_c_t-_denoise_8cc_source}{DCT-\/\+Denoise.\+cc}}.
+

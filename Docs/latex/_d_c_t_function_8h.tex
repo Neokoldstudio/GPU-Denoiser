@@ -1,0 +1,288 @@
+\doxysection{Tp\+IFT3205\+\_\+\+Debruitage/solution\+CPP/\+DCTFunction.h File Reference}
+\hypertarget{_d_c_t_function_8h}{}\label{_d_c_t_function_8h}\index{TpIFT3205\_Debruitage/solutionCPP/DCTFunction.h@{TpIFT3205\_Debruitage/solutionCPP/DCTFunction.h}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$new$>$}\newline
+Include dependency graph for DCTFunction.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_d_c_t_function_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_d_c_t_function_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{_d_c_t_function_8h_a1012795bee869077776aa970ab974857}{CARRE}}(X)~((X)\texorpdfstring{$\ast$}{*}(X))
+\item 
+\#define \mbox{\hyperlink{_d_c_t_function_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}~3.\+1415926535897
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+float \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{_d_c_t_function_8h_afe52cf51eb48f0179b791ae93b2031ca}{fmatrix\+\_\+allocate\+\_\+1d}} (int)
+\item 
+float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{_d_c_t_function_8h_a305e7ba7b814fa3d9886afcd5a10caae}{fmatrix\+\_\+allocate\+\_\+2d}} (int, int)
+\item 
+float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{_d_c_t_function_8h_a951c558d1da0b1c6ab91d4046713008d}{fmatrix\+\_\+allocate\+\_\+3d}} (int, int, int)
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_a2638eb8ffb36eb3fd4043135bea46d36}{free\+\_\+fmatrix\+\_\+1d}} (float \texorpdfstring{$\ast$}{*})
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_af1c6860c348ece5a139ff0ca2571290f}{free\+\_\+fmatrix\+\_\+2d}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*})
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_ae45860f7f22c42329f9df82bcf19e6dc}{free\+\_\+fmatrix\+\_\+3d}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int)
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_a0622ec4e9d9d6fd257ae3f2ffed9e24d}{copy\+\_\+matrix}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int, int)
+\item 
+float \mbox{\hyperlink{_d_c_t_function_8h_a75c11c219cecc756716cdc381060b9ec}{compute\+MMSE}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int)
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_afbf6467f379bf799c1c9186aa81906f5}{compute\+Moy}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int)
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_a34fef28358bd04edf6cb18b24b36939d}{Get\+Length\+Width}} (char \texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*})
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_a9d7facaebeb8133dbe2725546b841a72}{load\+\_\+image}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, char \texorpdfstring{$\ast$}{*}, int, int)
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_af7c4d015c3160627ff13a5da62ae43d7}{save\+\_\+picture\+\_\+pgm}} (char \texorpdfstring{$\ast$}{*}, char \texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int, int)
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_a277e6b2f38061fedda05553f8807135f}{Filtering\+DCT\+\_\+8x8\+\_\+}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float, int, int, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*})
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_a6768d4d38d6462d3265f8639f4f3f46a}{Filtering\+DCT\+\_\+8x8}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float, int, int, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*})
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_a23f40d6123098eaf70022e14728e72fc}{ddct8x8s}} (int, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*})
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_af91c76b18238b6c06457aa0dd13e133a}{Hard\+Threshold}} (float, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int)
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_a74d92250c7b4a84f63605fb88502cbfa}{Zig\+Zag\+Threshold}} (float, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int)
+\item 
+float \mbox{\hyperlink{_d_c_t_function_8h_a53291be503767f06ecaa0ff49200a06c}{gaussian\+\_\+noise}} (float, float)
+\item 
+void \mbox{\hyperlink{_d_c_t_function_8h_a76b68fee65fc6b1828ed2d238e9e50a3}{add\+\_\+gaussian\+\_\+noise}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}, int, int, float)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{_d_c_t_function_8h_a1012795bee869077776aa970ab974857}\label{_d_c_t_function_8h_a1012795bee869077776aa970ab974857} 
+\index{DCTFunction.h@{DCTFunction.h}!CARRE@{CARRE}}
+\index{CARRE@{CARRE}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{CARRE}{CARRE}}
+{\footnotesize\ttfamily \#define CARRE(\begin{DoxyParamCaption}\item[{}]{X }\end{DoxyParamCaption})~((X)\texorpdfstring{$\ast$}{*}(X))}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t_function_8h_source_l00025}{25}} of file \mbox{\hyperlink{_d_c_t_function_8h_source}{DCTFunction.\+h}}.
+
+\Hypertarget{_d_c_t_function_8h_a598a3330b3c21701223ee0ca14316eca}\label{_d_c_t_function_8h_a598a3330b3c21701223ee0ca14316eca} 
+\index{DCTFunction.h@{DCTFunction.h}!PI@{PI}}
+\index{PI@{PI}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{PI}{PI}}
+{\footnotesize\ttfamily \#define PI~3.\+1415926535897}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t_function_8h_source_l00026}{26}} of file \mbox{\hyperlink{_d_c_t_function_8h_source}{DCTFunction.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_d_c_t_function_8h_a76b68fee65fc6b1828ed2d238e9e50a3}\label{_d_c_t_function_8h_a76b68fee65fc6b1828ed2d238e9e50a3} 
+\index{DCTFunction.h@{DCTFunction.h}!add\_gaussian\_noise@{add\_gaussian\_noise}}
+\index{add\_gaussian\_noise@{add\_gaussian\_noise}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{add\_gaussian\_noise()}{add\_gaussian\_noise()}}
+{\footnotesize\ttfamily void add\+\_\+gaussian\+\_\+noise (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat,  }\item[{int}]{lgth,  }\item[{int}]{wdth,  }\item[{float}]{var }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00411}{411}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_a75c11c219cecc756716cdc381060b9ec}\label{_d_c_t_function_8h_a75c11c219cecc756716cdc381060b9ec} 
+\index{DCTFunction.h@{DCTFunction.h}!computeMMSE@{computeMMSE}}
+\index{computeMMSE@{computeMMSE}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{computeMMSE()}{computeMMSE()}}
+{\footnotesize\ttfamily float compute\+MMSE (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat1,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat2,  }\item[{int}]{sz }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00426}{426}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_afbf6467f379bf799c1c9186aa81906f5}\label{_d_c_t_function_8h_afbf6467f379bf799c1c9186aa81906f5} 
+\index{DCTFunction.h@{DCTFunction.h}!computeMoy@{computeMoy}}
+\index{computeMoy@{computeMoy}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{computeMoy()}{computeMoy()}}
+{\footnotesize\ttfamily void compute\+Moy (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mt,  }\item[{int}]{sz }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t_function_8cc_source_l00123}{123}} of file \mbox{\hyperlink{_d_c_t_function_8cc_source}{DCTFunction.\+cc}}.
+
+\Hypertarget{_d_c_t_function_8h_a0622ec4e9d9d6fd257ae3f2ffed9e24d}\label{_d_c_t_function_8h_a0622ec4e9d9d6fd257ae3f2ffed9e24d} 
+\index{DCTFunction.h@{DCTFunction.h}!copy\_matrix@{copy\_matrix}}
+\index{copy\_matrix@{copy\_matrix}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{copy\_matrix()}{copy\_matrix()}}
+{\footnotesize\ttfamily void copy\+\_\+matrix (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat1,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat2,  }\item[{int}]{lgth,  }\item[{int}]{wdth }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source_l00030}{30}} of file \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source}{Tp5\+\_\+\+IFT3205\+\_\+2-\/1.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_a23f40d6123098eaf70022e14728e72fc}\label{_d_c_t_function_8h_a23f40d6123098eaf70022e14728e72fc} 
+\index{DCTFunction.h@{DCTFunction.h}!ddct8x8s@{ddct8x8s}}
+\index{ddct8x8s@{ddct8x8s}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{ddct8x8s()}{ddct8x8s()}}
+{\footnotesize\ttfamily void ddct8x8s (\begin{DoxyParamCaption}\item[{int}]{isgn,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{a }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00265}{265}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_a6768d4d38d6462d3265f8639f4f3f46a}\label{_d_c_t_function_8h_a6768d4d38d6462d3265f8639f4f3f46a} 
+\index{DCTFunction.h@{DCTFunction.h}!FilteringDCT\_8x8@{FilteringDCT\_8x8}}
+\index{FilteringDCT\_8x8@{FilteringDCT\_8x8}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{FilteringDCT\_8x8()}{FilteringDCT\_8x8()}}
+{\footnotesize\ttfamily void Filtering\+DCT\+\_\+8x8 (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{imgin,  }\item[{float}]{sigma,  }\item[{int}]{length,  }\item[{int}]{width,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{Squ\+Win,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat3d }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00159}{159}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_a277e6b2f38061fedda05553f8807135f}\label{_d_c_t_function_8h_a277e6b2f38061fedda05553f8807135f} 
+\index{DCTFunction.h@{DCTFunction.h}!FilteringDCT\_8x8\_@{FilteringDCT\_8x8\_}}
+\index{FilteringDCT\_8x8\_@{FilteringDCT\_8x8\_}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{FilteringDCT\_8x8\_()}{FilteringDCT\_8x8\_()}}
+{\footnotesize\ttfamily void Filtering\+DCT\+\_\+8x8\+\_\+ (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{imgin,  }\item[{float}]{sigma,  }\item[{int}]{length,  }\item[{int}]{width,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{Squ\+Win,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat3d }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00224}{224}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_afe52cf51eb48f0179b791ae93b2031ca}\label{_d_c_t_function_8h_afe52cf51eb48f0179b791ae93b2031ca} 
+\index{DCTFunction.h@{DCTFunction.h}!fmatrix\_allocate\_1d@{fmatrix\_allocate\_1d}}
+\index{fmatrix\_allocate\_1d@{fmatrix\_allocate\_1d}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{fmatrix\_allocate\_1d()}{fmatrix\_allocate\_1d()}}
+{\footnotesize\ttfamily float \texorpdfstring{$\ast$}{*} fmatrix\+\_\+allocate\+\_\+1d (\begin{DoxyParamCaption}\item[{int}]{hsize }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00030}{30}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_a305e7ba7b814fa3d9886afcd5a10caae}\label{_d_c_t_function_8h_a305e7ba7b814fa3d9886afcd5a10caae} 
+\index{DCTFunction.h@{DCTFunction.h}!fmatrix\_allocate\_2d@{fmatrix\_allocate\_2d}}
+\index{fmatrix\_allocate\_2d@{fmatrix\_allocate\_2d}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{fmatrix\_allocate\_2d()}{fmatrix\_allocate\_2d()}}
+{\footnotesize\ttfamily float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} fmatrix\+\_\+allocate\+\_\+2d (\begin{DoxyParamCaption}\item[{int}]{vsize,  }\item[{int}]{hsize }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00043}{43}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_a951c558d1da0b1c6ab91d4046713008d}\label{_d_c_t_function_8h_a951c558d1da0b1c6ab91d4046713008d} 
+\index{DCTFunction.h@{DCTFunction.h}!fmatrix\_allocate\_3d@{fmatrix\_allocate\_3d}}
+\index{fmatrix\_allocate\_3d@{fmatrix\_allocate\_3d}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{fmatrix\_allocate\_3d()}{fmatrix\_allocate\_3d()}}
+{\footnotesize\ttfamily float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} fmatrix\+\_\+allocate\+\_\+3d (\begin{DoxyParamCaption}\item[{int}]{dsize,  }\item[{int}]{vsize,  }\item[{int}]{hsize }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00062}{62}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_a2638eb8ffb36eb3fd4043135bea46d36}\label{_d_c_t_function_8h_a2638eb8ffb36eb3fd4043135bea46d36} 
+\index{DCTFunction.h@{DCTFunction.h}!free\_fmatrix\_1d@{free\_fmatrix\_1d}}
+\index{free\_fmatrix\_1d@{free\_fmatrix\_1d}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{free\_fmatrix\_1d()}{free\_fmatrix\_1d()}}
+{\footnotesize\ttfamily void free\+\_\+fmatrix\+\_\+1d (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}}]{pmat }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00077}{77}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_af1c6860c348ece5a139ff0ca2571290f}\label{_d_c_t_function_8h_af1c6860c348ece5a139ff0ca2571290f} 
+\index{DCTFunction.h@{DCTFunction.h}!free\_fmatrix\_2d@{free\_fmatrix\_2d}}
+\index{free\_fmatrix\_2d@{free\_fmatrix\_2d}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{free\_fmatrix\_2d()}{free\_fmatrix\_2d()}}
+{\footnotesize\ttfamily void free\+\_\+fmatrix\+\_\+2d (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{pmat }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00085}{85}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_ae45860f7f22c42329f9df82bcf19e6dc}\label{_d_c_t_function_8h_ae45860f7f22c42329f9df82bcf19e6dc} 
+\index{DCTFunction.h@{DCTFunction.h}!free\_fmatrix\_3d@{free\_fmatrix\_3d}}
+\index{free\_fmatrix\_3d@{free\_fmatrix\_3d}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{free\_fmatrix\_3d()}{free\_fmatrix\_3d()}}
+{\footnotesize\ttfamily void free\+\_\+fmatrix\+\_\+3d (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{pmat,  }\item[{int}]{dsize }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00094}{94}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_a53291be503767f06ecaa0ff49200a06c}\label{_d_c_t_function_8h_a53291be503767f06ecaa0ff49200a06c} 
+\index{DCTFunction.h@{DCTFunction.h}!gaussian\_noise@{gaussian\_noise}}
+\index{gaussian\_noise@{gaussian\_noise}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{gaussian\_noise()}{gaussian\_noise()}}
+{\footnotesize\ttfamily float gaussian\+\_\+noise (\begin{DoxyParamCaption}\item[{float}]{var,  }\item[{float}]{mean }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00394}{394}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_a34fef28358bd04edf6cb18b24b36939d}\label{_d_c_t_function_8h_a34fef28358bd04edf6cb18b24b36939d} 
+\index{DCTFunction.h@{DCTFunction.h}!GetLengthWidth@{GetLengthWidth}}
+\index{GetLengthWidth@{GetLengthWidth}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{GetLengthWidth()}{GetLengthWidth()}}
+{\footnotesize\ttfamily void Get\+Length\+Width (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{path,  }\item[{int \texorpdfstring{$\ast$}{*}}]{length,  }\item[{int \texorpdfstring{$\ast$}{*}}]{width }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t_function_8cc_source_l00140}{140}} of file \mbox{\hyperlink{_d_c_t_function_8cc_source}{DCTFunction.\+cc}}.
+
+\Hypertarget{_d_c_t_function_8h_af91c76b18238b6c06457aa0dd13e133a}\label{_d_c_t_function_8h_af91c76b18238b6c06457aa0dd13e133a} 
+\index{DCTFunction.h@{DCTFunction.h}!HardThreshold@{HardThreshold}}
+\index{HardThreshold@{HardThreshold}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{HardThreshold()}{HardThreshold()}}
+{\footnotesize\ttfamily void Hard\+Threshold (\begin{DoxyParamCaption}\item[{float}]{sigma,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{coef,  }\item[{int}]{N }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00303}{303}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+
+\Hypertarget{_d_c_t_function_8h_a9d7facaebeb8133dbe2725546b841a72}\label{_d_c_t_function_8h_a9d7facaebeb8133dbe2725546b841a72} 
+\index{DCTFunction.h@{DCTFunction.h}!load\_image@{load\_image}}
+\index{load\_image@{load\_image}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{load\_image()}{load\_image()}}
+{\footnotesize\ttfamily void load\+\_\+image (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{data,  }\item[{char \texorpdfstring{$\ast$}{*}}]{path,  }\item[{int}]{length,  }\item[{int}]{width }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t_function_8cc_source_l00177}{177}} of file \mbox{\hyperlink{_d_c_t_function_8cc_source}{DCTFunction.\+cc}}.
+
+\Hypertarget{_d_c_t_function_8h_af7c4d015c3160627ff13a5da62ae43d7}\label{_d_c_t_function_8h_af7c4d015c3160627ff13a5da62ae43d7} 
+\index{DCTFunction.h@{DCTFunction.h}!save\_picture\_pgm@{save\_picture\_pgm}}
+\index{save\_picture\_pgm@{save\_picture\_pgm}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{save\_picture\_pgm()}{save\_picture\_pgm()}}
+{\footnotesize\ttfamily void save\+\_\+picture\+\_\+pgm (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{Path\+\_\+out,  }\item[{char \texorpdfstring{$\ast$}{*}}]{Name,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat,  }\item[{int}]{lgth,  }\item[{int}]{wdth }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_d_c_t_function_8cc_source_l00224}{224}} of file \mbox{\hyperlink{_d_c_t_function_8cc_source}{DCTFunction.\+cc}}.
+
+\Hypertarget{_d_c_t_function_8h_a74d92250c7b4a84f63605fb88502cbfa}\label{_d_c_t_function_8h_a74d92250c7b4a84f63605fb88502cbfa} 
+\index{DCTFunction.h@{DCTFunction.h}!ZigZagThreshold@{ZigZagThreshold}}
+\index{ZigZagThreshold@{ZigZagThreshold}!DCTFunction.h@{DCTFunction.h}}
+\doxysubsubsection{\texorpdfstring{ZigZagThreshold()}{ZigZagThreshold()}}
+{\footnotesize\ttfamily void Zig\+Zag\+Threshold (\begin{DoxyParamCaption}\item[{float}]{sigma,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{coef,  }\item[{int}]{N }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205_8c_source_l00313}{313}} of file \mbox{\hyperlink{_tp5___i_f_t3205_8c_source}{Tp5\+\_\+\+IFT3205.\+c}}.
+

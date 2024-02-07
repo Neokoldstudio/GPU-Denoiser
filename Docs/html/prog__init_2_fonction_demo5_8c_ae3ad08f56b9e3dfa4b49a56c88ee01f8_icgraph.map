@@ -1,0 +1,20 @@
+<map id="fmatrix_allocate_2d" name="fmatrix_allocate_2d">
+<area shape="rect" id="Node000001" title=" " alt="" coords="573,111,708,137"/>
+<area shape="rect" id="Node000002" href="$_tp5___i_f_t3205_8c.html#aa66405390a67d972f0876e853ff74ee3" title=" " alt="" coords="154,36,245,62"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="618,100,578,60,552,41,524,26,487,16,448,10,370,11,297,23,240,38,239,33,296,18,369,6,448,5,488,10,526,21,555,36,581,56,622,97"/>
+<area shape="rect" id="Node000004" href="$class_d_c_t_denoise.html#a1653c1efda5009f2a9bb2bee00475305" title=" " alt="" coords="344,36,525,62"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="598,107,524,76,490,65,492,60,526,71,600,102"/>
+<area shape="rect" id="Node000005" href="$prog__init_2_fonction_demo5_8c.html#a1755140314279ad9af3fed4f89d83653" title=" " alt="" coords="368,86,502,111"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="558,116,502,109,503,104,559,111"/>
+<area shape="rect" id="Node000006" href="$class_d_c_t_denoise.html#a43f4e874829b46e8d55859cfe2318e75" title=" " alt="" coords="103,111,296,137"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="558,126,297,126,297,121,558,121"/>
+<area shape="rect" id="Node000007" href="$prog__init_2_fonction_demo5_8c.html#a049dbc6f97c7bd38dc81a2a146b45683" title=" " alt="" coords="379,187,491,213"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="592,145,526,170,475,189,473,184,524,165,590,140"/>
+<area shape="rect" id="Node000008" href="$_tp5___i_f_t3205__2-1_8c.html#a3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="175,212,224,238"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="622,151,582,193,556,213,526,228,485,240,442,247,356,250,280,243,224,233,225,228,280,238,356,245,441,242,484,235,524,223,553,208,578,189,618,147"/>
+<area shape="rect" id="Node000003" href="$_tp5___i_f_t3205_8c.html#a3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="5,36,55,62"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="139,52,55,52,55,46,139,46"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="354,84,244,61,246,56,356,79"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="353,110,297,116,296,111,352,105"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="364,210,225,225,224,220,363,205"/>
+</map>

@@ -1,0 +1,17 @@
+<map id="HardThreshold" name="HardThreshold">
+<area shape="rect" id="Node000001" title=" " alt="" coords="522,80,629,106"/>
+<area shape="rect" id="Node000002" href="$_tp5___i_f_t3205_8c.html#a6768d4d38d6462d3265f8639f4f3f46a" title=" " alt="" coords="348,5,471,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="535,75,473,45,447,34,449,29,475,40,537,70"/>
+<area shape="rect" id="Node000003" href="$_d_c_t_function_8cc.html#abeb7935f2e1557e7a3a42afbe15d248b" title=" " alt="" coords="348,55,471,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="506,85,471,80,472,74,507,80"/>
+<area shape="rect" id="Node000004" href="$_tp5___i_f_t3205_8c.html#a277e6b2f38061fedda05553f8807135f" title=" " alt="" coords="344,104,474,130"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="507,105,475,110,474,105,506,100"/>
+<area shape="rect" id="Node000008" href="$_d_c_t_function_8cc.html#aa81bca059c282c7e0b120b970db5d366" title=" " alt="" coords="344,153,474,179"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="537,115,475,145,449,155,447,150,473,140,534,111"/>
+<area shape="rect" id="Node000005" href="$_tp5___i_f_t3205_8c.html#aa66405390a67d972f0876e853ff74ee3" title=" " alt="" coords="154,80,245,106"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="328,110,244,101,245,95,329,105"/>
+<area shape="rect" id="Node000007" href="$class_d_c_t_denoise.html#a43f4e874829b46e8d55859cfe2318e75" title=" " alt="" coords="103,129,296,155"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="329,129,297,133,296,128,328,124"/>
+<area shape="rect" id="Node000006" href="$_tp5___i_f_t3205_8c.html#a3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="5,80,55,106"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="139,96,55,96,55,90,139,90"/>
+</map>

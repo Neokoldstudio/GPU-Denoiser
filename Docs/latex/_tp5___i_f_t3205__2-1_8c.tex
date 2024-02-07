@@ -1,0 +1,123 @@
+\doxysection{Tp\+IFT3205\+\_\+\+Debruitage/prog\+\_\+init/\+Tp5\+\_\+\+IFT3205\+\_\+2-\/1.c File Reference}
+\hypertarget{_tp5___i_f_t3205__2-1_8c}{}\label{_tp5___i_f_t3205__2-1_8c}\index{TpIFT3205\_Debruitage/prog\_init/Tp5\_IFT3205\_2-\/1.c@{TpIFT3205\_Debruitage/prog\_init/Tp5\_IFT3205\_2-\/1.c}}
+{\ttfamily \#include "{}Fonction\+Demo5.\+h"{}}\newline
+Include dependency graph for Tp5\+\_\+\+IFT3205\+\_\+2-\/1.c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=322pt]{_tp5___i_f_t3205__2-1_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_a58b4209748807ea5752f811dc1fac4b5}{NAME\+\_\+\+VISUALISER}}~"{}open "{}
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_a81e0d64a3e0512b1db2a0d4e8a67944c}{NAME\+\_\+\+IMG\+\_\+\+IN}}~"{}lena512"{}
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_a7b8acdebd19e178dc38ad3aaa92b20ae}{NAME\+\_\+\+IMG\+\_\+\+OUT}}~"{}lena512\+\_\+\+Restored"{}
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_af8bd010713c3629b2947234239de57b6}{NAME\+\_\+\+IMG\+\_\+\+DEG}}~"{}lena512\+\_\+\+Degraded"{}
+\item 
+\#define \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_aec329df85e9a89d7664164ec55ce7a30}{SIGMA\+\_\+\+NOISE}}~30
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_ae562b8ed9e296271f83d1164a1945dfb}{copy\+\_\+matrix}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}mat1, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}mat2, int lgth, int wdth)
+\item 
+int \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}argv)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{_tp5___i_f_t3205__2-1_8c_af8bd010713c3629b2947234239de57b6}\label{_tp5___i_f_t3205__2-1_8c_af8bd010713c3629b2947234239de57b6} 
+\index{Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}!NAME\_IMG\_DEG@{NAME\_IMG\_DEG}}
+\index{NAME\_IMG\_DEG@{NAME\_IMG\_DEG}!Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}}
+\doxysubsubsection{\texorpdfstring{NAME\_IMG\_DEG}{NAME\_IMG\_DEG}}
+{\footnotesize\ttfamily \#define NAME\+\_\+\+IMG\+\_\+\+DEG~"{}lena512\+\_\+\+Degraded"{}}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source_l00022}{22}} of file \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source}{Tp5\+\_\+\+IFT3205\+\_\+2-\/1.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205__2-1_8c_a81e0d64a3e0512b1db2a0d4e8a67944c}\label{_tp5___i_f_t3205__2-1_8c_a81e0d64a3e0512b1db2a0d4e8a67944c} 
+\index{Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}!NAME\_IMG\_IN@{NAME\_IMG\_IN}}
+\index{NAME\_IMG\_IN@{NAME\_IMG\_IN}!Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}}
+\doxysubsubsection{\texorpdfstring{NAME\_IMG\_IN}{NAME\_IMG\_IN}}
+{\footnotesize\ttfamily \#define NAME\+\_\+\+IMG\+\_\+\+IN~"{}lena512"{}}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source_l00020}{20}} of file \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source}{Tp5\+\_\+\+IFT3205\+\_\+2-\/1.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205__2-1_8c_a7b8acdebd19e178dc38ad3aaa92b20ae}\label{_tp5___i_f_t3205__2-1_8c_a7b8acdebd19e178dc38ad3aaa92b20ae} 
+\index{Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}!NAME\_IMG\_OUT@{NAME\_IMG\_OUT}}
+\index{NAME\_IMG\_OUT@{NAME\_IMG\_OUT}!Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}}
+\doxysubsubsection{\texorpdfstring{NAME\_IMG\_OUT}{NAME\_IMG\_OUT}}
+{\footnotesize\ttfamily \#define NAME\+\_\+\+IMG\+\_\+\+OUT~"{}lena512\+\_\+\+Restored"{}}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source_l00021}{21}} of file \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source}{Tp5\+\_\+\+IFT3205\+\_\+2-\/1.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205__2-1_8c_a58b4209748807ea5752f811dc1fac4b5}\label{_tp5___i_f_t3205__2-1_8c_a58b4209748807ea5752f811dc1fac4b5} 
+\index{Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}!NAME\_VISUALISER@{NAME\_VISUALISER}}
+\index{NAME\_VISUALISER@{NAME\_VISUALISER}!Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}}
+\doxysubsubsection{\texorpdfstring{NAME\_VISUALISER}{NAME\_VISUALISER}}
+{\footnotesize\ttfamily \#define NAME\+\_\+\+VISUALISER~"{}open "{}}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source_l00019}{19}} of file \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source}{Tp5\+\_\+\+IFT3205\+\_\+2-\/1.\+c}}.
+
+\Hypertarget{_tp5___i_f_t3205__2-1_8c_aec329df85e9a89d7664164ec55ce7a30}\label{_tp5___i_f_t3205__2-1_8c_aec329df85e9a89d7664164ec55ce7a30} 
+\index{Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}!SIGMA\_NOISE@{SIGMA\_NOISE}}
+\index{SIGMA\_NOISE@{SIGMA\_NOISE}!Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}}
+\doxysubsubsection{\texorpdfstring{SIGMA\_NOISE}{SIGMA\_NOISE}}
+{\footnotesize\ttfamily \#define SIGMA\+\_\+\+NOISE~30}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source_l00042}{42}} of file \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source}{Tp5\+\_\+\+IFT3205\+\_\+2-\/1.\+c}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_tp5___i_f_t3205__2-1_8c_ae562b8ed9e296271f83d1164a1945dfb}\label{_tp5___i_f_t3205__2-1_8c_ae562b8ed9e296271f83d1164a1945dfb} 
+\index{Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}!copy\_matrix@{copy\_matrix}}
+\index{copy\_matrix@{copy\_matrix}!Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}}
+\doxysubsubsection{\texorpdfstring{copy\_matrix()}{copy\_matrix()}}
+{\footnotesize\ttfamily void copy\+\_\+matrix (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat1,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat2,  }\item[{int}]{lgth,  }\item[{int}]{wdth }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source_l00030}{30}} of file \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source}{Tp5\+\_\+\+IFT3205\+\_\+2-\/1.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=330pt]{_tp5___i_f_t3205__2-1_8c_ae562b8ed9e296271f83d1164a1945dfb_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_tp5___i_f_t3205__2-1_8c_a3c04138a5bfe5d72780bb7e82a18e627}\label{_tp5___i_f_t3205__2-1_8c_a3c04138a5bfe5d72780bb7e82a18e627} 
+\index{Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}!main@{main}}
+\index{main@{main}!Tp5\_IFT3205\_2-\/1.c@{Tp5\_IFT3205\_2-\/1.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{argv }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source_l00056}{56}} of file \mbox{\hyperlink{_tp5___i_f_t3205__2-1_8c_source}{Tp5\+\_\+\+IFT3205\+\_\+2-\/1.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_tp5___i_f_t3205__2-1_8c_a3c04138a5bfe5d72780bb7e82a18e627_cgraph}
+\end{center}
+\end{figure}

@@ -1,0 +1,372 @@
+\doxysection{Tp\+IFT3205\+\_\+\+Debruitage/prog\+\_\+init/\+Fonction\+Demo5.c File Reference}
+\hypertarget{prog__init_2_fonction_demo5_8c}{}\label{prog__init_2_fonction_demo5_8c}\index{TpIFT3205\_Debruitage/prog\_init/FonctionDemo5.c@{TpIFT3205\_Debruitage/prog\_init/FonctionDemo5.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include "{}Fonction\+Demo5.\+h"{}}\newline
+Include dependency graph for Fonction\+Demo5.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{prog__init_2_fonction_demo5_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a2649356557f5020cfda73f6ac0e45c35}{C8\+\_\+1R}}~0.\+49039264020161522456
+\item 
+\#define \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a260262cd64446f526294b41ca00654a5}{C8\+\_\+1I}}~0.\+09754516100806413392
+\item 
+\#define \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a9f2652df2e608a29b815bdbba3c7fe66}{C8\+\_\+2R}}~0.\+46193976625564337806
+\item 
+\#define \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_aa1f52d8eef712438072bec969b3f8d4d}{C8\+\_\+2I}}~0.\+19134171618254488586
+\item 
+\#define \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_adb0e82a2af4be008f7d3678be814a6b0}{C8\+\_\+3R}}~0.\+41573480615127261854
+\item 
+\#define \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a61a8c69ad247aee8be499f4503fc6cfc}{C8\+\_\+3I}}~0.\+27778511650980111237
+\item 
+\#define \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a04eac60814aed831f8b23d705f0271e1}{C8\+\_\+4R}}~0.\+35355339059327376220
+\item 
+\#define \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_add2f99c96d5d6cbb5897b3c7ff0b1016}{W8\+\_\+4R}}~0.\+70710678118654752440
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+float \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a2c27a0943bf6b0cadf643ab5d4ee14e8}{fmatrix\+\_\+allocate\+\_\+1d}} (int hsize)
+\item 
+float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_ae3ad08f56b9e3dfa4b49a56c88ee01f8}{fmatrix\+\_\+allocate\+\_\+2d}} (int vsize, int hsize)
+\item 
+float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a1755140314279ad9af3fed4f89d83653}{fmatrix\+\_\+allocate\+\_\+3d}} (int dsize, int vsize, int hsize)
+\item 
+void \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a97093e560c95ae9b81a57a47d6270018}{free\+\_\+fmatrix\+\_\+1d}} (float \texorpdfstring{$\ast$}{*}pmat)
+\item 
+void \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a53f8a4b71615ea60e6bf60d5f53e6777}{free\+\_\+fmatrix\+\_\+2d}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}pmat)
+\item 
+void \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_ababca049ac83ae93a90a00ad0c295ee2}{free\+\_\+fmatrix\+\_\+3d}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}pmat, int dsize)
+\item 
+float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a049dbc6f97c7bd38dc81a2a146b45683}{Load\+Image\+Pgm}} (char \texorpdfstring{$\ast$}{*}name, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{_d_c_t-_denoise_8cc_a9f59b34b1f25fe00023291b678246bcc}{length}}, int \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{_d_c_t-_denoise_8cc_a2474a5474cbff19523a51eb1de01cda4}{width}})
+\item 
+void \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a973df49c9e8a889851f174c6fecc177d}{Save\+Image\+Pgm}} (char \texorpdfstring{$\ast$}{*}name, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}mat, int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a9f59b34b1f25fe00023291b678246bcc}{length}}, int \mbox{\hyperlink{_d_c_t-_denoise_8cc_a2474a5474cbff19523a51eb1de01cda4}{width}})
+\item 
+void \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_ad27f6917f72ec7f5bf4b862139368f5a}{ddct8x8s}} (int isgn, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}a)
+\item 
+float \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_ac448f36c798fc589a0104ad72e5e18b3}{gaussian\+\_\+noise}} (float var, float mean)
+\item 
+void \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a9feb4517eee25195c625cf67b7a79599}{add\+\_\+gaussian\+\_\+noise}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}mat, int lgth, int wdth, float var)
+\item 
+float \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_a668687cd0509f0501ce6b91fe5a432e9}{compute\+MMSE}} (float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}mat1, float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}mat2, int sz)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{prog__init_2_fonction_demo5_8c_a260262cd64446f526294b41ca00654a5}\label{prog__init_2_fonction_demo5_8c_a260262cd64446f526294b41ca00654a5} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!C8\_1I@{C8\_1I}}
+\index{C8\_1I@{C8\_1I}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{C8\_1I}{C8\_1I}}
+{\footnotesize\ttfamily \#define C8\+\_\+1I~0.\+09754516100806413392}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00257}{257}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{prog__init_2_fonction_demo5_8c_a2649356557f5020cfda73f6ac0e45c35}\label{prog__init_2_fonction_demo5_8c_a2649356557f5020cfda73f6ac0e45c35} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!C8\_1R@{C8\_1R}}
+\index{C8\_1R@{C8\_1R}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{C8\_1R}{C8\_1R}}
+{\footnotesize\ttfamily \#define C8\+\_\+1R~0.\+49039264020161522456}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00256}{256}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{prog__init_2_fonction_demo5_8c_aa1f52d8eef712438072bec969b3f8d4d}\label{prog__init_2_fonction_demo5_8c_aa1f52d8eef712438072bec969b3f8d4d} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!C8\_2I@{C8\_2I}}
+\index{C8\_2I@{C8\_2I}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{C8\_2I}{C8\_2I}}
+{\footnotesize\ttfamily \#define C8\+\_\+2I~0.\+19134171618254488586}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00259}{259}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{prog__init_2_fonction_demo5_8c_a9f2652df2e608a29b815bdbba3c7fe66}\label{prog__init_2_fonction_demo5_8c_a9f2652df2e608a29b815bdbba3c7fe66} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!C8\_2R@{C8\_2R}}
+\index{C8\_2R@{C8\_2R}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{C8\_2R}{C8\_2R}}
+{\footnotesize\ttfamily \#define C8\+\_\+2R~0.\+46193976625564337806}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00258}{258}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{prog__init_2_fonction_demo5_8c_a61a8c69ad247aee8be499f4503fc6cfc}\label{prog__init_2_fonction_demo5_8c_a61a8c69ad247aee8be499f4503fc6cfc} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!C8\_3I@{C8\_3I}}
+\index{C8\_3I@{C8\_3I}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{C8\_3I}{C8\_3I}}
+{\footnotesize\ttfamily \#define C8\+\_\+3I~0.\+27778511650980111237}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00261}{261}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{prog__init_2_fonction_demo5_8c_adb0e82a2af4be008f7d3678be814a6b0}\label{prog__init_2_fonction_demo5_8c_adb0e82a2af4be008f7d3678be814a6b0} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!C8\_3R@{C8\_3R}}
+\index{C8\_3R@{C8\_3R}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{C8\_3R}{C8\_3R}}
+{\footnotesize\ttfamily \#define C8\+\_\+3R~0.\+41573480615127261854}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00260}{260}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{prog__init_2_fonction_demo5_8c_a04eac60814aed831f8b23d705f0271e1}\label{prog__init_2_fonction_demo5_8c_a04eac60814aed831f8b23d705f0271e1} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!C8\_4R@{C8\_4R}}
+\index{C8\_4R@{C8\_4R}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{C8\_4R}{C8\_4R}}
+{\footnotesize\ttfamily \#define C8\+\_\+4R~0.\+35355339059327376220}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00262}{262}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{prog__init_2_fonction_demo5_8c_add2f99c96d5d6cbb5897b3c7ff0b1016}\label{prog__init_2_fonction_demo5_8c_add2f99c96d5d6cbb5897b3c7ff0b1016} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!W8\_4R@{W8\_4R}}
+\index{W8\_4R@{W8\_4R}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{W8\_4R}{W8\_4R}}
+{\footnotesize\ttfamily \#define W8\+\_\+4R~0.\+70710678118654752440}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00263}{263}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{prog__init_2_fonction_demo5_8c_a9feb4517eee25195c625cf67b7a79599}\label{prog__init_2_fonction_demo5_8c_a9feb4517eee25195c625cf67b7a79599} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!add\_gaussian\_noise@{add\_gaussian\_noise}}
+\index{add\_gaussian\_noise@{add\_gaussian\_noise}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{add\_gaussian\_noise()}{add\_gaussian\_noise()}}
+{\footnotesize\ttfamily void add\+\_\+gaussian\+\_\+noise (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat,  }\item[{int}]{lgth,  }\item[{int}]{wdth,  }\item[{float}]{var }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00411}{411}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=304pt]{prog__init_2_fonction_demo5_8c_a9feb4517eee25195c625cf67b7a79599_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=258pt]{prog__init_2_fonction_demo5_8c_a9feb4517eee25195c625cf67b7a79599_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{prog__init_2_fonction_demo5_8c_a668687cd0509f0501ce6b91fe5a432e9}\label{prog__init_2_fonction_demo5_8c_a668687cd0509f0501ce6b91fe5a432e9} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!computeMMSE@{computeMMSE}}
+\index{computeMMSE@{computeMMSE}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{computeMMSE()}{computeMMSE()}}
+{\footnotesize\ttfamily float compute\+MMSE (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat1,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat2,  }\item[{int}]{sz }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00426}{426}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{prog__init_2_fonction_demo5_8c_a668687cd0509f0501ce6b91fe5a432e9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{prog__init_2_fonction_demo5_8c_ad27f6917f72ec7f5bf4b862139368f5a}\label{prog__init_2_fonction_demo5_8c_ad27f6917f72ec7f5bf4b862139368f5a} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!ddct8x8s@{ddct8x8s}}
+\index{ddct8x8s@{ddct8x8s}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{ddct8x8s()}{ddct8x8s()}}
+{\footnotesize\ttfamily void ddct8x8s (\begin{DoxyParamCaption}\item[{int}]{isgn,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{a }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00265}{265}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{prog__init_2_fonction_demo5_8c_ad27f6917f72ec7f5bf4b862139368f5a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{prog__init_2_fonction_demo5_8c_a2c27a0943bf6b0cadf643ab5d4ee14e8}\label{prog__init_2_fonction_demo5_8c_a2c27a0943bf6b0cadf643ab5d4ee14e8} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!fmatrix\_allocate\_1d@{fmatrix\_allocate\_1d}}
+\index{fmatrix\_allocate\_1d@{fmatrix\_allocate\_1d}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{fmatrix\_allocate\_1d()}{fmatrix\_allocate\_1d()}}
+{\footnotesize\ttfamily float \texorpdfstring{$\ast$}{*} fmatrix\+\_\+allocate\+\_\+1d (\begin{DoxyParamCaption}\item[{int}]{hsize }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00030}{30}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{prog__init_2_fonction_demo5_8c_ae3ad08f56b9e3dfa4b49a56c88ee01f8}\label{prog__init_2_fonction_demo5_8c_ae3ad08f56b9e3dfa4b49a56c88ee01f8} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!fmatrix\_allocate\_2d@{fmatrix\_allocate\_2d}}
+\index{fmatrix\_allocate\_2d@{fmatrix\_allocate\_2d}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{fmatrix\_allocate\_2d()}{fmatrix\_allocate\_2d()}}
+{\footnotesize\ttfamily float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} fmatrix\+\_\+allocate\+\_\+2d (\begin{DoxyParamCaption}\item[{int}]{vsize,  }\item[{int}]{hsize }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00043}{43}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{prog__init_2_fonction_demo5_8c_ae3ad08f56b9e3dfa4b49a56c88ee01f8_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{prog__init_2_fonction_demo5_8c_a1755140314279ad9af3fed4f89d83653}\label{prog__init_2_fonction_demo5_8c_a1755140314279ad9af3fed4f89d83653} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!fmatrix\_allocate\_3d@{fmatrix\_allocate\_3d}}
+\index{fmatrix\_allocate\_3d@{fmatrix\_allocate\_3d}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{fmatrix\_allocate\_3d()}{fmatrix\_allocate\_3d()}}
+{\footnotesize\ttfamily float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} fmatrix\+\_\+allocate\+\_\+3d (\begin{DoxyParamCaption}\item[{int}]{dsize,  }\item[{int}]{vsize,  }\item[{int}]{hsize }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00062}{62}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=318pt]{prog__init_2_fonction_demo5_8c_a1755140314279ad9af3fed4f89d83653_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{prog__init_2_fonction_demo5_8c_a1755140314279ad9af3fed4f89d83653_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{prog__init_2_fonction_demo5_8c_a97093e560c95ae9b81a57a47d6270018}\label{prog__init_2_fonction_demo5_8c_a97093e560c95ae9b81a57a47d6270018} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!free\_fmatrix\_1d@{free\_fmatrix\_1d}}
+\index{free\_fmatrix\_1d@{free\_fmatrix\_1d}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{free\_fmatrix\_1d()}{free\_fmatrix\_1d()}}
+{\footnotesize\ttfamily void free\+\_\+fmatrix\+\_\+1d (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}}]{pmat }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00077}{77}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+\Hypertarget{prog__init_2_fonction_demo5_8c_a53f8a4b71615ea60e6bf60d5f53e6777}\label{prog__init_2_fonction_demo5_8c_a53f8a4b71615ea60e6bf60d5f53e6777} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!free\_fmatrix\_2d@{free\_fmatrix\_2d}}
+\index{free\_fmatrix\_2d@{free\_fmatrix\_2d}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{free\_fmatrix\_2d()}{free\_fmatrix\_2d()}}
+{\footnotesize\ttfamily void free\+\_\+fmatrix\+\_\+2d (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{pmat }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00085}{85}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{prog__init_2_fonction_demo5_8c_a53f8a4b71615ea60e6bf60d5f53e6777_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{prog__init_2_fonction_demo5_8c_ababca049ac83ae93a90a00ad0c295ee2}\label{prog__init_2_fonction_demo5_8c_ababca049ac83ae93a90a00ad0c295ee2} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!free\_fmatrix\_3d@{free\_fmatrix\_3d}}
+\index{free\_fmatrix\_3d@{free\_fmatrix\_3d}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{free\_fmatrix\_3d()}{free\_fmatrix\_3d()}}
+{\footnotesize\ttfamily void free\+\_\+fmatrix\+\_\+3d (\begin{DoxyParamCaption}\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{pmat,  }\item[{int}]{dsize }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00094}{94}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{prog__init_2_fonction_demo5_8c_ababca049ac83ae93a90a00ad0c295ee2_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{prog__init_2_fonction_demo5_8c_ac448f36c798fc589a0104ad72e5e18b3}\label{prog__init_2_fonction_demo5_8c_ac448f36c798fc589a0104ad72e5e18b3} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!gaussian\_noise@{gaussian\_noise}}
+\index{gaussian\_noise@{gaussian\_noise}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{gaussian\_noise()}{gaussian\_noise()}}
+{\footnotesize\ttfamily float gaussian\+\_\+noise (\begin{DoxyParamCaption}\item[{float}]{var,  }\item[{float}]{mean }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00394}{394}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{prog__init_2_fonction_demo5_8c_ac448f36c798fc589a0104ad72e5e18b3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{prog__init_2_fonction_demo5_8c_a049dbc6f97c7bd38dc81a2a146b45683}\label{prog__init_2_fonction_demo5_8c_a049dbc6f97c7bd38dc81a2a146b45683} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!LoadImagePgm@{LoadImagePgm}}
+\index{LoadImagePgm@{LoadImagePgm}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{LoadImagePgm()}{LoadImagePgm()}}
+{\footnotesize\ttfamily float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} Load\+Image\+Pgm (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{name,  }\item[{int \texorpdfstring{$\ast$}{*}}]{length,  }\item[{int \texorpdfstring{$\ast$}{*}}]{width }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00111}{111}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=301pt]{prog__init_2_fonction_demo5_8c_a049dbc6f97c7bd38dc81a2a146b45683_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=237pt]{prog__init_2_fonction_demo5_8c_a049dbc6f97c7bd38dc81a2a146b45683_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{prog__init_2_fonction_demo5_8c_a973df49c9e8a889851f174c6fecc177d}\label{prog__init_2_fonction_demo5_8c_a973df49c9e8a889851f174c6fecc177d} 
+\index{FonctionDemo5.c@{FonctionDemo5.c}!SaveImagePgm@{SaveImagePgm}}
+\index{SaveImagePgm@{SaveImagePgm}!FonctionDemo5.c@{FonctionDemo5.c}}
+\doxysubsubsection{\texorpdfstring{SaveImagePgm()}{SaveImagePgm()}}
+{\footnotesize\ttfamily void Save\+Image\+Pgm (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{name,  }\item[{float \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{mat,  }\item[{int}]{length,  }\item[{int}]{width }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source_l00167}{167}} of file \mbox{\hyperlink{prog__init_2_fonction_demo5_8c_source}{Fonction\+Demo5.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=239pt]{prog__init_2_fonction_demo5_8c_a973df49c9e8a889851f174c6fecc177d_icgraph}
+\end{center}
+\end{figure}

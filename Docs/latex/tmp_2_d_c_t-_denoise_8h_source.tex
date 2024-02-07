@@ -1,112 +1,112 @@
 \doxysection{DCT-\/\+Denoise.h}
 \hypertarget{tmp_2_d_c_t-_denoise_8h_source}{}\label{tmp_2_d_c_t-_denoise_8h_source}\index{TpIFT3205\_Debruitage/solutionCPP/tmp/DCT-\/Denoise.h@{TpIFT3205\_Debruitage/solutionCPP/tmp/DCT-\/Denoise.h}}
-
+\mbox{\hyperlink{tmp_2_d_c_t-_denoise_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00001\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00002\ \textcolor{comment}{//\ module\ \ :\ DCT-\/Denoise.h}}
-\DoxyCodeLine{00003\ \textcolor{comment}{//\ author\ \ :\ Mignotte\ Max}}
-\DoxyCodeLine{00004\ \textcolor{comment}{//\ date\ \ \ \ :\ }}
-\DoxyCodeLine{00005\ \textcolor{comment}{//\ version\ :\ 1.0}}
-\DoxyCodeLine{00006\ \textcolor{comment}{//\ language:\ C++}}
-\DoxyCodeLine{00007\ \textcolor{comment}{//\ labo\ \ \ \ :\ DIRO}}
-\DoxyCodeLine{00008\ \textcolor{comment}{//\ note\ \ \ \ :\ }}
-\DoxyCodeLine{00009\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00010\ }
-\DoxyCodeLine{00011\ }
-\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#ifndef\ DCT\_DENOISE\_H}}
-\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ DCT\_DENOISE\_H}}
-\DoxyCodeLine{00014\ }
-\DoxyCodeLine{00015\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00016\ \textcolor{comment}{//\ INCLUDED\ FILES\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00017\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
-\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <math.h>}}
-\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <string.h>}}
-\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <new>}}
-\DoxyCodeLine{00023\ }
-\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}DCTFunction.h"{}}}
-\DoxyCodeLine{00025\ }
-\DoxyCodeLine{00026\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00027\ \textcolor{comment}{//\ PARAMETERS\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00028\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00029\ }
-\DoxyCodeLine{00030\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00031\ \textcolor{comment}{//\ Question\ 2.2}}
-\DoxyCodeLine{00032\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00033\ \textcolor{comment}{//\ NB\_ITERATIONS\ \ [1]}}
-\DoxyCodeLine{00034\ \textcolor{comment}{//\ THRESHOLD\ \ \ \ \ \ [6]}}
-\DoxyCodeLine{00035\ \textcolor{comment}{//\ OVERLAP\ \ \ \ \ \ \ \ [8]\ \ }}
-\DoxyCodeLine{00036\ \textcolor{comment}{//\ HARD\_THRESHOLD\ [0]}}
-\DoxyCodeLine{00037\ \textcolor{comment}{//\ MSE=157}}
-\DoxyCodeLine{00038\ \textcolor{comment}{//\ }}
-\DoxyCodeLine{00039\ }
-\DoxyCodeLine{00040\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00041\ \textcolor{comment}{//\ Question\ 2.3}}
-\DoxyCodeLine{00042\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00043\ \textcolor{comment}{//\ NB\_ITERATIONS\ \ [1]}}
-\DoxyCodeLine{00044\ \textcolor{comment}{//\ THRESHOLD\ \ \ \ \ \ [100]}}
-\DoxyCodeLine{00045\ \textcolor{comment}{//\ OVERLAP\ \ \ \ \ \ \ \ [8]\ }}
-\DoxyCodeLine{00046\ \textcolor{comment}{//\ HARD\_THRESHOLD\ [1]}}
-\DoxyCodeLine{00047\ \textcolor{comment}{//\ MSE=140.28}}
-\DoxyCodeLine{00048\ \textcolor{comment}{//\ }}
-\DoxyCodeLine{00049\ }
-\DoxyCodeLine{00050\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00051\ \textcolor{comment}{//\ Question\ 2.4}}
-\DoxyCodeLine{00052\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00053\ \textcolor{comment}{//\ NB\_ITERATIONS\ \ [1]}}
-\DoxyCodeLine{00054\ \textcolor{comment}{//\ THRESHOLD\ \ \ \ \ \ [90]}}
-\DoxyCodeLine{00055\ \textcolor{comment}{//\ OVERLAP\ \ \ \ \ \ \ \ [1]\ }}
-\DoxyCodeLine{00056\ \textcolor{comment}{//\ HARD\_THRESHOLD\ [1]}}
-\DoxyCodeLine{00057\ \textcolor{comment}{//\ MSE=65}}
-\DoxyCodeLine{00058\ \textcolor{comment}{//}}
-\DoxyCodeLine{00059\ }
-\DoxyCodeLine{00060\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00061\ \textcolor{comment}{//\ Question\ X.X}}
-\DoxyCodeLine{00062\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00063\ \textcolor{comment}{//\ NB\_ITERATIONS\ \ [5]}}
-\DoxyCodeLine{00064\ \textcolor{comment}{//\ THRESHOLD\ \ \ \ \ \ [SigmaNoise=30]}}
-\DoxyCodeLine{00065\ \textcolor{comment}{//\ OVERLAP\ \ \ \ \ \ \ \ [1]\ }}
-\DoxyCodeLine{00066\ \textcolor{comment}{//\ HARD\_THRESHOLD\ [1]}}
-\DoxyCodeLine{00067\ \textcolor{comment}{//\ MSE=58.06}}
-\DoxyCodeLine{00068\ \textcolor{comment}{//}}
-\DoxyCodeLine{00069\ }
-\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ NB\_ITERATIONS\ \ \ 1}}
-\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ THRESHOLD\ \ \ \ \ 90.0\ \ \ \ }\textcolor{comment}{//SigmaNoise=30}}
-\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ OVERLAP\ \ \ \ \ \ \ \ \ 1\ \ \ \ \ }\textcolor{comment}{//1}}
-\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ HARD\_THRESHOLD\ \ 1\ \ \ \ \ }\textcolor{comment}{//0>ZIGZAG}}
-\DoxyCodeLine{00074\ }
-\DoxyCodeLine{00075\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00076\ \textcolor{comment}{//\ CLASS\ DCTDenoise\ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00077\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00078\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_d_c_t_denoise}{DCTDenoise}}}
-\DoxyCodeLine{00079\ \ \{\ }
-\DoxyCodeLine{00080\ \ \ \textcolor{keyword}{public}:\ }
-\DoxyCodeLine{00081\ }
-\DoxyCodeLine{00082\ \ \ \textcolor{comment}{//Matrix}}
-\DoxyCodeLine{00083\ \ \ \textcolor{keywordtype}{float}**\ \ DataDegraded;}
-\DoxyCodeLine{00084\ \ \ \textcolor{keywordtype}{float}**\ \ DataFiltered;}
-\DoxyCodeLine{00085\ \ \ \textcolor{keywordtype}{float}**\ \ DataWithoutNoise;}
-\DoxyCodeLine{00086\ ;}
-\DoxyCodeLine{00087\ \ \ \textcolor{keywordtype}{float}**\ \ SquWinImg;}
-\DoxyCodeLine{00088\ }
-\DoxyCodeLine{00089\ \ \ \textcolor{comment}{//>Image}}
-\DoxyCodeLine{00090\ \ \ \textcolor{keywordtype}{int}\ \ length,width;}
-\DoxyCodeLine{00091\ }
-\DoxyCodeLine{00092\ \ \ \textcolor{comment}{//>Noise}}
-\DoxyCodeLine{00093\ \ \ \textcolor{keywordtype}{float}\ SigmaNoise;}
-\DoxyCodeLine{00094\ \ \ \textcolor{keywordtype}{float}\ Threshold\_Dct;}
-\DoxyCodeLine{00095\ \ \ \ }
-\DoxyCodeLine{00096\ \ \textcolor{comment}{//Functions}}
-\DoxyCodeLine{00097\ \ \ \textcolor{keyword}{public}:\ \ }
-\DoxyCodeLine{00098\ \ \ \mbox{\hyperlink{class_d_c_t_denoise}{DCTDenoise}}(\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
-\DoxyCodeLine{00099\ \ \ \ \mbox{\hyperlink{class_d_c_t_denoise}{\string~DCTDenoise}}();\ }
-\DoxyCodeLine{00100\ }
-\DoxyCodeLine{00101\ \ \ \ \textcolor{keywordtype}{void}\ Options(\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{float},\textcolor{keywordtype}{float});}
-\DoxyCodeLine{00102\ \ \ \textcolor{keywordtype}{void}\ IterDctDenoise();}
-\DoxyCodeLine{00103\ \};}
-\DoxyCodeLine{00104\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00105\ }
-\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00001}00001\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00002}00002\ \textcolor{comment}{//\ module\ \ :\ DCT-\/Denoise.h}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00003}00003\ \textcolor{comment}{//\ author\ \ :\ Mignotte\ Max}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00004}00004\ \textcolor{comment}{//\ date\ \ \ \ :\ }}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00005}00005\ \textcolor{comment}{//\ version\ :\ 1.0}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00006}00006\ \textcolor{comment}{//\ language:\ C++}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00007}00007\ \textcolor{comment}{//\ labo\ \ \ \ :\ DIRO}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00008}00008\ \textcolor{comment}{//\ note\ \ \ \ :\ }}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00009}00009\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00012}00012\ \textcolor{preprocessor}{\#ifndef\ DCT\_DENOISE\_H}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00013}00013\ \textcolor{preprocessor}{\#define\ DCT\_DENOISE\_H}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00015}00015\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00016}00016\ \textcolor{comment}{//\ INCLUDED\ FILES\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00017}00017\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00018}00018\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00019}00019\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00020}00020\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00021}00021\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00022}00022\ \textcolor{preprocessor}{\#include\ <new>}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00024}00024\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tmp_2_d_c_t_function_8h}{DCTFunction.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00026}00026\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00027}00027\ \textcolor{comment}{//\ PARAMETERS\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00028}00028\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00030}00030\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00031}00031\ \textcolor{comment}{//\ Question\ 2.2}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00032}00032\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00033}00033\ \textcolor{comment}{//\ NB\_ITERATIONS\ \ [1]}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00034}00034\ \textcolor{comment}{//\ THRESHOLD\ \ \ \ \ \ [6]}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00035}00035\ \textcolor{comment}{//\ OVERLAP\ \ \ \ \ \ \ \ [8]\ \ }}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00036}00036\ \textcolor{comment}{//\ HARD\_THRESHOLD\ [0]}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00037}00037\ \textcolor{comment}{//\ MSE=157}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00038}00038\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00040}00040\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00041}00041\ \textcolor{comment}{//\ Question\ 2.3}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00042}00042\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00043}00043\ \textcolor{comment}{//\ NB\_ITERATIONS\ \ [1]}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00044}00044\ \textcolor{comment}{//\ THRESHOLD\ \ \ \ \ \ [100]}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00045}00045\ \textcolor{comment}{//\ OVERLAP\ \ \ \ \ \ \ \ [8]\ }}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00046}00046\ \textcolor{comment}{//\ HARD\_THRESHOLD\ [1]}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00047}00047\ \textcolor{comment}{//\ MSE=140.28}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00048}00048\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00050}00050\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00051}00051\ \textcolor{comment}{//\ Question\ 2.4}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00052}00052\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00053}00053\ \textcolor{comment}{//\ NB\_ITERATIONS\ \ [1]}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00054}00054\ \textcolor{comment}{//\ THRESHOLD\ \ \ \ \ \ [90]}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00055}00055\ \textcolor{comment}{//\ OVERLAP\ \ \ \ \ \ \ \ [1]\ }}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00056}00056\ \textcolor{comment}{//\ HARD\_THRESHOLD\ [1]}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00057}00057\ \textcolor{comment}{//\ MSE=65}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00058}00058\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00060}00060\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00061}00061\ \textcolor{comment}{//\ Question\ X.X}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00062}00062\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00063}00063\ \textcolor{comment}{//\ NB\_ITERATIONS\ \ [5]}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00064}00064\ \textcolor{comment}{//\ THRESHOLD\ \ \ \ \ \ [SigmaNoise=30]}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00065}00065\ \textcolor{comment}{//\ OVERLAP\ \ \ \ \ \ \ \ [1]\ }}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00066}00066\ \textcolor{comment}{//\ HARD\_THRESHOLD\ [1]}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00067}00067\ \textcolor{comment}{//\ MSE=58.06}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00068}00068\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00070}\mbox{\hyperlink{tmp_2_d_c_t-_denoise_8h_adb1a274a291c41a2e9537d0755fa693e}{00070}}\ \textcolor{preprocessor}{\#define\ NB\_ITERATIONS\ \ \ 1}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00071}\mbox{\hyperlink{tmp_2_d_c_t-_denoise_8h_a4679d8ea8690999a6c6c7c0cb245c879}{00071}}\ \textcolor{preprocessor}{\#define\ THRESHOLD\ \ \ \ \ 90.0\ \ \ \ }\textcolor{comment}{//SigmaNoise=30}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00072}\mbox{\hyperlink{tmp_2_d_c_t-_denoise_8h_a7f59a274ef5dd963eb5011bfb790a7fd}{00072}}\ \textcolor{preprocessor}{\#define\ OVERLAP\ \ \ \ \ \ \ \ \ 1\ \ \ \ \ }\textcolor{comment}{//1}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00073}\mbox{\hyperlink{tmp_2_d_c_t-_denoise_8h_a6fd911e7deb6f42fafc5e84f4e2bd9d0}{00073}}\ \textcolor{preprocessor}{\#define\ HARD\_THRESHOLD\ \ 1\ \ \ \ \ }\textcolor{comment}{//0>ZIGZAG}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00075}00075\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00076}00076\ \textcolor{comment}{//\ CLASS\ DCTDenoise\ \ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00077}00077\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00078}00078\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_d_c_t_denoise}{DCTDenoise}}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00079}00079\ \ \{\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00080}00080\ \ \ \textcolor{keyword}{public}:\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00082}00082\ \ \ \textcolor{comment}{//Matrix}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00083}00083\ \ \ \textcolor{keywordtype}{float}**\ \ \mbox{\hyperlink{class_d_c_t_denoise_aefe1e1a0199d4ef95d5bb678ccffafd1}{DataDegraded}};}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00084}00084\ \ \ \textcolor{keywordtype}{float}**\ \ \mbox{\hyperlink{class_d_c_t_denoise_ad6bf775de1a94c8ad3d50614bdd2b7ab}{DataFiltered}};}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00085}00085\ \ \ \textcolor{keywordtype}{float}**\ \ \mbox{\hyperlink{class_d_c_t_denoise_a36f7517a9239b08c696651b590e3b89c}{DataWithoutNoise}};}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00086}00086\ ;}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00087}00087\ \ \ \textcolor{keywordtype}{float}**\ \ \mbox{\hyperlink{class_d_c_t_denoise_afd14aabe284399e671fbeb4f0a174dbd}{SquWinImg}};}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00089}00089\ \ \ \textcolor{comment}{//>Image}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00090}00090\ \ \ \textcolor{keywordtype}{int}\ \ \mbox{\hyperlink{class_d_c_t_denoise_a8fa24cca992c712b1dc10d8de4018dae}{length}},\mbox{\hyperlink{class_d_c_t_denoise_ae4e4da9764c6b3a5553ab3e6eb9e64f7}{width}};}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00092}00092\ \ \ \textcolor{comment}{//>Noise}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00093}00093\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_d_c_t_denoise_a3b850f74b5cef3e5fe69d63cbb43c0bf}{SigmaNoise}};}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00094}00094\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_d_c_t_denoise_ae5be959f126ec15d8b9d26c06a8123ff}{Threshold\_Dct}};}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00095}00095\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00096}00096\ \ \textcolor{comment}{//Functions}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00097}00097\ \ \ \textcolor{keyword}{public}:\ \ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00098}\mbox{\hyperlink{class_d_c_t_denoise_a1653c1efda5009f2a9bb2bee00475305}{00098}}\ \ \ \mbox{\hyperlink{class_d_c_t_denoise_a1653c1efda5009f2a9bb2bee00475305}{DCTDenoise}}(\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{int},\textcolor{keywordtype}{int});}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00099}\mbox{\hyperlink{class_d_c_t_denoise_ad4e5b2a93f30ee9f1de1c3ea389e7ec3}{00099}}\ \ \ \ \mbox{\hyperlink{class_d_c_t_denoise_ad4e5b2a93f30ee9f1de1c3ea389e7ec3}{\string~DCTDenoise}}();\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00101}\mbox{\hyperlink{class_d_c_t_denoise_ab89944ae247e0b318dc418fef57133be}{00101}}\ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_d_c_t_denoise_ab89944ae247e0b318dc418fef57133be}{Options}}(\textcolor{keywordtype}{float}**,\textcolor{keywordtype}{float},\textcolor{keywordtype}{float});}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00102}\mbox{\hyperlink{class_d_c_t_denoise_a43f4e874829b46e8d55859cfe2318e75}{00102}}\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_d_c_t_denoise_a43f4e874829b46e8d55859cfe2318e75}{IterDctDenoise}}();}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00103}00103\ \};}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00104}00104\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{tmp_2_d_c_t-_denoise_8h_source_l00106}00106\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}
