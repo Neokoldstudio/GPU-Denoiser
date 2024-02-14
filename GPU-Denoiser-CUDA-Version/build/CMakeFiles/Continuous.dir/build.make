@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/u/godbertp/Desktop/Projet GPU/GPU-Denoiser-CUDA-Version"
+CMAKE_SOURCE_DIR = "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/u/godbertp/Desktop/Projet GPU/GPU-Denoiser-CUDA-Version/build"
+CMAKE_BINARY_DIR = "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build"
 
 # Utility rule file for Continuous.
 
@@ -82,6 +82,6 @@ CMakeFiles/Continuous.dir/clean:
 .PHONY : CMakeFiles/Continuous.dir/clean
 
 CMakeFiles/Continuous.dir/depend:
-	cd "/u/godbertp/Desktop/Projet GPU/GPU-Denoiser-CUDA-Version/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/u/godbertp/Desktop/Projet GPU/GPU-Denoiser-CUDA-Version" "/u/godbertp/Desktop/Projet GPU/GPU-Denoiser-CUDA-Version" "/u/godbertp/Desktop/Projet GPU/GPU-Denoiser-CUDA-Version/build" "/u/godbertp/Desktop/Projet GPU/GPU-Denoiser-CUDA-Version/build" "/u/godbertp/Desktop/Projet GPU/GPU-Denoiser-CUDA-Version/build/CMakeFiles/Continuous.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version" "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version" "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build" "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build" "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build/CMakeFiles/Continuous.dir/DependInfo.cmake" "--color=$(COLOR)"
 .PHONY : CMakeFiles/Continuous.dir/depend
 

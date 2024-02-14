@@ -7,7 +7,7 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 # The top level Makefile was generated from the following files:
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
-  "/u/godbertp/Desktop/Projet GPU/GPU-Denoiser-CUDA-Version/CMakeLists.txt"
+  "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/CMakeLists.txt"
   "CMakeFiles/3.27.9/CMakeCUDACompiler.cmake"
   "CMakeFiles/3.27.9/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.27.9/CMakeSystem.cmake"

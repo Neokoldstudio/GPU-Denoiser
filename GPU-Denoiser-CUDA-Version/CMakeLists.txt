@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 project(GPU_Denoiser LANGUAGES CXX CUDA)
 
-set(CMAKE_CUDA_FLAGS "-Wall")
+#set(CMAKE_CUDA_FLAGS "-Wall")
 set(CMAKE_CUDA_ARCHITECTURES 70)
 
 include(CTest)

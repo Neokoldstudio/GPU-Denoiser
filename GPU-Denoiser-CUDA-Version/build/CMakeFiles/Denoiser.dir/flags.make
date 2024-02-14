@@ -6,5 +6,5 @@ CUDA_DEFINES =
 
 CUDA_INCLUDES = 
 
-CUDA_FLAGS = -Wall -std=c++17 "--generate-code=arch=compute_70,code=[compute_70,sm_70]"
+CUDA_FLAGS = -std=c++17 "--generate-code=arch=compute_70,code=[compute_70,sm_70]"
 

@@ -17,9 +17,9 @@
 // DEFINITIONS -----------------------------------
 //------------------------------------------------
 #define NAME_VISUALISER "display "
-#define NAME_IMG_IN  "lena512"
-#define NAME_IMG_OUT  "lena512_Restored"
-#define NAME_IMG_DEG  "lena512_Degraded"
+#define NAME_IMG_IN  "../Images/lena512"
+#define NAME_IMG_OUT  "../Images/lena512_Restored"
+#define NAME_IMG_DEG  "../Images/lena512_Degraded"
 //------------------------------------------------
 // PROTOTYPE DE FONCTIONS  -----------------------
 //------------------------------------------------

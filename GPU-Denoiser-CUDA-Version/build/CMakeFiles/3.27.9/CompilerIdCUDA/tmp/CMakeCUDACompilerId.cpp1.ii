@@ -30257,15 +30257,37 @@ static __inline__ __attribute__((device)) __attribute__((host)) __attribute__((c
 
 static __inline__ __attribute__((device)) __attribute__((host)) __attribute__((cudart_builtin)) unsigned int __vimax3_s16x2(const unsigned int a, const unsigned int b, const unsigned int c){
   unsigned int res;
+# 243 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/device_functions.hpp"
+  unsigned short aU_lo = (unsigned short)(a & 0xFFFFU);
+  unsigned short aU_hi = (unsigned short)(a >> 16);
+
+  unsigned short bU_lo = (unsigned short)(b & 0xFFFFU);
+  unsigned short bU_hi = (unsigned short)(b >> 16);
+
+  unsigned short cU_lo = (unsigned short)(c & 0xFFFFU);
+  unsigned short cU_hi = (unsigned short)(c >> 16);
 
 
+  short aS_lo = *(short*)& aU_lo;
+  short aS_hi = *(short*)& aU_hi;
+
+  short bS_lo = *(short*)& bU_lo;
+  short bS_hi = *(short*)& bU_hi;
+
+  short cS_lo = *(short*)& cU_lo;
+  short cS_hi = *(short*)& cU_hi;
 
 
+  short ansS_lo = (short)max(max(aS_lo, bS_lo), cS_lo);
+  short ansS_hi = (short)max(max(aS_hi, bS_hi), cS_hi);
 
 
+  unsigned short ansU_lo = *(unsigned short*)& ansS_lo;
+  unsigned short ansU_hi = *(unsigned short*)& ansS_hi;
 
-  res = __vmaxs2(__vmaxs2(a, b), c);
-# 273 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/device_functions.hpp"
+
+  res = ((unsigned int) ansU_lo) | (((unsigned int) ansU_hi) << 16);
+
   return res;
 }
 
@@ -30296,14 +30318,38 @@ static __inline__ __attribute__((device)) __attribute__((host)) __attribute__((c
 
 static __inline__ __attribute__((device)) __attribute__((host)) __attribute__((cudart_builtin)) unsigned int __vimin3_s16x2(const unsigned int a, const unsigned int b, const unsigned int c){
   unsigned int res;
+# 348 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/device_functions.hpp"
+  unsigned short aU_lo = (unsigned short)(a & 0xFFFFU);
+  unsigned short aU_hi = (unsigned short)(a >> 16);
+
+  unsigned short bU_lo = (unsigned short)(b & 0xFFFFU);
+  unsigned short bU_hi = (unsigned short)(b >> 16);
+
+  unsigned short cU_lo = (unsigned short)(c & 0xFFFFU);
+  unsigned short cU_hi = (unsigned short)(c >> 16);
 
 
+  short aS_lo = *(short*)& aU_lo;
+  short aS_hi = *(short*)& aU_hi;
+
+  short bS_lo = *(short*)& bU_lo;
+  short bS_hi = *(short*)& bU_hi;
+
+  short cS_lo = *(short*)& cU_lo;
+  short cS_hi = *(short*)& cU_hi;
 
 
+  short ansS_lo = (short)min(min(aS_lo, bS_lo), cS_lo);
+  short ansS_hi = (short)min(min(aS_hi, bS_hi), cS_hi);
 
 
-  res = __vmins2(__vmins2(a, b), c);
-# 379 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/device_functions.hpp"
+  unsigned short ansU_lo = *(unsigned short*)& ansS_lo;
+  unsigned short ansU_hi = *(unsigned short*)& ansS_hi;
+
+
+  res = ((unsigned int) ansU_lo) | (((unsigned int) ansU_hi) << 16);
+
+
   return res;
 }
 
@@ -30740,8 +30786,8 @@ static __inline__ __attribute__((device)) unsigned int atomicCAS(unsigned int *a
 # 156 "/opt/cuda/bin/../targets/x86_64-linux/include/device_atomic_functions.h"
 extern "C"
 {
-extern __attribute__((device)) __attribute__((device_builtin)) __attribute__((deprecated("__any""() is not valid on compute_70 and above, and should be replaced with ""__any""_sync()." "To continue using ""__any""(), specify virtual architecture compute_60 when targeting sm_70 and above, for example, using the pair of compiler options: -arch=compute_60 -code=sm_70."))) int __any(int cond);
-extern __attribute__((device)) __attribute__((device_builtin)) __attribute__((deprecated("__all""() is not valid on compute_70 and above, and should be replaced with ""__all""_sync()." "To continue using ""__all""(), specify virtual architecture compute_60 when targeting sm_70 and above, for example, using the pair of compiler options: -arch=compute_60 -code=sm_70."))) int __all(int cond);
+extern __attribute__((device)) __attribute__((device_builtin)) __attribute__((deprecated("__any""() is deprecated in favor of ""__any""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) int __any(int cond);
+extern __attribute__((device)) __attribute__((device_builtin)) __attribute__((deprecated("__all""() is deprecated in favor of ""__all""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) int __all(int cond);
 }
 # 169 "/opt/cuda/bin/../targets/x86_64-linux/include/device_atomic_functions.h"
 static __inline__ __attribute__((device)) unsigned long long int atomicAdd(unsigned long long int *address, unsigned long long int val) ;
@@ -30750,9 +30796,9 @@ static __inline__ __attribute__((device)) unsigned long long int atomicExch(unsi
 
 static __inline__ __attribute__((device)) unsigned long long int atomicCAS(unsigned long long int *address, unsigned long long int compare, unsigned long long int val) ;
 
-static __inline__ __attribute__((device)) __attribute__((deprecated("__any""() is not valid on compute_70 and above, and should be replaced with ""__any""_sync()." "To continue using ""__any""(), specify virtual architecture compute_60 when targeting sm_70 and above, for example, using the pair of compiler options: -arch=compute_60 -code=sm_70."))) bool any(bool cond) ;
+static __inline__ __attribute__((device)) __attribute__((deprecated("__any""() is deprecated in favor of ""__any""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) bool any(bool cond) ;
 
-static __inline__ __attribute__((device)) __attribute__((deprecated("__all""() is not valid on compute_70 and above, and should be replaced with ""__all""_sync()." "To continue using ""__all""(), specify virtual architecture compute_60 when targeting sm_70 and above, for example, using the pair of compiler options: -arch=compute_60 -code=sm_70."))) bool all(bool cond) ;
+static __inline__ __attribute__((device)) __attribute__((deprecated("__all""() is deprecated in favor of ""__all""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) bool all(bool cond) ;
 # 188 "/opt/cuda/bin/../targets/x86_64-linux/include/device_atomic_functions.h"
 # 1 "/opt/cuda/bin/../targets/x86_64-linux/include/device_atomic_functions.hpp" 1
 # 62 "/opt/cuda/bin/../targets/x86_64-linux/include/device_atomic_functions.hpp"
@@ -31304,230 +31350,6 @@ static __inline__ __attribute__((device)) unsigned long long atomicXor(unsigned 
 # 57 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_35_atomic_functions.h" 2
 # 3625 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/device_functions.h" 2
 # 1 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_60_atomic_functions.h" 1
-# 93 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_60_atomic_functions.h"
-static __inline__ __attribute__((device)) double atomicAdd(double *address, double val) ;
-
-static __inline__ __attribute__((device))
-int atomicAdd_block(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-int atomicAdd_system(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicAdd_block(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicAdd_system(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicAdd_block(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicAdd_system(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-float atomicAdd_block(float *address, float val) ;
-
-static __inline__ __attribute__((device))
-float atomicAdd_system(float *address, float val) ;
-
-static __inline__ __attribute__((device))
-double atomicAdd_block(double *address, double val) ;
-
-static __inline__ __attribute__((device))
-double atomicAdd_system(double *address, double val) ;
-
-static __inline__ __attribute__((device))
-int atomicSub_block(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-int atomicSub_system(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicSub_block(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicSub_system(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-int atomicExch_block(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-int atomicExch_system(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicExch_block(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicExch_system(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicExch_block(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicExch_system(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-float atomicExch_block(float *address, float val) ;
-
-static __inline__ __attribute__((device))
-float atomicExch_system(float *address, float val) ;
-
-static __inline__ __attribute__((device))
-int atomicMin_block(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-int atomicMin_system(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-long long atomicMin_block(long long *address, long long val) ;
-
-static __inline__ __attribute__((device))
-long long atomicMin_system(long long *address, long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicMin_block(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicMin_system(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicMin_block(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicMin_system(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-int atomicMax_block(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-int atomicMax_system(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-long long atomicMax_block(long long *address, long long val) ;
-
-static __inline__ __attribute__((device))
-long long atomicMax_system(long long *address, long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicMax_block(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicMax_system(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicMax_block(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicMax_system(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicInc_block(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicInc_system(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicDec_block(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicDec_system(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-int atomicCAS_block(int *address, int compare, int val) ;
-
-static __inline__ __attribute__((device))
-int atomicCAS_system(int *address, int compare, int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicCAS_block(unsigned int *address, unsigned int compare,
-                             unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicCAS_system(unsigned int *address, unsigned int compare,
-                              unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long int atomicCAS_block(unsigned long long int *address,
-                                       unsigned long long int compare,
-                                       unsigned long long int val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long int atomicCAS_system(unsigned long long int *address,
-                                        unsigned long long int compare,
-                                        unsigned long long int val) ;
-
-static __inline__ __attribute__((device))
-int atomicAnd_block(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-int atomicAnd_system(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-long long atomicAnd_block(long long *address, long long val) ;
-
-static __inline__ __attribute__((device))
-long long atomicAnd_system(long long *address, long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicAnd_block(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicAnd_system(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicAnd_block(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicAnd_system(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-int atomicOr_block(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-int atomicOr_system(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-long long atomicOr_block(long long *address, long long val) ;
-
-static __inline__ __attribute__((device))
-long long atomicOr_system(long long *address, long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicOr_block(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicOr_system(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicOr_block(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicOr_system(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-int atomicXor_block(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-int atomicXor_system(int *address, int val) ;
-
-static __inline__ __attribute__((device))
-long long atomicXor_block(long long *address, long long val) ;
-
-static __inline__ __attribute__((device))
-long long atomicXor_system(long long *address, long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicXor_block(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned int atomicXor_system(unsigned int *address, unsigned int val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicXor_block(unsigned long long *address, unsigned long long val) ;
-
-static __inline__ __attribute__((device))
-unsigned long long atomicXor_system(unsigned long long *address, unsigned long long val) ;
 # 325 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_60_atomic_functions.h"
 # 1 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_60_atomic_functions.hpp" 1
 # 61 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_60_atomic_functions.hpp"
@@ -31745,449 +31567,6 @@ unsigned long long __ullAtomicXor_block(unsigned long long *address, unsigned lo
 extern __attribute__((device)) __attribute__((device_builtin))
 unsigned long long __ullAtomicXor_system(unsigned long long *address, unsigned long long val);
 }
-# 292 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_60_atomic_functions.hpp"
-static __inline__ __attribute__((device)) double atomicAdd(double *address, double val)
-{
-  return __dAtomicAdd(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicAdd_block(int *address, int val)
-{
-  return __iAtomicAdd_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicAdd_system(int *address, int val)
-{
-  return __iAtomicAdd_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicAdd_block(unsigned int *address, unsigned int val)
-{
-  return __uAtomicAdd_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicAdd_system(unsigned int *address, unsigned int val)
-{
-  return __uAtomicAdd_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicAdd_block(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicAdd_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicAdd_system(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicAdd_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-float atomicAdd_block(float *address, float val)
-{
-  return __fAtomicAdd_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-float atomicAdd_system(float *address, float val)
-{
-  return __fAtomicAdd_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-double atomicAdd_block(double *address, double val)
-{
-  return __dAtomicAdd_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-double atomicAdd_system(double *address, double val)
-{
-  return __dAtomicAdd_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicSub_block(int *address, int val)
-{
-  return __iAtomicAdd_block(address, (unsigned int)-(int)val);
-}
-
-static __inline__ __attribute__((device))
-int atomicSub_system(int *address, int val)
-{
-  return __iAtomicAdd_system(address, (unsigned int)-(int)val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicSub_block(unsigned int *address, unsigned int val)
-{
-  return __uAtomicAdd_block(address, (unsigned int)-(int)val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicSub_system(unsigned int *address, unsigned int val)
-{
-  return __uAtomicAdd_system(address, (unsigned int)-(int)val);
-}
-
-static __inline__ __attribute__((device))
-int atomicExch_block(int *address, int val)
-{
-  return __iAtomicExch_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicExch_system(int *address, int val)
-{
-  return __iAtomicExch_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicExch_block(unsigned int *address, unsigned int val)
-{
-  return __uAtomicExch_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicExch_system(unsigned int *address, unsigned int val)
-{
-  return __uAtomicExch_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicExch_block(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicExch_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicExch_system(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicExch_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-float atomicExch_block(float *address, float val)
-{
-  return __fAtomicExch_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-float atomicExch_system(float *address, float val)
-{
-  return __fAtomicExch_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicMin_block(int *address, int val)
-{
-  return __iAtomicMin_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicMin_system(int *address, int val)
-{
-  return __iAtomicMin_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-long long atomicMin_block(long long *address, long long val)
-{
-  return __illAtomicMin_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-long long atomicMin_system(long long *address, long long val)
-{
-  return __illAtomicMin_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicMin_block(unsigned int *address, unsigned int val)
-{
-  return __uAtomicMin_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicMin_system(unsigned int *address, unsigned int val)
-{
-  return __uAtomicMin_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicMin_block(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicMin_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicMin_system(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicMin_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicMax_block(int *address, int val)
-{
-  return __iAtomicMax_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicMax_system(int *address, int val)
-{
-  return __iAtomicMax_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-long long atomicMax_block(long long *address, long long val)
-{
-  return __illAtomicMax_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-long long atomicMax_system(long long *address, long long val)
-{
-  return __illAtomicMax_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicMax_block(unsigned int *address, unsigned int val)
-{
-  return __uAtomicMax_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicMax_system(unsigned int *address, unsigned int val)
-{
-  return __uAtomicMax_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicMax_block(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicMax_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicMax_system(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicMax_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicInc_block(unsigned int *address, unsigned int val)
-{
-  return __uAtomicInc_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicInc_system(unsigned int *address, unsigned int val)
-{
-  return __uAtomicInc_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicDec_block(unsigned int *address, unsigned int val)
-{
-  return __uAtomicDec_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicDec_system(unsigned int *address, unsigned int val)
-{
-  return __uAtomicDec_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicCAS_block(int *address, int compare, int val)
-{
-  return __iAtomicCAS_block(address, compare, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicCAS_system(int *address, int compare, int val)
-{
-  return __iAtomicCAS_system(address, compare, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicCAS_block(unsigned int *address, unsigned int compare,
-                             unsigned int val)
-{
-  return __uAtomicCAS_block(address, compare, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicCAS_system(unsigned int *address, unsigned int compare,
-                              unsigned int val)
-{
-  return __uAtomicCAS_system(address, compare, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long int atomicCAS_block(unsigned long long int *address,
-                                       unsigned long long int compare,
-                                       unsigned long long int val)
-{
-  return __ullAtomicCAS_block(address, compare, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long int atomicCAS_system(unsigned long long int *address,
-                                        unsigned long long int compare,
-                                        unsigned long long int val)
-{
-  return __ullAtomicCAS_system(address, compare, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicAnd_block(int *address, int val)
-{
-  return __iAtomicAnd_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicAnd_system(int *address, int val)
-{
-  return __iAtomicAnd_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-long long atomicAnd_block(long long *address, long long val)
-{
-  return __llAtomicAnd_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-long long atomicAnd_system(long long *address, long long val)
-{
-  return __llAtomicAnd_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicAnd_block(unsigned int *address, unsigned int val)
-{
-  return __uAtomicAnd_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicAnd_system(unsigned int *address, unsigned int val)
-{
-  return __uAtomicAnd_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicAnd_block(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicAnd_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicAnd_system(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicAnd_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicOr_block(int *address, int val)
-{
-  return __iAtomicOr_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicOr_system(int *address, int val)
-{
-  return __iAtomicOr_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-long long atomicOr_block(long long *address, long long val)
-{
-  return __llAtomicOr_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-long long atomicOr_system(long long *address, long long val)
-{
-  return __llAtomicOr_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicOr_block(unsigned int *address, unsigned int val)
-{
-  return __uAtomicOr_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicOr_system(unsigned int *address, unsigned int val)
-{
-  return __uAtomicOr_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicOr_block(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicOr_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicOr_system(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicOr_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicXor_block(int *address, int val)
-{
-  return __iAtomicXor_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-int atomicXor_system(int *address, int val)
-{
-  return __iAtomicXor_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-long long atomicXor_block(long long *address, long long val)
-{
-  return __llAtomicXor_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-long long atomicXor_system(long long *address, long long val)
-{
-  return __llAtomicXor_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicXor_block(unsigned int *address, unsigned int val)
-{
-  return __uAtomicXor_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned int atomicXor_system(unsigned int *address, unsigned int val)
-{
-  return __uAtomicXor_system(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicXor_block(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicXor_block(address, val);
-}
-
-static __inline__ __attribute__((device))
-unsigned long long atomicXor_system(unsigned long long *address, unsigned long long val)
-{
-  return __ullAtomicXor_system(address, val);
-}
 # 326 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_60_atomic_functions.h" 2
 # 3626 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/device_functions.h" 2
 # 1 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_20_intrinsics.h" 1
@@ -32219,7 +31598,7 @@ extern __attribute__((device)) __attribute__((device_builtin)) double __dsqrt_rz
 extern __attribute__((device)) __attribute__((device_builtin)) double __dsqrt_ru(double x);
 # 414 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_20_intrinsics.h"
 extern __attribute__((device)) __attribute__((device_builtin)) double __dsqrt_rd(double x);
-extern __attribute__((device)) __attribute__((device_builtin)) __attribute__((deprecated("__ballot""() is not valid on compute_70 and above, and should be replaced with ""__ballot""_sync()." "To continue using ""__ballot""(), specify virtual architecture compute_60 when targeting sm_70 and above, for example, using the pair of compiler options: -arch=compute_60 -code=sm_70."))) unsigned int __ballot(int);
+extern __attribute__((device)) __attribute__((device_builtin)) __attribute__((deprecated("__ballot""() is deprecated in favor of ""__ballot""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned int __ballot(int);
 extern __attribute__((device)) __attribute__((device_builtin)) int __syncthreads_count(int);
 extern __attribute__((device)) __attribute__((device_builtin)) int __syncthreads_and(int);
 extern __attribute__((device)) __attribute__((device_builtin)) int __syncthreads_or(int);
@@ -32342,7 +31721,7 @@ extern __attribute__((device)) __attribute__((device_builtin)) double __hiloint2
 
 }
 # 1525 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_20_intrinsics.h"
-static __inline__ __attribute__((device)) __attribute__((deprecated("__ballot""() is not valid on compute_70 and above, and should be replaced with ""__ballot""_sync()." "To continue using ""__ballot""(), specify virtual architecture compute_60 when targeting sm_70 and above, for example, using the pair of compiler options: -arch=compute_60 -code=sm_70."))) unsigned int ballot(bool pred) ;
+static __inline__ __attribute__((device)) __attribute__((deprecated("__ballot""() is deprecated in favor of ""__ballot""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned int ballot(bool pred) ;
 
 static __inline__ __attribute__((device)) int syncthreads_count(bool pred) ;
 
@@ -32358,29 +31737,21 @@ static __inline__ __attribute__((device)) unsigned int __isShared(const void *pt
 static __inline__ __attribute__((device)) unsigned int __isConstant(const void *ptr) ;
 static __inline__ __attribute__((device)) unsigned int __isLocal(const void *ptr) ;
 
-static __inline__ __attribute__((device)) unsigned int __isGridConstant(const void *ptr) ;
+
 
 static __inline__ __attribute__((device)) size_t __cvta_generic_to_global(const void *ptr) ;
 static __inline__ __attribute__((device)) size_t __cvta_generic_to_shared(const void *ptr) ;
 static __inline__ __attribute__((device)) size_t __cvta_generic_to_constant(const void *ptr) ;
 static __inline__ __attribute__((device)) size_t __cvta_generic_to_local(const void *ptr) ;
 
-static __inline__ __attribute__((device)) size_t __cvta_generic_to_grid_constant(const void *ptr) ;
+
 
 
 static __inline__ __attribute__((device)) void * __cvta_global_to_generic(size_t rawbits) ;
 static __inline__ __attribute__((device)) void * __cvta_shared_to_generic(size_t rawbits) ;
 static __inline__ __attribute__((device)) void * __cvta_constant_to_generic(size_t rawbits) ;
 static __inline__ __attribute__((device)) void * __cvta_local_to_generic(size_t rawbits) ;
-
-static __inline__ __attribute__((device)) void * __cvta_grid_constant_to_generic(size_t rawbits) ;
-
-
-
-
-
-
-
+# 1564 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_20_intrinsics.h"
 # 1 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_20_intrinsics.hpp" 1
 # 75 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_20_intrinsics.hpp"
 static __inline__ __attribute__((device)) unsigned int ballot(bool pred)
@@ -32431,14 +31802,7 @@ static __inline__ __attribute__((device)) unsigned int __isLocal(const void *ptr
 {
   return __nv_isLocal_impl(ptr);
 }
-
-
-static __inline__ __attribute__((device)) unsigned int __isGridConstant(const void *ptr)
-{
-  return __nv_isGridConstant_impl(ptr);
-}
-
-
+# 131 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_20_intrinsics.hpp"
 extern "C" {
   __attribute__((device)) size_t __nv_cvta_generic_to_global_impl(const void *);
   __attribute__((device)) size_t __nv_cvta_generic_to_shared_impl(const void *);
@@ -32489,37 +31853,6 @@ static __inline__ __attribute__((device)) void * __cvta_local_to_generic(size_t 
 {
   return __nv_cvta_local_to_generic_impl(rawbits);
 }
-
-
-
-
-
-
-static __inline__ __attribute__((device)) size_t __cvta_generic_to_grid_constant(const void *ptr)
-{
-
-  unsigned long long ret;
-  asm("cvta.to.param.u64 %0, %1;" : "=l"(ret) : "l"(ptr));
-
-
-
-
-  return (size_t)ret;
-
-}
-
-static __inline__ __attribute__((device)) void * __cvta_grid_constant_to_generic(size_t rawbits)
-{
-  void *ret;
-
-  unsigned long long in = rawbits;
-  asm("cvta.param.u64 %0, %1;" : "=l"(ret) : "l"(in));
-
-
-
-
-  return ret;
-}
 # 1565 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_20_intrinsics.h" 2
 # 3627 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/device_functions.h" 2
 # 1 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_30_intrinsics.h" 1
@@ -32533,7 +31866,21 @@ static __attribute__((device)) __inline__ int __any_sync(unsigned mask, int pred
 static __attribute__((device)) __inline__ int __uni_sync(unsigned mask, int pred) ;
 static __attribute__((device)) __inline__ unsigned __ballot_sync(unsigned mask, int pred) ;
 static __attribute__((device)) __inline__ unsigned __activemask() ;
-# 154 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_30_intrinsics.h"
+# 140 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_30_intrinsics.h"
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl""() is deprecated in favor of ""__shfl""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) int __shfl(int var, int srcLane, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl""() is deprecated in favor of ""__shfl""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned int __shfl(unsigned int var, int srcLane, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_up""() is deprecated in favor of ""__shfl_up""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) int __shfl_up(int var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_up""() is deprecated in favor of ""__shfl_up""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned int __shfl_up(unsigned int var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_down""() is deprecated in favor of ""__shfl_down""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) int __shfl_down(int var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_down""() is deprecated in favor of ""__shfl_down""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned int __shfl_down(unsigned int var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_xor""() is deprecated in favor of ""__shfl_xor""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) int __shfl_xor(int var, int laneMask, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_xor""() is deprecated in favor of ""__shfl_xor""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned int __shfl_xor(unsigned int var, int laneMask, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl""() is deprecated in favor of ""__shfl""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) float __shfl(float var, int srcLane, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_up""() is deprecated in favor of ""__shfl_up""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) float __shfl_up(float var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_down""() is deprecated in favor of ""__shfl_down""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) float __shfl_down(float var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_xor""() is deprecated in favor of ""__shfl_xor""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) float __shfl_xor(float var, int laneMask, int width=32) ;
+
+
 static __attribute__((device)) __inline__ int __shfl_sync(unsigned mask, int var, int srcLane, int width=32) ;
 static __attribute__((device)) __inline__ unsigned int __shfl_sync(unsigned mask, unsigned int var, int srcLane, int width=32) ;
 static __attribute__((device)) __inline__ int __shfl_up_sync(unsigned mask, int var, unsigned int delta, int width=32) ;
@@ -32546,7 +31893,23 @@ static __attribute__((device)) __inline__ float __shfl_sync(unsigned mask, float
 static __attribute__((device)) __inline__ float __shfl_up_sync(unsigned mask, float var, unsigned int delta, int width=32) ;
 static __attribute__((device)) __inline__ float __shfl_down_sync(unsigned mask, float var, unsigned int delta, int width=32) ;
 static __attribute__((device)) __inline__ float __shfl_xor_sync(unsigned mask, float var, int laneMask, int width=32) ;
-# 183 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_30_intrinsics.h"
+
+
+
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl""() is deprecated in favor of ""__shfl""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned long long __shfl(unsigned long long var, int srcLane, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl""() is deprecated in favor of ""__shfl""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) long long __shfl(long long var, int srcLane, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_up""() is deprecated in favor of ""__shfl_up""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) long long __shfl_up(long long var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_up""() is deprecated in favor of ""__shfl_up""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned long long __shfl_up(unsigned long long var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_down""() is deprecated in favor of ""__shfl_down""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) long long __shfl_down(long long var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_down""() is deprecated in favor of ""__shfl_down""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned long long __shfl_down(unsigned long long var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_xor""() is deprecated in favor of ""__shfl_xor""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) long long __shfl_xor(long long var, int laneMask, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_xor""() is deprecated in favor of ""__shfl_xor""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned long long __shfl_xor(unsigned long long var, int laneMask, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl""() is deprecated in favor of ""__shfl""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) double __shfl(double var, int srcLane, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_up""() is deprecated in favor of ""__shfl_up""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) double __shfl_up(double var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_down""() is deprecated in favor of ""__shfl_down""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) double __shfl_down(double var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_xor""() is deprecated in favor of ""__shfl_xor""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) double __shfl_xor(double var, int laneMask, int width=32) ;
+
+
 static __attribute__((device)) __inline__ long long __shfl_sync(unsigned mask, long long var, int srcLane, int width=32) ;
 static __attribute__((device)) __inline__ unsigned long long __shfl_sync(unsigned mask, unsigned long long var, int srcLane, int width=32) ;
 static __attribute__((device)) __inline__ long long __shfl_up_sync(unsigned mask, long long var, unsigned int delta, int width=32) ;
@@ -32559,7 +31922,19 @@ static __attribute__((device)) __inline__ double __shfl_sync(unsigned mask, doub
 static __attribute__((device)) __inline__ double __shfl_up_sync(unsigned mask, double var, unsigned int delta, int width=32) ;
 static __attribute__((device)) __inline__ double __shfl_down_sync(unsigned mask, double var, unsigned int delta, int width=32) ;
 static __attribute__((device)) __inline__ double __shfl_xor_sync(unsigned mask, double var, int laneMask, int width=32) ;
-# 208 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_30_intrinsics.h"
+
+
+
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl""() is deprecated in favor of ""__shfl""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) long __shfl(long var, int srcLane, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl""() is deprecated in favor of ""__shfl""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned long __shfl(unsigned long var, int srcLane, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_up""() is deprecated in favor of ""__shfl_up""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) long __shfl_up(long var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_up""() is deprecated in favor of ""__shfl_up""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned long __shfl_up(unsigned long var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_down""() is deprecated in favor of ""__shfl_down""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) long __shfl_down(long var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_down""() is deprecated in favor of ""__shfl_down""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned long __shfl_down(unsigned long var, unsigned int delta, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_xor""() is deprecated in favor of ""__shfl_xor""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) long __shfl_xor(long var, int laneMask, int width=32) ;
+static __attribute__((device)) __inline__ __attribute__((deprecated("__shfl_xor""() is deprecated in favor of ""__shfl_xor""_sync() and may be removed in a future release (Use -Wno-deprecated-declarations to suppress this warning)."))) unsigned long __shfl_xor(unsigned long var, int laneMask, int width=32) ;
+
+
 static __attribute__((device)) __inline__ long __shfl_sync(unsigned mask, long var, int srcLane, int width=32) ;
 static __attribute__((device)) __inline__ unsigned long __shfl_sync(unsigned mask, unsigned long var, int srcLane, int width=32) ;
 static __attribute__((device)) __inline__ long __shfl_up_sync(unsigned mask, long var, unsigned int delta, int width=32) ;
@@ -32628,6 +32003,223 @@ unsigned __activemask() {
     unsigned ret;
     asm volatile ("activemask.b32 %0;" : "=r"(ret));
     return ret;
+}
+
+
+
+
+static __attribute__((device)) __inline__ int __shfl(int var, int srcLane, int width) {
+ int ret;
+ int c = ((32 -width) << 8) | 0x1f;
+ asm volatile ("shfl.idx.b32 %0, %1, %2, %3;" : "=r"(ret) : "r"(var), "r"(srcLane), "r"(c));
+ return ret;
+}
+
+static __attribute__((device)) __inline__ unsigned int __shfl(unsigned int var, int srcLane, int width) {
+ return (unsigned int) __shfl((int)var, srcLane, width);
+}
+
+static __attribute__((device)) __inline__ int __shfl_up(int var, unsigned int delta, int width) {
+ int ret;
+ int c = (32 -width) << 8;
+ asm volatile ("shfl.up.b32 %0, %1, %2, %3;" : "=r"(ret) : "r"(var), "r"(delta), "r"(c));
+ return ret;
+}
+
+static __attribute__((device)) __inline__ unsigned int __shfl_up(unsigned int var, unsigned int delta, int width) {
+ return (unsigned int) __shfl_up((int)var, delta, width);
+}
+
+static __attribute__((device)) __inline__ int __shfl_down(int var, unsigned int delta, int width) {
+ int ret;
+ int c = ((32 -width) << 8) | 0x1f;
+ asm volatile ("shfl.down.b32 %0, %1, %2, %3;" : "=r"(ret) : "r"(var), "r"(delta), "r"(c));
+ return ret;
+}
+
+static __attribute__((device)) __inline__ unsigned int __shfl_down(unsigned int var, unsigned int delta, int width) {
+ return (unsigned int) __shfl_down((int)var, delta, width);
+}
+
+static __attribute__((device)) __inline__ int __shfl_xor(int var, int laneMask, int width) {
+ int ret;
+ int c = ((32 -width) << 8) | 0x1f;
+ asm volatile ("shfl.bfly.b32 %0, %1, %2, %3;" : "=r"(ret) : "r"(var), "r"(laneMask), "r"(c));
+ return ret;
+}
+
+static __attribute__((device)) __inline__ unsigned int __shfl_xor(unsigned int var, int laneMask, int width) {
+ return (unsigned int) __shfl_xor((int)var, laneMask, width);
+}
+
+static __attribute__((device)) __inline__ float __shfl(float var, int srcLane, int width) {
+ float ret;
+        int c;
+ c = ((32 -width) << 8) | 0x1f;
+ asm volatile ("shfl.idx.b32 %0, %1, %2, %3;" : "=f"(ret) : "f"(var), "r"(srcLane), "r"(c));
+ return ret;
+}
+
+static __attribute__((device)) __inline__ float __shfl_up(float var, unsigned int delta, int width) {
+ float ret;
+        int c;
+ c = (32 -width) << 8;
+ asm volatile ("shfl.up.b32 %0, %1, %2, %3;" : "=f"(ret) : "f"(var), "r"(delta), "r"(c));
+ return ret;
+}
+
+static __attribute__((device)) __inline__ float __shfl_down(float var, unsigned int delta, int width) {
+ float ret;
+        int c;
+ c = ((32 -width) << 8) | 0x1f;
+ asm volatile ("shfl.down.b32 %0, %1, %2, %3;" : "=f"(ret) : "f"(var), "r"(delta), "r"(c));
+ return ret;
+}
+
+static __attribute__((device)) __inline__ float __shfl_xor(float var, int laneMask, int width) {
+ float ret;
+        int c;
+ c = ((32 -width) << 8) | 0x1f;
+ asm volatile ("shfl.bfly.b32 %0, %1, %2, %3;" : "=f"(ret) : "f"(var), "r"(laneMask), "r"(c));
+ return ret;
+}
+
+
+
+static __attribute__((device)) __inline__ long long __shfl(long long var, int srcLane, int width) {
+ int lo, hi;
+ asm volatile("mov.b64 {%0,%1}, %2;" : "=r"(lo), "=r"(hi) : "l"(var));
+ hi = __shfl(hi, srcLane, width);
+ lo = __shfl(lo, srcLane, width);
+ asm volatile("mov.b64 %0, {%1,%2};" : "=l"(var) : "r"(lo), "r"(hi));
+ return var;
+}
+
+static __attribute__((device)) __inline__ unsigned long long __shfl(unsigned long long var, int srcLane, int width) {
+ return (unsigned long long) __shfl((long long) var, srcLane, width);
+}
+
+static __attribute__((device)) __inline__ long long __shfl_up(long long var, unsigned int delta, int width) {
+ int lo, hi;
+ asm volatile("mov.b64 {%0,%1}, %2;" : "=r"(lo), "=r"(hi) : "l"(var));
+ hi = __shfl_up(hi, delta, width);
+ lo = __shfl_up(lo, delta, width);
+ asm volatile("mov.b64 %0, {%1,%2};" : "=l"(var) : "r"(lo), "r"(hi));
+ return var;
+}
+
+static __attribute__((device)) __inline__ unsigned long long __shfl_up(unsigned long long var, unsigned int delta, int width) {
+ return (unsigned long long) __shfl_up((long long) var, delta, width);
+}
+
+static __attribute__((device)) __inline__ long long __shfl_down(long long var, unsigned int delta, int width) {
+ int lo, hi;
+ asm volatile("mov.b64 {%0,%1}, %2;" : "=r"(lo), "=r"(hi) : "l"(var));
+ hi = __shfl_down(hi, delta, width);
+ lo = __shfl_down(lo, delta, width);
+ asm volatile("mov.b64 %0, {%1,%2};" : "=l"(var) : "r"(lo), "r"(hi));
+ return var;
+}
+
+static __attribute__((device)) __inline__ unsigned long long __shfl_down(unsigned long long var, unsigned int delta, int width) {
+ return (unsigned long long) __shfl_down((long long) var, delta, width);
+}
+
+static __attribute__((device)) __inline__ long long __shfl_xor(long long var, int laneMask, int width) {
+ int lo, hi;
+ asm volatile("mov.b64 {%0,%1}, %2;" : "=r"(lo), "=r"(hi) : "l"(var));
+ hi = __shfl_xor(hi, laneMask, width);
+ lo = __shfl_xor(lo, laneMask, width);
+ asm volatile("mov.b64 %0, {%1,%2};" : "=l"(var) : "r"(lo), "r"(hi));
+ return var;
+}
+
+static __attribute__((device)) __inline__ unsigned long long __shfl_xor(unsigned long long var, int laneMask, int width) {
+ return (unsigned long long) __shfl_xor((long long) var, laneMask, width);
+}
+
+static __attribute__((device)) __inline__ double __shfl(double var, int srcLane, int width) {
+ unsigned lo, hi;
+ asm volatile("mov.b64 {%0,%1}, %2;" : "=r"(lo), "=r"(hi) : "d"(var));
+ hi = __shfl(hi, srcLane, width);
+ lo = __shfl(lo, srcLane, width);
+ asm volatile("mov.b64 %0, {%1,%2};" : "=d"(var) : "r"(lo), "r"(hi));
+ return var;
+}
+
+static __attribute__((device)) __inline__ double __shfl_up(double var, unsigned int delta, int width) {
+ unsigned lo, hi;
+ asm volatile("mov.b64 {%0,%1}, %2;" : "=r"(lo), "=r"(hi) : "d"(var));
+ hi = __shfl_up(hi, delta, width);
+ lo = __shfl_up(lo, delta, width);
+ asm volatile("mov.b64 %0, {%1,%2};" : "=d"(var) : "r"(lo), "r"(hi));
+ return var;
+}
+
+static __attribute__((device)) __inline__ double __shfl_down(double var, unsigned int delta, int width) {
+ unsigned lo, hi;
+ asm volatile("mov.b64 {%0,%1}, %2;" : "=r"(lo), "=r"(hi) : "d"(var));
+ hi = __shfl_down(hi, delta, width);
+ lo = __shfl_down(lo, delta, width);
+ asm volatile("mov.b64 %0, {%1,%2};" : "=d"(var) : "r"(lo), "r"(hi));
+ return var;
+}
+
+static __attribute__((device)) __inline__ double __shfl_xor(double var, int laneMask, int width) {
+ unsigned lo, hi;
+ asm volatile("mov.b64 {%0,%1}, %2;" : "=r"(lo), "=r"(hi) : "d"(var));
+ hi = __shfl_xor(hi, laneMask, width);
+ lo = __shfl_xor(lo, laneMask, width);
+ asm volatile("mov.b64 %0, {%1,%2};" : "=d"(var) : "r"(lo), "r"(hi));
+ return var;
+}
+
+static __attribute__((device)) __inline__ long __shfl(long var, int srcLane, int width) {
+ return (sizeof(long) == sizeof(long long)) ?
+  __shfl((long long) var, srcLane, width) :
+  __shfl((int) var, srcLane, width);
+}
+
+static __attribute__((device)) __inline__ unsigned long __shfl(unsigned long var, int srcLane, int width) {
+ return (sizeof(long) == sizeof(long long)) ?
+  __shfl((unsigned long long) var, srcLane, width) :
+  __shfl((unsigned int) var, srcLane, width);
+}
+
+static __attribute__((device)) __inline__ long __shfl_up(long var, unsigned int delta, int width) {
+ return (sizeof(long) == sizeof(long long)) ?
+  __shfl_up((long long) var, delta, width) :
+  __shfl_up((int) var, delta, width);
+}
+
+static __attribute__((device)) __inline__ unsigned long __shfl_up(unsigned long var, unsigned int delta, int width) {
+ return (sizeof(long) == sizeof(long long)) ?
+  __shfl_up((unsigned long long) var, delta, width) :
+  __shfl_up((unsigned int) var, delta, width);
+}
+
+static __attribute__((device)) __inline__ long __shfl_down(long var, unsigned int delta, int width) {
+ return (sizeof(long) == sizeof(long long)) ?
+  __shfl_down((long long) var, delta, width) :
+  __shfl_down((int) var, delta, width);
+}
+
+static __attribute__((device)) __inline__ unsigned long __shfl_down(unsigned long var, unsigned int delta, int width) {
+ return (sizeof(long) == sizeof(long long)) ?
+  __shfl_down((unsigned long long) var, delta, width) :
+  __shfl_down((unsigned int) var, delta, width);
+}
+
+static __attribute__((device)) __inline__ long __shfl_xor(long var, int laneMask, int width) {
+ return (sizeof(long) == sizeof(long long)) ?
+  __shfl_xor((long long) var, laneMask, width) :
+  __shfl_xor((int) var, laneMask, width);
+}
+
+static __attribute__((device)) __inline__ unsigned long __shfl_xor(unsigned long var, int laneMask, int width) {
+ return (sizeof(long) == sizeof(long long)) ?
+  __shfl_xor((unsigned long long) var, laneMask, width) :
+  __shfl_xor((unsigned int) var, laneMask, width);
 }
 # 369 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_30_intrinsics.hpp"
 static __attribute__((device)) __inline__ int __shfl_sync(unsigned mask, int var, int srcLane, int width) {
@@ -33700,232 +33292,13 @@ static __attribute__((device)) __inline__ unsigned int __funnelshift_rc(unsigned
 # 1 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_35_intrinsics.h" 1
 # 3630 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/device_functions.h" 2
 # 1 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h" 1
-# 102 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
-static __attribute__((device)) __inline__ int __dp2a_lo(int srcA, int srcB, int c) ;
-# 113 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
-static __attribute__((device)) __inline__ unsigned int __dp2a_lo(unsigned int srcA, unsigned int srcB, unsigned int c) ;
-# 125 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
-static __attribute__((device)) __inline__ int __dp2a_lo(short2 srcA, char4 srcB, int c) ;
-# 136 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
-static __attribute__((device)) __inline__ unsigned int __dp2a_lo(ushort2 srcA, uchar4 srcB, unsigned int c) ;
-# 148 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
-static __attribute__((device)) __inline__ int __dp2a_hi(int srcA, int srcB, int c) ;
-# 159 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
-static __attribute__((device)) __inline__ unsigned int __dp2a_hi(unsigned int srcA, unsigned int srcB, unsigned int c) ;
-# 171 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
-static __attribute__((device)) __inline__ int __dp2a_hi(short2 srcA, char4 srcB, int c) ;
-# 182 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
-static __attribute__((device)) __inline__ unsigned int __dp2a_hi(ushort2 srcA, uchar4 srcB, unsigned int c) ;
-# 197 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
-static __attribute__((device)) __inline__ int __dp4a(int srcA, int srcB, int c) ;
-# 206 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
-static __attribute__((device)) __inline__ unsigned int __dp4a(unsigned int srcA, unsigned int srcB, unsigned int c) ;
-# 216 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
-static __attribute__((device)) __inline__ int __dp4a(char4 srcA, char4 srcB, int c) ;
-# 225 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
-static __attribute__((device)) __inline__ unsigned int __dp4a(uchar4 srcA, uchar4 srcB, unsigned int c) ;
 # 235 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h"
 # 1 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.hpp" 1
-# 79 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.hpp"
-static __attribute__((device)) __inline__ int __dp4a(int srcA, int srcB, int c) {
-    int ret;
-    asm volatile ("dp4a.s32.s32 %0, %1, %2, %3;" : "=r"(ret) : "r"(srcA), "r"(srcB), "r"(c));
-    return ret;
-}
-
-static __attribute__((device)) __inline__ unsigned int __dp4a(unsigned int srcA, unsigned int srcB, unsigned int c) {
-    unsigned int ret;
-    asm volatile ("dp4a.u32.u32 %0, %1, %2, %3;" : "=r"(ret) : "r"(srcA), "r"(srcB), "r"(c));
-    return ret;
-}
-
-static __attribute__((device)) __inline__ int __dp4a(char4 srcA, char4 srcB, int c) {
-    int ret;
-    asm volatile ("dp4a.s32.s32 %0, %1, %2, %3;" : "=r"(ret) : "r"(*(int *)&srcA), "r"(*(int *)&srcB), "r"(c));
-    return ret;
-}
-
-static __attribute__((device)) __inline__ unsigned int __dp4a(uchar4 srcA, uchar4 srcB, unsigned int c) {
-    unsigned int ret;
-    asm volatile ("dp4a.u32.u32 %0, %1, %2, %3;" : "=r"(ret) : "r"(*(unsigned int *)&srcA), "r"(*(unsigned int *)&srcB), "r"(c));
-    return ret;
-}
-
-
-static __attribute__((device)) __inline__ int __dp2a_lo(int srcA, int srcB, int c) {
-    int ret;
-    asm volatile ("dp2a.lo.s32.s32 %0, %1, %2, %3;" : "=r"(ret) : "r"(srcA), "r"(srcB), "r"(c));
-    return ret;
-}
-
-static __attribute__((device)) __inline__ unsigned int __dp2a_lo(unsigned int srcA, unsigned int srcB, unsigned int c) {
-    unsigned int ret;
-    asm volatile ("dp2a.lo.u32.u32 %0, %1, %2, %3;" : "=r"(ret) : "r"(srcA), "r"(srcB), "r"(c));
-    return ret;
-}
-
-static __attribute__((device)) __inline__ int __dp2a_lo(short2 srcA, char4 srcB, int c) {
-    int ret;
-    asm volatile ("dp2a.lo.s32.s32 %0, %1, %2, %3;" : "=r"(ret) : "r"(*(int *)&srcA), "r"(*(int *)&srcB), "r"(c));
-    return ret;
-}
-
-static __attribute__((device)) __inline__ unsigned int __dp2a_lo(ushort2 srcA, uchar4 srcB, unsigned int c) {
-    unsigned int ret;
-    asm volatile ("dp2a.lo.u32.u32 %0, %1, %2, %3;" : "=r"(ret) : "r"(*(unsigned int *)&srcA), "r"(*(unsigned int *)&srcB), "r"(c));
-    return ret;
-}
-
-
-static __attribute__((device)) __inline__ int __dp2a_hi(int srcA, int srcB, int c) {
-    int ret;
-    asm volatile ("dp2a.hi.s32.s32 %0, %1, %2, %3;" : "=r"(ret) : "r"(srcA), "r"(srcB), "r"(c));
-    return ret;
-}
-
-static __attribute__((device)) __inline__ unsigned int __dp2a_hi(unsigned int srcA, unsigned int srcB, unsigned int c) {
-    unsigned int ret;
-    asm volatile ("dp2a.hi.u32.u32 %0, %1, %2, %3;" : "=r"(ret) : "r"(srcA), "r"(srcB), "r"(c));
-    return ret;
-}
-
-static __attribute__((device)) __inline__ int __dp2a_hi(short2 srcA, char4 srcB, int c) {
-    int ret;
-    asm volatile ("dp2a.hi.s32.s32 %0, %1, %2, %3;" : "=r"(ret) : "r"(*(int *)&srcA), "r"(*(int *)&srcB), "r"(c));
-    return ret;
-}
-
-static __attribute__((device)) __inline__ unsigned int __dp2a_hi(ushort2 srcA, uchar4 srcB, unsigned int c) {
-    unsigned int ret;
-    asm volatile ("dp2a.hi.u32.u32 %0, %1, %2, %3;" : "=r"(ret) : "r"(*(unsigned int *)&srcA), "r"(*(unsigned int *)&srcB), "r"(c));
-    return ret;
-}
 # 236 "/opt/cuda/bin/../targets/x86_64-linux/include/sm_61_intrinsics.h" 2
 # 3631 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/device_functions.h" 2
 # 1 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_70_rt.h" 1
-# 82 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_70_rt.h"
-# 1 "/opt/cuda/bin/../targets/x86_64-linux/include/builtin_types.h" 1
-# 83 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_70_rt.h" 2
-
-# 1 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/host_defines.h" 1
-# 85 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_70_rt.h" 2
-# 96 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_70_rt.h"
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, unsigned value) ;
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, int value) ;
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, unsigned long value) ;
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, long value) ;
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, unsigned long long value) ;
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, long long value) ;
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, float value) ;
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, double value) ;
-
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, unsigned value, int *pred) ;
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, int value, int *pred) ;
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, unsigned long value, int *pred) ;
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, long value, int *pred) ;
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, unsigned long long value, int *pred) ;
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, long long value, int *pred) ;
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, float value, int *pred) ;
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, double value, int *pred) ;
-
-static __attribute__((device)) __inline__ void __nanosleep(unsigned int ns) ;
-
-static __attribute__((device)) __inline__ unsigned short int atomicCAS(unsigned short int *address, unsigned short int compare, unsigned short int val) ;
 # 126 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_70_rt.h"
 # 1 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_70_rt.hpp" 1
-# 79 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_70_rt.hpp"
-# 1 "/opt/cuda/bin/../targets/x86_64-linux/include/builtin_types.h" 1
-# 80 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_70_rt.hpp" 2
-
-# 1 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/host_defines.h" 1
-# 82 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_70_rt.hpp" 2
-# 93 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_70_rt.hpp"
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, unsigned value) {
-  return __match32_any_sync(mask, value);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, int value) {
-  return __match32_any_sync(mask, value);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, unsigned long value) {
-  return (sizeof(long) == sizeof(long long)) ?
-    __match64_any_sync(mask, (unsigned long long)value):
-    __match32_any_sync(mask, (unsigned)value);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, long value) {
-  return (sizeof(long) == sizeof(long long)) ?
-    __match64_any_sync(mask, (unsigned long long)value):
-    __match32_any_sync(mask, (unsigned)value);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, unsigned long long value) {
-  return __match64_any_sync(mask, value);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, long long value) {
-  return __match64_any_sync(mask, value);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, float value) {
-  return __match32_any_sync(mask, __float_as_uint(value));
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_any_sync(unsigned mask, double value) {
-  return __match64_any_sync(mask, __double_as_longlong(value));
-}
-
-
-
-
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, unsigned value, int *pred) {
-  return __match32_all_sync(mask, value, pred);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, int value, int *pred) {
-  return __match32_all_sync(mask, value, pred);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, unsigned long value, int *pred) {
-  return (sizeof(long) == sizeof(long long)) ?
-    __match64_all_sync(mask, (unsigned long long)value, pred):
-    __match32_all_sync(mask, (unsigned)value, pred);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, long value, int *pred) {
-  return (sizeof(long) == sizeof(long long)) ?
-    __match64_all_sync(mask, (unsigned long long)value, pred):
-    __match32_all_sync(mask, (unsigned)value, pred);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, unsigned long long value, int *pred) {
-  return __match64_all_sync(mask, value, pred);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, long long value, int *pred) {
-  return __match64_all_sync(mask, value, pred);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, float value, int *pred) {
-  return __match32_all_sync(mask, __float_as_uint(value), pred);
-}
-
-static __attribute__((device)) __inline__ unsigned int __match_all_sync(unsigned mask, double value, int *pred) {
-  return __match64_all_sync(mask, __double_as_longlong(value), pred);
-}
-
-static __attribute__((device)) __inline__ void __nanosleep(unsigned int ns) {
-    asm volatile("nanosleep.u32 %0;" :: "r"(ns));
-}
-
-
-extern "C" __attribute__((device)) __attribute__((device_builtin))
-unsigned short __usAtomicCAS(unsigned short *, unsigned short, unsigned short);
-
-static __attribute__((device)) __inline__ unsigned short int atomicCAS(unsigned short int *address, unsigned short int compare, unsigned short int val) {
-  return __usAtomicCAS(address, compare, val);
-}
 # 127 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_70_rt.h" 2
 # 3632 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/device_functions.h" 2
 # 1 "/opt/cuda/bin/../targets/x86_64-linux/include/crt/sm_80_rt.h" 1
@@ -34017,28 +33390,7 @@ static __attribute__((device)) T tex2D(cudaTextureObject_t texObject, float x, f
   tex2D(&ret, texObject, x, y);
   return ret;
 }
-
-
-template <typename T>
-static __attribute__((device)) typename __nv_itex_trait<T>::type tex2D(T *ptr, cudaTextureObject_t obj, float x, float y,
-                                                          bool* isResident)
-{
-  unsigned char res;
-   __nv_tex_surf_handler("__itex2D_sparse", ptr, obj, x, y, &res);
-   *isResident = (res != 0);
-}
-
-template <class T>
-static __attribute__((device)) T tex2D(cudaTextureObject_t texObject, float x, float y, bool* isResident)
-{
-  T ret;
-  tex2D(&ret, texObject, x, y, isResident);
-  return ret;
-}
-
-
-
-
+# 173 "/opt/cuda/bin/../targets/x86_64-linux/include/texture_indirect_functions.h"
 template <typename T>
 static __attribute__((device)) typename __nv_itex_trait<T>::type tex3D(T *ptr, cudaTextureObject_t obj, float x, float y, float z)
 {
@@ -34052,27 +33404,7 @@ static __attribute__((device)) T tex3D(cudaTextureObject_t texObject, float x, f
   tex3D(&ret, texObject, x, y, z);
   return ret;
 }
-
-
-template <typename T>
-static __attribute__((device)) typename __nv_itex_trait<T>::type tex3D(T *ptr, cudaTextureObject_t obj, float x, float y, float z,
-                                                          bool* isResident)
-{
-  unsigned char res;
-   __nv_tex_surf_handler("__itex3D_sparse", ptr, obj, x, y, z, &res);
-   *isResident = (res != 0);
-}
-
-template <class T>
-static __attribute__((device)) T tex3D(cudaTextureObject_t texObject, float x, float y, float z, bool* isResident)
-{
-  T ret;
-  tex3D(&ret, texObject, x, y, z, isResident);
-  return ret;
-}
-
-
-
+# 207 "/opt/cuda/bin/../targets/x86_64-linux/include/texture_indirect_functions.h"
 template <typename T>
 static __attribute__((device)) typename __nv_itex_trait<T>::type tex1DLayered(T *ptr, cudaTextureObject_t obj, float x, int layer)
 {
@@ -34100,26 +33432,7 @@ static __attribute__((device)) T tex2DLayered(cudaTextureObject_t texObject, flo
   tex2DLayered(&ret, texObject, x, y, layer);
   return ret;
 }
-
-
-template <typename T>
-static __attribute__((device)) typename __nv_itex_trait<T>::type tex2DLayered(T *ptr, cudaTextureObject_t obj, float x, float y, int layer, bool* isResident)
-{
-  unsigned char res;
-  __nv_tex_surf_handler("__itex2DLayered_sparse", ptr, obj, x, y, layer, &res);
-  *isResident = (res != 0);
-}
-
-template <class T>
-static __attribute__((device)) T tex2DLayered(cudaTextureObject_t texObject, float x, float y, int layer, bool* isResident)
-{
-  T ret;
-  tex2DLayered(&ret, texObject, x, y, layer, isResident);
-  return ret;
-}
-
-
-
+# 254 "/opt/cuda/bin/../targets/x86_64-linux/include/texture_indirect_functions.h"
 template <typename T>
 static __attribute__((device)) typename __nv_itex_trait<T>::type texCubemap(T *ptr, cudaTextureObject_t obj, float x, float y, float z)
 {
@@ -34163,26 +33476,7 @@ static __attribute__((device)) T tex2Dgather(cudaTextureObject_t to, float x, fl
   tex2Dgather(&ret, to, x, y, comp);
   return ret;
 }
-
-
-template <typename T>
-static __attribute__((device)) typename __nv_itex_trait<T>::type tex2Dgather(T *ptr, cudaTextureObject_t obj, float x, float y, bool* isResident, int comp = 0)
-{
-  unsigned char res;
-  __nv_tex_surf_handler("__itex2Dgather_sparse", ptr, obj, x, y, comp, &res);
-  *isResident = (res != 0);
-}
-
-template <class T>
-static __attribute__((device)) T tex2Dgather(cudaTextureObject_t to, float x, float y, bool* isResident, int comp = 0)
-{
-  T ret;
-  tex2Dgather(&ret, to, x, y, isResident, comp);
-  return ret;
-}
-
-
-
+# 317 "/opt/cuda/bin/../targets/x86_64-linux/include/texture_indirect_functions.h"
 template <typename T>
 static __attribute__((device)) typename __nv_itex_trait<T>::type tex1DLod(T *ptr, cudaTextureObject_t obj, float x, float level)
 {
@@ -34211,28 +33505,7 @@ static __attribute__((device)) T tex2DLod(cudaTextureObject_t texObject, float x
   tex2DLod(&ret, texObject, x, y, level);
   return ret;
 }
-
-
-
-template <typename T>
-static __attribute__((device)) typename __nv_itex_trait<T>::type tex2DLod(T *ptr, cudaTextureObject_t obj, float x, float y, float level, bool* isResident)
-{
-  unsigned char res;
-  __nv_tex_surf_handler("__itex2DLod_sparse", ptr, obj, x, y, level, &res);
-  *isResident = (res != 0);
-}
-
-template <class T>
-static __attribute__((device)) T tex2DLod(cudaTextureObject_t texObject, float x, float y, float level, bool* isResident)
-{
-  T ret;
-  tex2DLod(&ret, texObject, x, y, level, isResident);
-  return ret;
-}
-
-
-
-
+# 367 "/opt/cuda/bin/../targets/x86_64-linux/include/texture_indirect_functions.h"
 template <typename T>
 static __attribute__((device)) typename __nv_itex_trait<T>::type tex3DLod(T *ptr, cudaTextureObject_t obj, float x, float y, float z, float level)
 {
@@ -34246,27 +33519,7 @@ static __attribute__((device)) T tex3DLod(cudaTextureObject_t texObject, float x
   tex3DLod(&ret, texObject, x, y, z, level);
   return ret;
 }
-
-
-template <typename T>
-static __attribute__((device)) typename __nv_itex_trait<T>::type tex3DLod(T *ptr, cudaTextureObject_t obj, float x, float y, float z, float level, bool* isResident)
-{
-  unsigned char res;
-  __nv_tex_surf_handler("__itex3DLod_sparse", ptr, obj, x, y, z, level, &res);
-  *isResident = (res != 0);
-}
-
-template <class T>
-static __attribute__((device)) T tex3DLod(cudaTextureObject_t texObject, float x, float y, float z, float level, bool* isResident)
-{
-  T ret;
-  tex3DLod(&ret, texObject, x, y, z, level, isResident);
-  return ret;
-}
-
-
-
-
+# 401 "/opt/cuda/bin/../targets/x86_64-linux/include/texture_indirect_functions.h"
 template <typename T>
 static __attribute__((device)) typename __nv_itex_trait<T>::type tex1DLayeredLod(T *ptr, cudaTextureObject_t obj, float x, int layer, float level)
 {
@@ -34295,25 +33548,7 @@ static __attribute__((device)) T tex2DLayeredLod(cudaTextureObject_t texObject, 
   tex2DLayeredLod(&ret, texObject, x, y, layer, level);
   return ret;
 }
-
-
-template <typename T>
-static __attribute__((device)) typename __nv_itex_trait<T>::type tex2DLayeredLod(T *ptr, cudaTextureObject_t obj, float x, float y, int layer, float level, bool* isResident)
-{
-  unsigned char res;
-  __nv_tex_surf_handler("__itex2DLayeredLod_sparse", ptr, obj, x, y, layer, level, &res);
-  *isResident = (res != 0);
-}
-
-template <class T>
-static __attribute__((device)) T tex2DLayeredLod(cudaTextureObject_t texObject, float x, float y, int layer, float level, bool* isResident)
-{
-  T ret;
-  tex2DLayeredLod(&ret, texObject, x, y, layer, level, isResident);
-  return ret;
-}
-
-
+# 448 "/opt/cuda/bin/../targets/x86_64-linux/include/texture_indirect_functions.h"
 template <typename T>
 static __attribute__((device)) typename __nv_itex_trait<T>::type texCubemapLod(T *ptr, cudaTextureObject_t obj, float x, float y, float z, float level)
 {
@@ -34385,26 +33620,7 @@ static __attribute__((device)) T tex2DGrad(cudaTextureObject_t texObject, float 
   tex2DGrad(&ret, texObject, x, y, dPdx, dPdy);
   return ret;
 }
-
-
-template <typename T>
-static __attribute__((device)) typename __nv_itex_trait<T>::type tex2DGrad(T *ptr, cudaTextureObject_t obj, float x, float y, float2 dPdx, float2 dPdy, bool* isResident)
-{
-  unsigned char res;
-  __nv_tex_surf_handler("__itex2DGrad_sparse", ptr, obj, x, y, &dPdx, &dPdy, &res);
-  *isResident = (res != 0);
-}
-
-template <class T>
-static __attribute__((device)) T tex2DGrad(cudaTextureObject_t texObject, float x, float y, float2 dPdx, float2 dPdy, bool* isResident)
-{
-  T ret;
-  tex2DGrad(&ret, texObject, x, y, dPdx, dPdy, isResident);
-  return ret;
-}
-
-
-
+# 539 "/opt/cuda/bin/../targets/x86_64-linux/include/texture_indirect_functions.h"
 template <typename T>
 static __attribute__((device)) typename __nv_itex_trait<T>::type tex3DGrad(T *ptr, cudaTextureObject_t obj, float x, float y, float z, float4 dPdx, float4 dPdy)
 {
@@ -34418,27 +33634,7 @@ static __attribute__((device)) T tex3DGrad(cudaTextureObject_t texObject, float 
   tex3DGrad(&ret, texObject, x, y, z, dPdx, dPdy);
   return ret;
 }
-
-
-template <typename T>
-static __attribute__((device)) typename __nv_itex_trait<T>::type tex3DGrad(T *ptr, cudaTextureObject_t obj, float x, float y, float z, float4 dPdx, float4 dPdy, bool* isResident)
-{
-  unsigned char res;
-  __nv_tex_surf_handler("__itex3DGrad_sparse", ptr, obj, x, y, z, &dPdx, &dPdy, &res);
-  *isResident = (res != 0);
-}
-
-template <class T>
-static __attribute__((device)) T tex3DGrad(cudaTextureObject_t texObject, float x, float y, float z, float4 dPdx, float4 dPdy, bool* isResident)
-{
-  T ret;
-  tex3DGrad(&ret, texObject, x, y, z, dPdx, dPdy, isResident);
-  return ret;
-}
-
-
-
-
+# 573 "/opt/cuda/bin/../targets/x86_64-linux/include/texture_indirect_functions.h"
 template <typename T>
 static __attribute__((device)) typename __nv_itex_trait<T>::type tex1DLayeredGrad(T *ptr, cudaTextureObject_t obj, float x, int layer, float dPdx, float dPdy)
 {
@@ -34467,26 +33663,7 @@ static __attribute__((device)) T tex2DLayeredGrad(cudaTextureObject_t texObject,
   tex2DLayeredGrad(&ret, texObject, x, y, layer, dPdx, dPdy);
   return ret;
 }
-
-
-template <typename T>
-static __attribute__((device)) typename __nv_itex_trait<T>::type tex2DLayeredGrad(T * ptr, cudaTextureObject_t obj, float x, float y, int layer, float2 dPdx, float2 dPdy, bool* isResident)
-{
-  unsigned char res;
-  __nv_tex_surf_handler("__itex2DLayeredGrad_sparse", ptr, obj, x, y, layer, &dPdx, &dPdy, &res);
-  *isResident = (res != 0);
-}
-
-template <class T>
-static __attribute__((device)) T tex2DLayeredGrad(cudaTextureObject_t texObject, float x, float y, int layer, float2 dPdx, float2 dPdy, bool* isResident)
-{
-  T ret;
-  tex2DLayeredGrad(&ret, texObject, x, y, layer, dPdx, dPdy, isResident);
-  return ret;
-}
-
-
-
+# 621 "/opt/cuda/bin/../targets/x86_64-linux/include/texture_indirect_functions.h"
 template <typename T>
 static __attribute__((device)) typename __nv_itex_trait<T>::type texCubemapLayeredGrad(T *ptr, cudaTextureObject_t obj, float x, float y, float z, int layer, float4 dPdx, float4 dPdy)
 {

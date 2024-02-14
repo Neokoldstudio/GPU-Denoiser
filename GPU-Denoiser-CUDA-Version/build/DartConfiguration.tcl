@@ -4,8 +4,8 @@
 
 
 # Configuration directories and files
-SourceDirectory: /u/godbertp/Desktop/Projet GPU/GPU-Denoiser-CUDA-Version
-BuildDirectory: /u/godbertp/Desktop/Projet GPU/GPU-Denoiser-CUDA-Version/build
+SourceDirectory: /u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version
+BuildDirectory: /u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build
 
 # Where to place the cost data store
 CostDataFile: 
@@ -27,7 +27,7 @@ SubmitInactivityTimeout:
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/usr/bin/cmake" "/u/godbertp/Desktop/Projet GPU/GPU-Denoiser-CUDA-Version"
+ConfigureCommand: "/usr/bin/cmake" "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version"
 MakeCommand: /usr/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 
