@@ -516,56 +516,56 @@ Denoiser/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/build
 .PHONY : Denoiser/fast
 
-FonctionDemo5.o: FonctionDemo5.cu.o
-.PHONY : FonctionDemo5.o
+Denoiser.o: Denoiser.cu.o
+.PHONY : Denoiser.o
 
 # target to build an object file
-FonctionDemo5.cu.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/GPU_Denoiser.dir/build.make CMakeFiles/GPU_Denoiser.dir/FonctionDemo5.cu.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/FonctionDemo5.cu.o
-.PHONY : FonctionDemo5.cu.o
+Denoiser.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/Denoiser.cu.o
+.PHONY : Denoiser.cu.o
 
-FonctionDemo5.i: FonctionDemo5.cu.i
-.PHONY : FonctionDemo5.i
+Denoiser.i: Denoiser.cu.i
+.PHONY : Denoiser.i
 
 # target to preprocess a source file
-FonctionDemo5.cu.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/GPU_Denoiser.dir/build.make CMakeFiles/GPU_Denoiser.dir/FonctionDemo5.cu.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/FonctionDemo5.cu.i
-.PHONY : FonctionDemo5.cu.i
+Denoiser.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/Denoiser.cu.i
+.PHONY : Denoiser.cu.i
 
-FonctionDemo5.s: FonctionDemo5.cu.s
-.PHONY : FonctionDemo5.s
+Denoiser.s: Denoiser.cu.s
+.PHONY : Denoiser.s
 
 # target to generate assembly for a file
-FonctionDemo5.cu.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/GPU_Denoiser.dir/build.make CMakeFiles/GPU_Denoiser.dir/FonctionDemo5.cu.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/FonctionDemo5.cu.s
-.PHONY : FonctionDemo5.cu.s
+Denoiser.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/Denoiser.cu.s
+.PHONY : Denoiser.cu.s
 
-Tp5_IFT3205.o: Tp5_IFT3205.cu.o
-.PHONY : Tp5_IFT3205.o
+Fonctions.o: Fonctions.cu.o
+.PHONY : Fonctions.o
 
 # target to build an object file
-Tp5_IFT3205.cu.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.o
-.PHONY : Tp5_IFT3205.cu.o
+Fonctions.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GPU_Denoiser.dir/build.make CMakeFiles/GPU_Denoiser.dir/Fonctions.cu.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/Fonctions.cu.o
+.PHONY : Fonctions.cu.o
 
-Tp5_IFT3205.i: Tp5_IFT3205.cu.i
-.PHONY : Tp5_IFT3205.i
+Fonctions.i: Fonctions.cu.i
+.PHONY : Fonctions.i
 
 # target to preprocess a source file
-Tp5_IFT3205.cu.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.i
-.PHONY : Tp5_IFT3205.cu.i
+Fonctions.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GPU_Denoiser.dir/build.make CMakeFiles/GPU_Denoiser.dir/Fonctions.cu.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/Fonctions.cu.i
+.PHONY : Fonctions.cu.i
 
-Tp5_IFT3205.s: Tp5_IFT3205.cu.s
-.PHONY : Tp5_IFT3205.s
+Fonctions.s: Fonctions.cu.s
+.PHONY : Fonctions.s
 
 # target to generate assembly for a file
-Tp5_IFT3205.cu.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.s
-.PHONY : Tp5_IFT3205.cu.s
+Fonctions.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GPU_Denoiser.dir/build.make CMakeFiles/GPU_Denoiser.dir/Fonctions.cu.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Denoiser.dir/build.make CMakeFiles/Denoiser.dir/Fonctions.cu.s
+.PHONY : Fonctions.cu.s
 
 # Help Target
 help:
@@ -606,12 +606,12 @@ help:
 	@echo "... NightlyUpdate"
 	@echo "... Denoiser"
 	@echo "... GPU_Denoiser"
-	@echo "... FonctionDemo5.o"
-	@echo "... FonctionDemo5.i"
-	@echo "... FonctionDemo5.s"
-	@echo "... Tp5_IFT3205.o"
-	@echo "... Tp5_IFT3205.i"
-	@echo "... Tp5_IFT3205.s"
+	@echo "... Denoiser.o"
+	@echo "... Denoiser.i"
+	@echo "... Denoiser.s"
+	@echo "... Fonctions.o"
+	@echo "... Fonctions.i"
+	@echo "... Fonctions.s"
 .PHONY : help
 
 

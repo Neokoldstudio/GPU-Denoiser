@@ -1,2 +1,2 @@
-/usr/bin/ar qc libGPU_Denoiser.a CMakeFiles/GPU_Denoiser.dir/FonctionDemo5.cu.o
+/usr/bin/ar qc libGPU_Denoiser.a CMakeFiles/GPU_Denoiser.dir/Fonctions.cu.o
 /usr/bin/ranlib libGPU_Denoiser.a

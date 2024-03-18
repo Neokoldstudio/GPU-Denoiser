@@ -7,9 +7,9 @@ set(CMAKE_CUDA_ARCHITECTURES 70)
 
 include(CTest)
  
-add_library(GPU_Denoiser FonctionDemo5.cu)
+add_library(GPU_Denoiser Fonctions.cu)
 
-add_executable(Denoiser Tp5_IFT3205.cu FonctionDemo5.cu)
+add_executable(Denoiser Denoiser.cu Fonctions.cu)
  
 # Request that particles be built with -std=c++11
 # As this is a public compile feature anything that links to 

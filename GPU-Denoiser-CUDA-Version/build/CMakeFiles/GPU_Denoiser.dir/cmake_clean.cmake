@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/GPU_Denoiser.dir/FonctionDemo5.cu.o"
-  "CMakeFiles/GPU_Denoiser.dir/FonctionDemo5.cu.o.d"
+  "CMakeFiles/GPU_Denoiser.dir/Fonctions.cu.o"
+  "CMakeFiles/GPU_Denoiser.dir/Fonctions.cu.o.d"
   "libGPU_Denoiser.a"
   "libGPU_Denoiser.pdb"
 )

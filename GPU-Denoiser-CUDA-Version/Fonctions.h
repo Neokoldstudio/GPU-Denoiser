@@ -1,5 +1,5 @@
 //------------------------------------------------------
-// module  : FunctionDemo5.h
+// module  : Fonctions.h
 // auteur  : Mignotte Max
 // date    :
 // version : 1.0

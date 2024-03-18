@@ -69,44 +69,44 @@ include CMakeFiles/Denoiser.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Denoiser.dir/flags.make
 
-CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.o: CMakeFiles/Denoiser.dir/flags.make
-CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.o: /u/godbertp/Desktop/Projet\ GPU/projet/GPU-Denoiser-CUDA-Version/Tp5_IFT3205.cu
-CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.o: CMakeFiles/Denoiser.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CUDA object CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.o"
-	/opt/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.o -MF CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.o.d -x cu -c "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/Tp5_IFT3205.cu" -o CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.o
+CMakeFiles/Denoiser.dir/Denoiser.cu.o: CMakeFiles/Denoiser.dir/flags.make
+CMakeFiles/Denoiser.dir/Denoiser.cu.o: /u/godbertp/Desktop/Projet\ GPU/projet/GPU-Denoiser-CUDA-Version/Denoiser.cu
+CMakeFiles/Denoiser.dir/Denoiser.cu.o: CMakeFiles/Denoiser.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CUDA object CMakeFiles/Denoiser.dir/Denoiser.cu.o"
+	/opt/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/Denoiser.dir/Denoiser.cu.o -MF CMakeFiles/Denoiser.dir/Denoiser.cu.o.d -x cu -c "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/Denoiser.cu" -o CMakeFiles/Denoiser.dir/Denoiser.cu.o
 
-CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CUDA source to CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.i"
+CMakeFiles/Denoiser.dir/Denoiser.cu.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CUDA source to CMakeFiles/Denoiser.dir/Denoiser.cu.i"
 	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_PREPROCESSED_SOURCE
 
-CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CUDA source to assembly CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.s"
+CMakeFiles/Denoiser.dir/Denoiser.cu.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CUDA source to assembly CMakeFiles/Denoiser.dir/Denoiser.cu.s"
 	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_ASSEMBLY_SOURCE
 
-CMakeFiles/Denoiser.dir/FonctionDemo5.cu.o: CMakeFiles/Denoiser.dir/flags.make
-CMakeFiles/Denoiser.dir/FonctionDemo5.cu.o: /u/godbertp/Desktop/Projet\ GPU/projet/GPU-Denoiser-CUDA-Version/FonctionDemo5.cu
-CMakeFiles/Denoiser.dir/FonctionDemo5.cu.o: CMakeFiles/Denoiser.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CUDA object CMakeFiles/Denoiser.dir/FonctionDemo5.cu.o"
-	/opt/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/Denoiser.dir/FonctionDemo5.cu.o -MF CMakeFiles/Denoiser.dir/FonctionDemo5.cu.o.d -x cu -c "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/FonctionDemo5.cu" -o CMakeFiles/Denoiser.dir/FonctionDemo5.cu.o
+CMakeFiles/Denoiser.dir/Fonctions.cu.o: CMakeFiles/Denoiser.dir/flags.make
+CMakeFiles/Denoiser.dir/Fonctions.cu.o: /u/godbertp/Desktop/Projet\ GPU/projet/GPU-Denoiser-CUDA-Version/Fonctions.cu
+CMakeFiles/Denoiser.dir/Fonctions.cu.o: CMakeFiles/Denoiser.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CUDA object CMakeFiles/Denoiser.dir/Fonctions.cu.o"
+	/opt/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/Denoiser.dir/Fonctions.cu.o -MF CMakeFiles/Denoiser.dir/Fonctions.cu.o.d -x cu -c "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/Fonctions.cu" -o CMakeFiles/Denoiser.dir/Fonctions.cu.o
 
-CMakeFiles/Denoiser.dir/FonctionDemo5.cu.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CUDA source to CMakeFiles/Denoiser.dir/FonctionDemo5.cu.i"
+CMakeFiles/Denoiser.dir/Fonctions.cu.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CUDA source to CMakeFiles/Denoiser.dir/Fonctions.cu.i"
 	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_PREPROCESSED_SOURCE
 
-CMakeFiles/Denoiser.dir/FonctionDemo5.cu.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CUDA source to assembly CMakeFiles/Denoiser.dir/FonctionDemo5.cu.s"
+CMakeFiles/Denoiser.dir/Fonctions.cu.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CUDA source to assembly CMakeFiles/Denoiser.dir/Fonctions.cu.s"
 	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_ASSEMBLY_SOURCE
 
 # Object files for target Denoiser
 Denoiser_OBJECTS = \
-"CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.o" \
-"CMakeFiles/Denoiser.dir/FonctionDemo5.cu.o"
+"CMakeFiles/Denoiser.dir/Denoiser.cu.o" \
+"CMakeFiles/Denoiser.dir/Fonctions.cu.o"
 
 # External object files for target Denoiser
 Denoiser_EXTERNAL_OBJECTS =
 
-Denoiser: CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.o
-Denoiser: CMakeFiles/Denoiser.dir/FonctionDemo5.cu.o
+Denoiser: CMakeFiles/Denoiser.dir/Denoiser.cu.o
+Denoiser: CMakeFiles/Denoiser.dir/Fonctions.cu.o
 Denoiser: CMakeFiles/Denoiser.dir/build.make
 Denoiser: CMakeFiles/Denoiser.dir/linkLibs.rsp
 Denoiser: CMakeFiles/Denoiser.dir/objects1.rsp

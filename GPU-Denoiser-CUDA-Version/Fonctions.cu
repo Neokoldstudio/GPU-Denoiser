@@ -1,5 +1,5 @@
 //------------------------------------------------------
-// module  : FonctionDemo5.c
+// module  : Fonctions.c
 // auteur original  : Mignotte Max
 // portage sur GPU : Godbert Paul
 // date    :
@@ -19,7 +19,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "FonctionDemo5.h"
+#include "Fonctions.h"
 
 
 //--------------------------//

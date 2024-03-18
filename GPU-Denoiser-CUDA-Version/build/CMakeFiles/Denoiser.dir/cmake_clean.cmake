@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/Denoiser.dir/FonctionDemo5.cu.o"
-  "CMakeFiles/Denoiser.dir/FonctionDemo5.cu.o.d"
-  "CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.o"
-  "CMakeFiles/Denoiser.dir/Tp5_IFT3205.cu.o.d"
+  "CMakeFiles/Denoiser.dir/Denoiser.cu.o"
+  "CMakeFiles/Denoiser.dir/Denoiser.cu.o.d"
+  "CMakeFiles/Denoiser.dir/Fonctions.cu.o"
+  "CMakeFiles/Denoiser.dir/Fonctions.cu.o.d"
   "Denoiser"
   "Denoiser.pdb"
 )
