@@ -156,6 +156,31 @@ void copy_matrix(float **mat1, float **mat2, int lgth, int wdth)
             mat1[i][j] = mat2[i][j];
 }
 
+void copy_matrix_on_device(float *mat1, float **mat2, int lgth, int wdth)
+{
+    float buff[lgth*wdth];
+
+    for (int i = 0; i < lgth; i++)
+        for (int j = 0; j < wdth; j++)
+            buff[wdth*i + j] = mat2[i][j];
+
+    cudaMemcpy(mat2, buff, lgth*wdth, cudaMemcpyHostToDevice);
+}
+
+void copy_matrix_on_host(float **mat1, float *mat2, int lgth, int wdth) {
+    float *buff = (float *)malloc(lgth * wdth * sizeof(float));
+
+    // Copy matrix data from device to host buffer
+    cudaMemcpy(buff, mat2, lgth * wdth * sizeof(float), cudaMemcpyDeviceToHost);
+
+    // Unflatten the 1D buffer to 2D matrix
+    for (int i = 0; i < lgth; i++)
+        for (int j = 0; j < wdth; j++)
+            mat1[i][j] = buff[wdth * i + j];
+
+    // Free the temporary buffer
+    free(buff);
+}
 //----------------------------------------------------------
 // Fast FilteringDCT 8x8  <simple & optimise>
 //----------------------------------------------------------
@@ -418,7 +443,9 @@ int main(int argc, char **argv)
     float **ImgDenoised = fmatrix_allocate_2d(length, width);
 
     //>Degradation
-    copy_matrix(ImgDegraded, Img, length, width);
+    dim3 blockSize(16, 16);
+    dim3 gridSize((length + 16 - 1) / 16, (width + 16 - 1) / 16);
+
     add_gaussian_noise(ImgDegraded, length, width, SIGMA_NOISE * SIGMA_NOISE);
 
     printf("\n\n  Info Noise");
