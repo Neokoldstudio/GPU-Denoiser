@@ -8,7 +8,7 @@
 // labo    : DIRO
 // note    :
 //------------------------------------------------------
-// 
+//
 
 //------------------------------------------------
 // INCLUDED FUNCTION -----------------------------
@@ -21,183 +21,243 @@
 
 #include "Fonctions.h"
 
-
 //--------------------------//
 //-- Matrice de Flottant --//
 //--------------------------//
 //---------------------------------------------------------
-//  Alloue de la memoire pour une matrice 1d de float      
+//  Alloue de la memoire pour une matrice 1d de float
 //---------------------------------------------------------
-float* fmatrix_allocate_1d(int hsize)
- {
-  float* matrix;
+float *fmatrix_allocate_1d(int hsize)
+{
+    float *matrix;
 
-  matrix=(float*)malloc(sizeof(float)*hsize);
-  if (matrix==NULL) printf("probleme d'allocation memoire");
+    matrix = (float *)malloc(sizeof(float) * hsize);
+    if (matrix == NULL)
+        printf("probleme d'allocation memoire");
+        exit -1;
 
-  return matrix;
- }
+    return matrix;
+}
+
+float * fmatrix_allocate_1d_device(int hsize)
+{
+    float *matrix;
+    //comme CUDA ne gère pas nativement les array multidimentionelles, on "applatis" la matrice 2D
+    cudaMalloc((void**)&matrix, sizeof(float)*hsize);
+
+    if(matrix == NULL)
+        printf("probleme d'allocation memoire dans une matrice 1d");
+        exit -1;
+
+    return matrix;
+}
 
 //----------------------------------------------------------
-//  Alloue de la memoire pour une matrice 2d de float       
+//  Alloue de la memoire pour une matrice 2d de float
 //----------------------------------------------------------
-float** fmatrix_allocate_2d(int vsize,int hsize)
- {
-  int i;
-  float** matrix;
-  float *imptr;
+float **fmatrix_allocate_2d(int vsize, int hsize)
+{
+    int i;
+    float **matrix;
+    float *imptr;
 
-  matrix=(float**)malloc(sizeof(float*)*vsize);
-  if (matrix==NULL) printf("probleme d'allocation memoire");
+    matrix = (float **)malloc(sizeof(float *) * vsize);
+    if (matrix == NULL)
+        printf("probleme d'allocation memoire");
+        exit -1;
 
-  imptr=(float*)malloc(sizeof(float)*hsize*vsize);
-  if (imptr==NULL) printf("probleme d'allocation memoire");
+    imptr = (float *)malloc(sizeof(float) * hsize * vsize);
+    if (imptr == NULL)
+        printf("probleme d'allocation memoire");
+        exit -1;
 
-  for(i=0;i<vsize;i++,imptr+=hsize) matrix[i]=imptr;
-  return matrix;
- }
+    for (i = 0; i < vsize; i++, imptr += hsize)
+        matrix[i] = imptr;
+    return matrix;
+}
+
+float * fmatrix_allocate_2d_device(int vsize, int hsize)
+{
+    float *matrix;
+    //comme CUDA ne gère pas nativement les array multidimentionelles, on "applatis" la matrice 2D
+    cudaMalloc((void**)&matrix, sizeof(float)*vsize*hsize);
+
+    if(matrix == NULL)
+        printf("probleme d'allocation memoire dans une matrice 3d");
+        exit -1;
+
+    return matrix;
+}
 
 //----------------------------------------------------------
 // Allocation matrix 3d float
 //----------------------------------------------------------
-float*** fmatrix_allocate_3d(int dsize,int vsize,int hsize)
- {
-  int i;
-  float*** matrix;
+float ***fmatrix_allocate_3d(int dsize, int vsize, int hsize)
+{
+    int i;
+    float ***matrix;
 
-  matrix=(float***)malloc(sizeof(float**)*dsize); 
+    matrix = (float ***)malloc(sizeof(float **) * dsize);
 
-  for(i=0;i<dsize;i++)
-    matrix[i]=fmatrix_allocate_2d(vsize,hsize);
-  return matrix;
- }
+    for (i = 0; i < dsize; i++)
+        matrix[i] = fmatrix_allocate_2d(vsize, hsize);
+    return matrix;
+}
+
+float * fmatrix_allocate_3d_device(int dsize, int vsize, int hsize)
+{
+    float *matrix;
+    //comme CUDA ne gère pas nativement les array multidimentionelles, on "applatis" la matrice 3D
+    cudaMalloc((void**)&matrix, sizeof(float)*dsize*vsize*hsize);
+    
+    if(matrix == NULL)
+        printf("probleme d'allocation memoire dans une matrice 3d");
+        exit -1;
+
+    return matrix;
+}
 
 //----------------------------------------------------------
-// Libere la memoire de la matrice 1d de float              
+// Libere la memoire de la matrice 1d de float
 //----------------------------------------------------------
-void free_fmatrix_1d(float* pmat)
- {
-  free(pmat);
- }
+void free_fmatrix_1d(float *pmat)
+{
+    free(pmat);
+}
 
 //----------------------------------------------------------
-// Libere la memoire de la matrice 2d de float              
+// Libere la memoire de la matrice 2d de float
 //----------------------------------------------------------
-void free_fmatrix_2d(float** pmat)
- {
-  free(pmat[0]);
-  free(pmat);
- }
+void free_fmatrix_2d(float **pmat)
+{
+    free(pmat[0]);
+    free(pmat);
+}
 
 //----------------------------------------------------------
 // Free Memory 3d de float
 //----------------------------------------------------------
-void free_fmatrix_3d(float*** pmat,int dsize)
+void free_fmatrix_3d(float ***pmat, int dsize)
 {
- int i;
- for(i=0;i<dsize;i++)
-  {
-   free(pmat[i][0]);
-   free(pmat[i]);
-   }
- free(pmat);
+    int i;
+    for (i = 0; i < dsize; i++)
+    {
+        free(pmat[i][0]);
+        free(pmat[i]);
+    }
+    free(pmat);
+}
+
+//----------------------------------------------------------
+// Free Device Memory of matrices
+//----------------------------------------------------------
+void free_matrix_device(float* pmat)
+{
+    cudaFree(pmat);
 }
 
 //--------------------//
 //-- LOAD/SAVE/FILE --//
 //--------------------//
 //----------------------------------------------------------
-// Chargement de l'image de nom <name> (en pgm)             
+// Chargement de l'image de nom <name> (en pgm)
 //----------------------------------------------------------
-float** LoadImagePgm(char* name,int *length,int *width)
- {
-  int i,j;
-  unsigned char var;
-  char buff[NBCHAR];
-  int tmp;
-  char* ptmp;
-  float** mat;
+float **LoadImagePgm(char *name, int *length, int *width)
+{
+    int i, j;
+    unsigned char var;
+    char buff[NBCHAR];
+    int tmp;
+    char *ptmp;
+    float **mat;
 
-  char stringTmp1[NBCHAR],stringTmp2[NBCHAR];
- 
-  int ta1,ta2,ta3;
-  FILE *fic;
+    char stringTmp1[NBCHAR], stringTmp2[NBCHAR];
 
-  //-----nom du fichier pgm-----
-  strcpy(buff,name);
-  strcat(buff,".pgm");
-  printf("---> Ouverture de %s",buff);
+    int ta1, ta2, ta3;
+    FILE *fic;
 
-  //----ouverture du fichier----
-  fic=fopen(buff,"r");
-  if (fic==NULL)
-    { printf("\n- Grave erreur a l'ouverture de %s  -\n",buff);
-      exit(-1); }
+    //-----nom du fichier pgm-----
+    strcpy(buff, name);
+    strcat(buff, ".pgm");
+    printf("---> Ouverture de %s", buff);
 
-  //--recuperation de l'entete--
-  ptmp=fgets(stringTmp1,100,fic);
-  ptmp=fgets(stringTmp2,100,fic);
-  tmp=fscanf(fic,"%d %d",&ta1,&ta2);
-  tmp=fscanf(fic,"%d\n",&ta3);
+    //----ouverture du fichier----
+    fic = fopen(buff, "r");
+    if (fic == NULL)
+    {
+        printf("\n- Grave erreur a l'ouverture de %s  -\n", buff);
+        exit(-1);
+    }
 
-  //--affichage de l'entete--
-  printf("\n\n--Entete--");
-  printf("\n----------");
-  printf("\n%s%s%d %d \n%d\n",stringTmp1,stringTmp2,ta1,ta2,ta3);
+    //--recuperation de l'entete--
+    ptmp = fgets(stringTmp1, 100, fic);
+    ptmp = fgets(stringTmp2, 100, fic);
+    tmp = fscanf(fic, "%d %d", &ta1, &ta2);
+    tmp = fscanf(fic, "%d\n", &ta3);
 
-  *length=ta1;
-  *width=ta2;
-  mat=fmatrix_allocate_2d(*length,*width);
-   
-  //--chargement dans la matrice--
-     for(i=0;i<*length;i++)
-      for(j=0;j<*width;j++)  
-        { tmp=fread(&var,1,1,fic);
-          mat[i][j]=var; }
+    //--affichage de l'entete--
+    printf("\n\n--Entete--");
+    printf("\n----------");
+    printf("\n%s%s%d %d \n%d\n", stringTmp1, stringTmp2, ta1, ta2, ta3);
 
-   //---fermeture du fichier---
-  fclose(fic);
+    *length = ta1;
+    *width = ta2;
+    mat = fmatrix_allocate_2d(*length, *width);
 
-  return(mat);
- }
+    //--chargement dans la matrice--
+    for (i = 0; i < *length; i++)
+        for (j = 0; j < *width; j++)
+        {
+            tmp = fread(&var, 1, 1, fic);
+            mat[i][j] = var;
+        }
 
+    //---fermeture du fichier---
+    fclose(fic);
+
+    return (mat);
+}
 
 //----------------------------------------------------------
-// Sauvegarde de l'image de nom <name> au format pgm        
+// Sauvegarde de l'image de nom <name> au format pgm
 //----------------------------------------------------------
-void SaveImagePgm(char* name,float** mat,int length,int width)
- {
-  int i,j;
-  char buff[NBCHAR];
-  FILE* fic;
-  time_t tm;
+void SaveImagePgm(char *name, float **mat, int length, int width)
+{
+    int i, j;
+    char buff[NBCHAR];
+    FILE *fic;
+    time_t tm;
 
-  //--extension--
-  strcpy(buff,name);
-  strcat(buff,".pgm");
+    //--extension--
+    strcpy(buff, name);
+    strcat(buff, ".pgm");
 
-  //--ouverture fichier--
-  fic=fopen(buff,"w");
-    if (fic==NULL) 
-        { printf(" Probleme dans la sauvegarde de %s",buff); 
-          exit(-1); }
-  printf("\n Sauvegarde de %s au format pgm\n",name);
+    //--ouverture fichier--
+    fic = fopen(buff, "w");
+    if (fic == NULL)
+    {
+        printf(" Probleme dans la sauvegarde de %s", buff);
+        exit(-1);
+    }
+    printf("\n Sauvegarde de %s au format pgm\n", name);
 
-  //--sauvegarde de l'entete--
-  fprintf(fic,"P5");
-  if ((ctime(&tm))==NULL) fprintf(fic,"\n#\n");
-  else fprintf(fic,"\n# IMG Module, %s",ctime(&tm));
-  fprintf(fic,"%d %d",width,length);
-  fprintf(fic,"\n255\n");
+    //--sauvegarde de l'entete--
+    fprintf(fic, "P5");
+    if ((ctime(&tm)) == NULL)
+        fprintf(fic, "\n#\n");
+    else 
+        fprintf(fic, "\n# IMG Module, %s", ctime(&tm));
+    fprintf(fic, "%d %d", width, length);
+    fprintf(fic, "\n255\n");
 
-  //--enregistrement--
-     for(i=0;i<length;i++)
-      for(j=0;j<width;j++) 
-        fprintf(fic,"%c",(char)mat[i][j]);
-   
-  //--fermeture fichier--
-   fclose(fic); 
- } 
+    //--enregistrement--
+    for (i = 0; i < length; i++)
+        for (j = 0; j < width; j++)
+            fprintf(fic, "%c", (char)mat[i][j]);
+
+    //--fermeture fichier--
+    fclose(fic);
+}
 
 //-------------//
 //-- FOURIER --//
@@ -222,20 +282,19 @@ function prototypes
     void ddct16x16s(int isgn, double **a);
 */
 
-
 /*
 -------- 8x8 DCT (Discrete Cosine Transform) / Inverse of DCT --------
     [definition]
         <case1> Normalized 8x8 IDCT
-            C[k1][k2] = (1/4) * sum_j1=0^7 sum_j2=0^7 
-                            a[j1][j2] * s[j1] * s[j2] * 
-                            cos(pi*j1*(k1+1/2)/8) * 
+            C[k1][k2] = (1/4) * sum_j1=0^7 sum_j2=0^7
+                            a[j1][j2] * s[j1] * s[j2] *
+                            cos(pi*j1*(k1+1/2)/8) *
                             cos(pi*j2*(k2+1/2)/8), 0<=k1<8, 0<=k2<8
                             (s[0] = 1/sqrt(2), s[j] = 1, j > 0)
         <case2> Normalized 8x8 DCT
-            C[k1][k2] = (1/4) * s[k1] * s[k2] * sum_j1=0^7 sum_j2=0^7 
-                            a[j1][j2] * 
-                            cos(pi*(j1+1/2)*k1/8) * 
+            C[k1][k2] = (1/4) * s[k1] * s[k2] * sum_j1=0^7 sum_j2=0^7
+                            a[j1][j2] *
+                            cos(pi*(j1+1/2)*k1/8) *
                             cos(pi*(j2+1/2)*k2/8), 0<=k1<8, 0<=k2<8
                             (s[0] = 1/sqrt(2), s[j] = 1, j > 0)
     [usage]
@@ -249,28 +308,29 @@ function prototypes
                              a[k1][k2] = C[k1][k2], 0<=k1<8, 0<=k2<8
 */
 
-
 /* Cn_kR = sqrt(2.0/n) * cos(pi/2*k/n) */
 /* Cn_kI = sqrt(2.0/n) * sin(pi/2*k/n) */
 /* Wn_kR = cos(pi/2*k/n) */
 /* Wn_kI = sin(pi/2*k/n) */
-#define C8_1R   0.49039264020161522456
-#define C8_1I   0.09754516100806413392
-#define C8_2R   0.46193976625564337806
-#define C8_2I   0.19134171618254488586
-#define C8_3R   0.41573480615127261854
-#define C8_3I   0.27778511650980111237
-#define C8_4R   0.35355339059327376220
-#define W8_4R   0.70710678118654752440
+#define C8_1R 0.49039264020161522456
+#define C8_1I 0.09754516100806413392
+#define C8_2R 0.46193976625564337806
+#define C8_2I 0.19134171618254488586
+#define C8_3R 0.41573480615127261854
+#define C8_3I 0.27778511650980111237
+#define C8_4R 0.35355339059327376220
+#define W8_4R 0.70710678118654752440
 
 void ddct8x8s(int isgn, float **a)
 {
     int j;
     float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
     float xr, xi;
-    
-    if (isgn < 0) {
-        for (j = 0; j <= 7; j++) {
+
+    if (isgn < 0)
+    {
+        for (j = 0; j <= 7; j++)
+        {
             x0r = a[0][j] + a[7][j];
             x1r = a[0][j] - a[7][j];
             x0i = a[2][j] + a[5][j];
@@ -298,7 +358,8 @@ void ddct8x8s(int isgn, float **a)
             a[3][j] = C8_3R * x3r - C8_3I * x3i;
             a[5][j] = C8_3R * x3i + C8_3I * x3r;
         }
-        for (j = 0; j <= 7; j++) {
+        for (j = 0; j <= 7; j++)
+        {
             x0r = a[j][0] + a[j][7];
             x1r = a[j][0] - a[j][7];
             x0i = a[j][2] + a[j][5];
@@ -326,8 +387,11 @@ void ddct8x8s(int isgn, float **a)
             a[j][3] = C8_3R * x3r - C8_3I * x3i;
             a[j][5] = C8_3R * x3i + C8_3I * x3r;
         }
-    } else {
-        for (j = 0; j <= 7; j++) {
+    }
+    else
+    {
+        for (j = 0; j <= 7; j++)
+        {
             x1r = C8_1R * a[1][j] + C8_1I * a[7][j];
             x1i = C8_1R * a[7][j] - C8_1I * a[1][j];
             x3r = C8_3R * a[3][j] + C8_3I * a[5][j];
@@ -355,7 +419,8 @@ void ddct8x8s(int isgn, float **a)
             a[6][j] = x2i - x3r;
             a[1][j] = x2i + x3r;
         }
-        for (j = 0; j <= 7; j++) {
+        for (j = 0; j <= 7; j++)
+        {
             x1r = C8_1R * a[j][1] + C8_1I * a[j][7];
             x1i = C8_1R * a[j][7] - C8_1I * a[j][1];
             x3r = C8_3R * a[j][3] + C8_3I * a[j][5];
@@ -390,52 +455,57 @@ void ddct8x8s(int isgn, float **a)
 //--- DEGRADATION ---//
 //-------------------//
 //----------------------------------------------------------
-//  Gaussian noisee  
+//  Gaussian noisee
 //----------------------------------------------------------
-float gaussian_noise(float var,float mean)
+float gaussian_noise(float var, float mean)
 {
- float noise,theta;
+    float noise, theta;
 
- //Noise generation 
- noise=sqrt(-2*var*log(1.0-((float)rand()/RAND_MAX)));
- theta=(float)rand()*1.9175345E-4-PI;
- noise=noise*cos(theta);
- noise+=mean;
- if (noise>GREY_LEVEL) noise=GREY_LEVEL;
- if (noise<0) noise=0;
- return noise;
+    // Noise generation
+    noise = sqrt(-2 * var * log(1.0 - ((float)rand() / RAND_MAX)));
+    theta = (float)rand() * 1.9175345E-4 - PI;
+    noise = noise * cos(theta);
+    noise += mean;
+    if (noise > GREY_LEVEL)
+        noise = GREY_LEVEL;
+    if (noise < 0)
+        noise = 0;
+    return noise;
 }
 
 //----------------------------------------------------------
-//  Add Gaussian noise 
+//  Add Gaussian noise
 //----------------------------------------------------------
-void add_gaussian_noise(float** mat,int lgth,int wdth,float var)
+void add_gaussian_noise(float **mat, int lgth, int wdth, float var)
 {
- int i,j;
+    int i, j;
 
- //Loop
- for(i=0;i<lgth;i++) for(j=0;j<wdth;j++)
- if (var!=0.0) mat[i][j]=gaussian_noise(var,mat[i][j]);
+    // Loop
+    for (i = 0; i < lgth; i++)
+        for (j = 0; j < wdth; j++)
+            if (var != 0.0)
+                mat[i][j] = gaussian_noise(var, mat[i][j]);
 }
 
 //--------------//
 //--- MESURE ---//
 //--------------//
 //----------------------------------------------------------
-// compute MMSE              
-//----------------------------------------------------------     
-float computeMMSE(float** mat1,float** mat2,int sz)
+// compute MMSE
+//----------------------------------------------------------
+float computeMMSE(float **mat1, float **mat2, int sz)
 {
- int i,j;
- float mmse;
+    int i, j;
+    float mmse;
 
- //Boucle 
- mmse=0.0;
- for(i=0;i<sz;i++) for(j=0;j<sz;j++) mmse+=CARRE(mat2[i][j]-mat1[i][j]);
+    // Boucle
+    mmse = 0.0;
+    for (i = 0; i < sz; i++)
+        for (j = 0; j < sz; j++)
+            mmse += CARRE(mat2[i][j] - mat1[i][j]);
 
- mmse/=(CARRE(sz));
+    mmse /= (CARRE(sz));
 
- //retour
- return mmse;
+    // retour
+    return mmse;
 }
-
