@@ -17,6 +17,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <curand_kernel.h>
 
 //------------------------------------------------
 // CONSTANTS & DEFINITIONS -----------------------
@@ -53,6 +54,10 @@ void ddct8x8s(int, float **);
 //>Degradation
 float gaussian_noise(float, float);
 void add_gaussian_noise(float **, int, int, float);
+
+__device__ float gaussian_noise(float, float, curandState *);
+__global__ void add_gaussian_noise_kernel(float *, int, int, float, curandState);
+void add_gaussian_noise_to_matrix(float *, int, int, float);
 
 //>Mesure
 float computeMMSE(float **, float **, int);

@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <curand_kernel.h>
 
 #include "Fonctions.h"
 
@@ -33,21 +34,25 @@ float *fmatrix_allocate_1d(int hsize)
 
     matrix = (float *)malloc(sizeof(float) * hsize);
     if (matrix == NULL)
+    {
         printf("probleme d'allocation memoire");
-        exit -1;
+        exit(-1);
+    }
 
     return matrix;
 }
 
-float * fmatrix_allocate_1d_device(int hsize)
+float *fmatrix_allocate_1d_device(int hsize)
 {
     float *matrix;
-    //comme CUDA ne gère pas nativement les array multidimentionelles, on "applatis" la matrice 2D
-    cudaMalloc((void**)&matrix, sizeof(float)*hsize);
+    // comme CUDA ne gère pas nativement les array multidimentionelles, on "applatis" la matrice 2D
+    cudaMalloc((void **)&matrix, sizeof(float) * hsize);
 
-    if(matrix == NULL)
+    if (matrix == NULL)
+    {
         printf("probleme d'allocation memoire dans une matrice 1d");
-        exit -1;
+        exit(-1);
+    }
 
     return matrix;
 }
@@ -63,28 +68,34 @@ float **fmatrix_allocate_2d(int vsize, int hsize)
 
     matrix = (float **)malloc(sizeof(float *) * vsize);
     if (matrix == NULL)
+    {
         printf("probleme d'allocation memoire");
-        exit -1;
+        exit(-1);
+    }
 
     imptr = (float *)malloc(sizeof(float) * hsize * vsize);
     if (imptr == NULL)
+    {
         printf("probleme d'allocation memoire");
-        exit -1;
+        exit(-1);
+    }
 
     for (i = 0; i < vsize; i++, imptr += hsize)
         matrix[i] = imptr;
     return matrix;
 }
 
-float * fmatrix_allocate_2d_device(int vsize, int hsize)
+float *fmatrix_allocate_2d_device(int vsize, int hsize)
 {
     float *matrix;
-    //comme CUDA ne gère pas nativement les array multidimentionelles, on "applatis" la matrice 2D
-    cudaMalloc((void**)&matrix, sizeof(float)*vsize*hsize);
+    // comme CUDA ne gère pas nativement les array multidimentionelles, on "applatis" la matrice 2D
+    cudaMalloc((void **)&matrix, sizeof(float) * vsize * hsize);
 
-    if(matrix == NULL)
-        printf("probleme d'allocation memoire dans une matrice 3d");
-        exit -1;
+    if (matrix == NULL)
+    {
+        printf("probleme d'allocation memoire dans une matrice 2d");
+        exit(-1);
+    }
 
     return matrix;
 }
@@ -104,15 +115,17 @@ float ***fmatrix_allocate_3d(int dsize, int vsize, int hsize)
     return matrix;
 }
 
-float * fmatrix_allocate_3d_device(int dsize, int vsize, int hsize)
+float *fmatrix_allocate_3d_device(int dsize, int vsize, int hsize)
 {
     float *matrix;
-    //comme CUDA ne gère pas nativement les array multidimentionelles, on "applatis" la matrice 3D
-    cudaMalloc((void**)&matrix, sizeof(float)*dsize*vsize*hsize);
-    
-    if(matrix == NULL)
+    // comme CUDA ne gère pas nativement les array multidimentionelles, on "applatis" la matrice 3D
+    cudaMalloc((void **)&matrix, sizeof(float) * dsize * vsize * hsize);
+
+    if (matrix == NULL)
+    {
         printf("probleme d'allocation memoire dans une matrice 3d");
-        exit -1;
+        exit(-1);
+    }
 
     return matrix;
 }
@@ -151,7 +164,7 @@ void free_fmatrix_3d(float ***pmat, int dsize)
 //----------------------------------------------------------
 // Free Device Memory of matrices
 //----------------------------------------------------------
-void free_matrix_device(float* pmat)
+void free_matrix_device(float *pmat)
 {
     cudaFree(pmat);
 }
@@ -245,7 +258,7 @@ void SaveImagePgm(char *name, float **mat, int length, int width)
     fprintf(fic, "P5");
     if ((ctime(&tm)) == NULL)
         fprintf(fic, "\n#\n");
-    else 
+    else
         fprintf(fic, "\n# IMG Module, %s", ctime(&tm));
     fprintf(fic, "%d %d", width, length);
     fprintf(fic, "\n255\n");
@@ -457,14 +470,44 @@ void ddct8x8s(int isgn, float **a)
 //----------------------------------------------------------
 //  Gaussian noisee
 //----------------------------------------------------------
-float gaussian_noise(float var, float mean)
+// float gaussian_noise(float var, float mean)
+// {
+//     float noise, theta;
+
+//     // Noise generation
+//     noise = sqrt(-2 * var * log(1.0 - ((float)rand() / RAND_MAX)));
+//     theta = (float)rand() * 1.9175345E-4 - PI;
+//     noise = noise * cos(theta);
+//     noise += mean;
+//     if (noise > GREY_LEVEL)
+//         noise = GREY_LEVEL;
+//     if (noise < 0)
+//         noise = 0;
+//     return noise;
+// }
+
+// ----------------------------------------------------------
+//  Add Gaussian noise
+// ----------------------------------------------------------
+// void add_gaussian_noise(float **mat, int lgth, int wdth, float var)
+// {
+//     int i, j;
+
+//     // Loop
+//     for (i = 0; i < lgth; i++)
+//         for (j = 0; j < wdth; j++)
+//             if (var != 0.0)
+//                 mat[i][j] = gaussian_noise(var, mat[i][j]);
+// }
+
+__device__ float gaussian_noise(float var, float mean, curandState *state)
 {
     float noise, theta;
 
     // Noise generation
-    noise = sqrt(-2 * var * log(1.0 - ((float)rand() / RAND_MAX)));
-    theta = (float)rand() * 1.9175345E-4 - PI;
-    noise = noise * cos(theta);
+    noise = sqrtf(-2 * var * logf(1.0 - curand_uniform(state)));
+    theta = 2 * PI * curand_uniform(state); // Generate theta in the range [0, 2*PI]
+    noise = noise * cosf(theta);
     noise += mean;
     if (noise > GREY_LEVEL)
         noise = GREY_LEVEL;
@@ -473,18 +516,37 @@ float gaussian_noise(float var, float mean)
     return noise;
 }
 
-//----------------------------------------------------------
-//  Add Gaussian noise
-//----------------------------------------------------------
-void add_gaussian_noise(float **mat, int lgth, int wdth, float var)
+__global__ void add_gaussian_noise_kernel(float *mat, int lgth, int wdth, float var, curandState *states)
 {
-    int i, j;
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    int index = x * wdth + y;
 
-    // Loop
-    for (i = 0; i < lgth; i++)
-        for (j = 0; j < wdth; j++)
-            if (var != 0.0)
-                mat[i][j] = gaussian_noise(var, mat[i][j]);
+    // Each thread gets its own seed based on its global thread ID
+    unsigned int seed = threadIdx.x + blockIdx.x * blockDim.x + threadIdx.y + blockIdx.y * blockDim.y;
+    curand_init(seed, 0, 0, &states[index]);
+
+    if (x < lgth && y < wdth)
+    {
+        float noise = gaussian_noise(var, mat[index], &states[index]);
+        mat[index] = noise;
+    }
+}
+
+void add_gaussian_noise_to_matrix(float *cuMat, int width, int height, float var)
+{
+    // Set up CUDA random number generator states
+    curandState *devStates;
+    cudaMalloc((void **)&devStates, width * height * sizeof(curandState));
+
+    // Launch kernel to add Gaussian noise to matrix
+    dim3 blockSize(16, 16);
+    dim3 gridSize((width + blockSize.x - 1) / blockSize.x, (height + blockSize.y - 1) / blockSize.y);
+    add_gaussian_noise_kernel<<<gridSize, blockSize>>>(cuMat, width, height, var, devStates);
+    cudaDeviceSynchronize();
+
+    // Free CUDA random number generator states
+    cudaFree(devStates);
 }
 
 //--------------//

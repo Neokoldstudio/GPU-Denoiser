@@ -24,7 +24,6 @@
 //------------------------------------------------
 // PROTOTYPE DE FONCTIONS  -----------------------
 //------------------------------------------------
-
 //>Main Function
 void DctDenoise(float **, float **, float **, int, int, float);
 
@@ -35,56 +34,11 @@ void FilteringDCT_8x8(float **, float, int, int, float **, float ***);
 void HardThreshold(float, float **, int);
 void ZigZagThreshold(float, float **, int);
 
-//------------------------------------------------
-// CONSTANTS -------------------------------------
-//------------------------------------------------
-//-------------
-// Question 2.2
-// ------------
-// #define SIGMA_NOISE   30
-// #define NB_ITERATIONS  1
-// #define THRESHOLD      6
-// #define OVERLAP        8
-// #define HARD_THRESHOLD  0
-//
-// MSE=157.00
-//
-
-//-------------
-// Question 2.3
-// ------------
-// #define SIGMA_NOISE    30
-// #define NB_ITERATIONS   1
-// #define THRESHOLD     100
-// #define OVERLAP         8
-// #define HARD_THRESHOLD  1
-//
-// MSE=140.28
-//
-
-//-------------
-// Question 2.4
-// ------------
 #define SIGMA_NOISE 30
 #define NB_ITERATIONS 1
 #define THRESHOLD 90
 #define OVERLAP 1
 #define HARD_THRESHOLD 1
-//
-// MSE=65.04
-//
-
-//-------------
-// Question X.X
-// ------------
-/* #define SIGMA_NOISE     30 */
-/* #define  NB_ITERATIONS   5 */
-/* #define THRESHOLD       30 */
-/* #define OVERLAP          1  */
-/* #define HARD_THRESHOLD   1 */
-//
-// MSE=58.06
-//
 
 #define ZOOM 1
 #define QUIT 0
@@ -154,6 +108,24 @@ void copy_matrix(float **mat1, float **mat2, int lgth, int wdth)
     for (i = 0; i < lgth; i++)
         for (j = 0; j < wdth; j++)
             mat1[i][j] = mat2[i][j];
+}
+
+void copy_matrix_1d_to_2d(float *mat1, float **mat2, int lgth, int wdth)
+{
+    int i, j;
+
+    for (i = 0; i < lgth; i++)
+        for (j = 0; j < wdth; j++)
+            mat2[i][j] = mat1[i * wdth + j];
+}
+
+void copy_matrix_2d_to_1d(float **mat1, float *mat2, int lgth, int wdth)
+{
+    int i, j;
+
+    for (i = 0; i < lgth; i++)
+        for (j = 0; j < wdth; j++)
+            mat2[i * wdth + j] = mat1[i][j];
 }
 
 //----------------------------------------------------------
@@ -413,13 +385,48 @@ int main(int argc, char **argv)
     //>Lecture Image
     float **Img = LoadImagePgm(NAME_IMG_IN, &length, &width);
 
-    //>Allocation memory
+    //>CPU Memory Allocation
     float **ImgDegraded = fmatrix_allocate_2d(length, width);
     float **ImgDenoised = fmatrix_allocate_2d(length, width);
 
-    //>Degradation
     copy_matrix(ImgDegraded, Img, length, width);
-    add_gaussian_noise(ImgDegraded, length, width, SIGMA_NOISE * SIGMA_NOISE);
+
+    //>GPU Memory Allocation
+    float *ImgDegraded1d = fmatrix_allocate_1d(length * width);
+    float *cuImgDegraded = fmatrix_allocate_2d_device(length, width);
+
+    copy_matrix_2d_to_1d(ImgDegraded, ImgDegraded1d, length, width);
+
+    cudaMemcpy(cuImgDegraded, ImgDegraded1d, width * length * sizeof(float), cudaMemcpyHostToDevice); // copy of the yet to be degraded image on the GPU
+    // cudaMemcpy(cuImgDenoised, ImgDenoised[0], width * length * sizeof(float), cudaMemcpyHostToDevice); // copy of the yet to be denoised image (empty at this point) on the GPU
+
+    // textures declaration. We will be using textures for ease of use, readability and performance
+    // texture<float, 2> texImgDegraded;
+    // texture<float, 2> texImgDenoised;
+
+    // binding the arrays to 2D textures
+    // cudaBindTexture2D(NULL, texImgDegraded, cuImgDegraded, cudaCreateChannelDesc<float>(), width, length, width * sizeof(float));
+    // cudaBindTexture2D(NULL, texImgDenoised, cuImgDenoised, cudaCreateChannelDesc<float>(), width, length, width * sizeof(float));
+
+    //>GPU Degradation
+    add_gaussian_noise_to_matrix(cuImgDegraded, length, width, SIGMA_NOISE * SIGMA_NOISE);
+
+    // Allocate memory on CPU to store degraded image
+    float *tmp = (float *)malloc(width * length * sizeof(float));
+
+    // Bind the texture to a CUDA array
+    // cudaArray *cuArrayImgDegraded;
+    // cudaChannelFormatDesc channelDescImgDegraded = cudaCreateChannelDesc<float>();
+    // cudaMallocArray(&cuArrayImgDegraded, &channelDescImgDegraded, width, length);
+    // cudaBindTextureToArray(texImgDegraded, cuArrayImgDegraded, channelDescImgDegraded);
+
+    // Copy the CUDA array data to CPU buffer
+    cudaMemcpy(tmp, cuImgDegraded, width * length * sizeof(float), cudaMemcpyDeviceToHost);
+
+    copy_matrix_1d_to_2d(tmp, ImgDegraded, length, width);
+
+    // Unbind the texture
+    // cudaUnbindTexture(texImgDegraded);
 
     printf("\n\n  Info Noise");
     printf("\n  ------------");
@@ -472,8 +479,16 @@ int main(int argc, char **argv)
     if (ImgDenoised)
         free_fmatrix_2d(ImgDenoised);
 
+    free_fmatrix_1d(tmp);
+    free_fmatrix_1d(ImgDegraded1d);
+
+    cudaFree(cuImgDegraded);
+    // cudaFree(cuImgDenoised);
+
+    // cudaUnbindTexture(texImgDegraded);
+    // cudaUnbindTexture(texImgDenoised);
+
     // Return
     printf("\n C'est fini... \n");
-    ;
     return 0;
 }
