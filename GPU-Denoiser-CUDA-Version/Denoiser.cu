@@ -128,24 +128,6 @@ void copy_matrix_2d_to_1d(float **mat1, float *mat2, int lgth, int wdth)
             mat2[i * wdth + j] = mat1[i][j];
 }
 
-void copy_matrix_1d_to_2d(float *mat1, float **mat2, int lgth, int wdth)
-{
-    int i, j;
-
-    for (i = 0; i < lgth; i++)
-        for (j = 0; j < wdth; j++)
-            mat2[i][j] = mat1[i * wdth + j];
-}
-
-void copy_matrix_2d_to_1d(float **mat1, float *mat2, int lgth, int wdth)
-{
-    int i, j;
-
-    for (i = 0; i < lgth; i++)
-        for (j = 0; j < wdth; j++)
-            mat2[i * wdth + j] = mat1[i][j];
-}
-
 void copy_matrix_on_device(float *mat1, float **mat2, int lgth, int wdth)
 {
     float buff[lgth * wdth];
@@ -442,35 +424,17 @@ int main(int argc, char **argv)
     copy_matrix_2d_to_1d(ImgDegraded, ImgDegraded1d, length, width);
 
     cudaMemcpy(cuImgDegraded, ImgDegraded1d, width * length * sizeof(float), cudaMemcpyHostToDevice); // copy of the yet to be degraded image on the GPU
-    // cudaMemcpy(cuImgDenoised, ImgDenoised[0], width * length * sizeof(float), cudaMemcpyHostToDevice); // copy of the yet to be denoised image (empty at this point) on the GPU
-
-    // textures declaration. We will be using textures for ease of use, readability and performance
-    // texture<float, 2> texImgDegraded;
-    // texture<float, 2> texImgDenoised;
-
-    // binding the arrays to 2D textures
-    // cudaBindTexture2D(NULL, texImgDegraded, cuImgDegraded, cudaCreateChannelDesc<float>(), width, length, width * sizeof(float));
-    // cudaBindTexture2D(NULL, texImgDenoised, cuImgDenoised, cudaCreateChannelDesc<float>(), width, length, width * sizeof(float));
-
+    
     //>GPU Degradation
     add_gaussian_noise_to_matrix(cuImgDegraded, length, width, SIGMA_NOISE * SIGMA_NOISE);
 
     // Allocate memory on CPU to store degraded image
     float *tmp = (float *)malloc(width * length * sizeof(float));
 
-    // Bind the texture to a CUDA array
-    // cudaArray *cuArrayImgDegraded;
-    // cudaChannelFormatDesc channelDescImgDegraded = cudaCreateChannelDesc<float>();
-    // cudaMallocArray(&cuArrayImgDegraded, &channelDescImgDegraded, width, length);
-    // cudaBindTextureToArray(texImgDegraded, cuArrayImgDegraded, channelDescImgDegraded);
-
     // Copy the CUDA array data to CPU buffer
     cudaMemcpy(tmp, cuImgDegraded, width * length * sizeof(float), cudaMemcpyDeviceToHost);
 
     copy_matrix_1d_to_2d(tmp, ImgDegraded, length, width);
-
-    // Unbind the texture
-    // cudaUnbindTexture(texImgDegraded);
 
     printf("\n\n  Info Noise");
     printf("\n  ------------");

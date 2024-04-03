@@ -506,7 +506,7 @@ __device__ float gaussian_noise(float var, float mean, curandState *state)
 
     // Noise generation
     noise = sqrtf(-2 * var * logf(1.0 - curand_uniform(state)));
-    theta = 2 * PI * curand_uniform(state); // Generate theta in the range [0, 2*PI]
+    theta = curand_uniform(state) * 1.9175345E-4 - PI;
     noise = noise * cosf(theta);
     noise += mean;
     if (noise > GREY_LEVEL)
@@ -523,8 +523,7 @@ __global__ void add_gaussian_noise_kernel(float *mat, int lgth, int wdth, float 
     int index = x * wdth + y;
 
     // Each thread gets its own seed based on its global thread ID
-    unsigned int seed = threadIdx.x + blockIdx.x * blockDim.x + threadIdx.y + blockIdx.y * blockDim.y;
-    curand_init(seed, 0, 0, &states[index]);
+    curand_init(index, 0, 0, &states[index]);
 
     if (x < lgth && y < wdth)
     {
