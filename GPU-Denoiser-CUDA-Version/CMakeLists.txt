@@ -5,6 +5,8 @@ project(GPU_Denoiser LANGUAGES CXX CUDA)
 #set(CMAKE_CUDA_FLAGS "-Wall")
 set(CMAKE_CUDA_ARCHITECTURES 70)
 
+set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
+
 include(CTest)
  
 add_library(GPU_Denoiser Fonctions.cu)
