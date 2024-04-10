@@ -49,7 +49,7 @@ float **LoadImagePgm(char *, int *, int *);
 void SaveImagePgm(char *, float **, int, int);
 
 //>Fourier
-void ddct8x8s(int, float **);
+__device__ void ddct8x8s(int, float *);
 
 //>Degradation
 float gaussian_noise(float, float);

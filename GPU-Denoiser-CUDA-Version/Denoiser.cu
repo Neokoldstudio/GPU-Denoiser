@@ -31,8 +31,11 @@ void DctDenoise(float **, float **, float **, int, int, float);
 void copy_matrix(float **, float **, int, int);
 void FilteringDCT_8x8_(float **, float, int, int, float **, float ***);
 void FilteringDCT_8x8(float **, float, int, int, float **, float ***);
-void HardThreshold(float, float **, int);
-void ZigZagThreshold(float, float **, int);
+void HardThreshold(float, float *, int);
+void ZigZagThreshold(float, float *, int);
+void copy_matrix_on_device(float *, float **, int, int);
+void copy_matrix_on_host(float **, float *, int , int);
+__global__ void denoise_block(float *, float, int, int, int, float *, float *, void (*)(float, float*, int));
 
 #define SIGMA_NOISE 30
 #define NB_ITERATIONS 1
@@ -51,7 +54,7 @@ void ZigZagThreshold(float, float **, int);
 //----------------------------------------------------------
 // IterDctDenoise
 //----------------------------------------------------------
-void DctDenoise(float **DataDegraded, float **DataFiltered, float **Data, int lgth, int wdth, float Thresh)
+void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int lgth, int wdth, float Thresh)
 {
     int k;
     int SizeWindow;
@@ -74,25 +77,63 @@ void DctDenoise(float **DataDegraded, float **DataFiltered, float **Data, int lg
     printf("\n  Overlap        > [%d]", OVERLAP);
     printf("\n\n");
 
+    printf("oui bonjour \n");
     // Allocation Memoire
-    float **SquWin = fmatrix_allocate_2d(SizeWindow, SizeWindow);
-    float ***mat3d = fmatrix_allocate_3d(SizeWindow * SizeWindow, lgth, wdth);
+    float *SquWin = fmatrix_allocate_2d_device(SizeWindow, SizeWindow);
+    float *mat3d = fmatrix_allocate_3d_device(SizeWindow * SizeWindow, lgth, wdth);
+    float** DataFiltered_h = fmatrix_allocate_2d(lgth, wdth);
 
+    printf("oui heu non \n");
     // Init
-    copy_matrix(DataFiltered, DataDegraded, lgth, wdth);
+    copy_matrix_on_device(DataFiltered_d, DataDegraded, lgth, wdth);
+
+    printf("oui bonjour alors voila\n");
+    int threadsPerBlock = 16;
+    int blocksPerGrid = (lgth + threadsPerBlock - 1) / threadsPerBlock;
+    blocksPerGrid *= (wdth + threadsPerBlock - 1) / threadsPerBlock;
+
+    // Launch kernel for denoising
 
     //>Loop-DEnoising
     for (k = 0; k < NB_ITERATIONS; k++)
     {
-        FilteringDCT_8x8_(DataFiltered, THRESHOLD, lgth, wdth, SquWin, mat3d);
-        printf("\n   > MSE >> [%.5f]", computeMMSE(DataFiltered, Data, lgth));
+        printf("time to looooooooop  \n");
+    //    FilteringDCT_8x8_(DataFiltered, THRESHOLD, lgth, wdth, SquWin, mat3d);
+        denoise_block<<<blocksPerGrid, threadsPerBlock>>>(DataFiltered_d, SIGMA_NOISE, lgth, wdth, OVERLAP,SquWin, mat3d, HardThreshold);
+        cudaDeviceSynchronize();
+        copy_matrix_on_host(DataFiltered_h, DataFiltered_d, lgth, wdth);
+        printf("\n   > MSE >> [%.5f]", computeMMSE(DataFiltered_h, Data, lgth));
     }
 
+    printf("j'ai kiffe \n");
+    // TODO : fix le segfault qui arrive qq part par la 
+    for (int i = 0; i < lgth; i++)
+        for (int j = 0; j < wdth; j++)
+        {
+            double temp = 0.0;
+            double nb = 0.0;
+            for (k = 0; k < 64; k++)
+                if (mat3d[k + lgth * i +  lgth * wdth * j] > 0.0)
+                {
+                    nb++;
+                    temp += mat3d[k + lgth * i +  lgth * wdth * j];
+                }
+
+            if (nb)
+            {
+                temp /= nb;
+                DataFiltered_d[i + wdth * j] = temp;
+            }
+        }
+
+    printf("bisoux ;)\n");
     // Free memory
     if (SquWin)
-        free_fmatrix_2d(SquWin);
+        free_matrix_device(SquWin);
     if (mat3d)
-        free_fmatrix_3d(mat3d, SizeWindow * SizeWindow);
+        free_matrix_device(mat3d);
+    if(DataFiltered_h)
+        free_fmatrix_2d(DataFiltered_h);
 }
 
 //---------------//
@@ -157,84 +198,38 @@ void copy_matrix_on_host(float **mat1, float *mat2, int lgth, int wdth)
 //----------------------------------------------------------
 // Fast FilteringDCT 8x8  <simple & optimise>
 //----------------------------------------------------------
-void FilteringDCT_8x8(float **imgin, float sigma, int length, int width, float **SquWin, float ***mat3d)
-{
-    int i, j, k, l;
-    int x, y;
-    int pos, posr, posc;
-    float temp;
-    float nb;
+__global__ void denoise_block(float *imgin, float sigma, int length, int width, int overlap,float *SquWin, float *mat3d, void (*thresh)(float, float*, int)) {
+  int i = blockIdx.y * blockDim.y + threadIdx.y;
+  int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-    // Boucle
-    //------
-    for (i = 0; i < length; i++)
-        for (j = 0; j < width; j++)
-        {
-            for (k = 0; k < 8; k++)
-                for (l = 0; l < 8; l++)
-                {
-                    posr = i - 4 + k;
-                    posc = j - 4 + l;
+  if (i < length && j < width) {
+    // Calculate block coordinates within the image
+    int block_i = i - (i % overlap);
+    int block_j = j - (j % overlap);
 
-                    if (posr < 0)
-                        posr += length;
-                    if (posr > (length - 1))
-                        posr -= length;
-                    if (posc < 0)
-                        posc += width;
-                    if (posc > (width - 1))
-                        posc -= width;
+    // Process each coefficient within the block
+    for (int k = 0; k < 8; k++) {
+      for (int l = 0; l < 8; l++) {
+        int posr = block_i + k;
+        int posc = block_j + l;
 
-                    SquWin[k][l] = imgin[posr][posc];
-                }
+        // Handle edge cases
+        posr = (posr + length) % length;
+        posc = (posc + width) % width;
 
-            ddct8x8s(-1, SquWin);
-            HardThreshold(sigma, SquWin, 8);
-            ddct8x8s(1, SquWin);
+        SquWin[k + 8 * l] = imgin[posr * width + posc];
+      }
+    }
 
-            x = (i % 8);
-            y = (j % 8);
-            pos = ((x * 8) + y);
+    // Perform DCT, thresholding, and inverse DCT
+    ddct8x8s(-1, SquWin);
+    (*thresh)(sigma, SquWin, 8);
+    ddct8x8s(1, SquWin);
 
-            for (k = 0; k < 8; k++)
-                for (l = 0; l < 8; l++)
-                {
-                    posr = i - 4 + k;
-                    posc = j - 4 + l;
-
-                    if (posr < 0)
-                        posr += length;
-                    if (posr > (length - 1))
-                        posr -= length;
-                    if (posc < 0)
-                        posc += width;
-                    if (posc > (width - 1))
-                        posc -= width;
-
-                    mat3d[pos][posr][posc] = SquWin[k][l];
-                }
-        }
-
-    // Moyennage
-    //---------
-    for (i = 0; i < length; i++)
-        for (j = 0; j < width; j++)
-        {
-            temp = 0.0;
-            nb = 0.0;
-            for (k = 0; k < 64; k++)
-                if (mat3d[k][i][j] > 0)
-                {
-                    nb++;
-                    temp += mat3d[k][i][j];
-                }
-
-            if (nb)
-            {
-                temp /= nb;
-                imgin[i][j] = temp;
-            }
-        }
+    // Calculate final output position in mat3d
+    int pos = ((i % overlap) * 8 + threadIdx.y) * width + ((j % overlap) * 8 + threadIdx.x);
+    mat3d[pos / (width * 8) + length*(pos % width) + length*width*(pos / width)] = SquWin[threadIdx.y + 8 * threadIdx.x];
+  }
 }
 
 //----------------------------------------------------------
@@ -242,125 +237,123 @@ void FilteringDCT_8x8(float **imgin, float sigma, int length, int width, float *
 // Fast FilteringDCT 8x8  <simple> <ovl>
 //----------------------------------------------------------
 //----------------------------------------------------------
-void FilteringDCT_8x8_(float **imgin, float sigma, int length, int width, float **SquWin, float ***mat3d)
-{
-    int i, j;
-    int k, l;
-    int x, y;
-    int pos;
-    float temp;
-    float nb;
-    int posr, posc;
-    int overlap;
+// void FilteringDCT_8x8_(float **imgin, float sigma, int length, int width, float **SquWin, float ***mat3d)
+// {
+//     int i, j;
+//     int k, l;
+//     int x, y;
+//     int pos;
+//     float temp;
+//     float nb;
+//     int posr, posc;
+//     int overlap;
 
-    // Initialisation
-    //--------------
-    //>Record
-    overlap = OVERLAP;
+//     // Initialisation
+//     //--------------
+//     //>Record
+//     overlap = OVERLAP;
 
-    //>Init
-    for (k = 0; k < 64; k++)
-        for (i = 0; i < length; i++)
-            for (j = 0; j < width; j++)
-                mat3d[k][i][j] = -1.0;
+//     //>Init
+//     for (k = 0; k < 64; k++)
+//         for (i = 0; i < length; i++)
+//             for (j = 0; j < width; j++)
+//                 mat3d[k][i][j] = -1.0;
+//     // Loop
+//     //----
+//     for (i = 0; i < length; i += overlap)
+//         for (j = 0; j < width; j += overlap)
+//         {
+//             for (k = 0; k < 8; k++)
+//                 for (l = 0; l < 8; l++)
+//                 {
+//                     posr = i - 4 + k;
+//                     posc = j - 4 + l;
 
-    // Loop
-    //----
-    for (i = 0; i < length; i += overlap)
-        for (j = 0; j < width; j += overlap)
-        {
-            for (k = 0; k < 8; k++)
-                for (l = 0; l < 8; l++)
-                {
-                    posr = i - 4 + k;
-                    posc = j - 4 + l;
+//                     if (posr < 0)
+//                         posr += length;
+//                     if (posr > (length - 1))
+//                         posr -= length;
 
-                    if (posr < 0)
-                        posr += length;
-                    if (posr > (length - 1))
-                        posr -= length;
+//                     if (posc < 0)
+//                         posc += width;
+//                     if (posc > (width - 1))
+//                         posc -= width;
 
-                    if (posc < 0)
-                        posc += width;
-                    if (posc > (width - 1))
-                        posc -= width;
+//                     SquWin[k][l] = imgin[posr][posc];
+//                 }
 
-                    SquWin[k][l] = imgin[posr][posc];
-                }
+//             ddct8x8s(-1, SquWin);
+//             if (HARD_THRESHOLD)
+//                 HardThreshold(sigma, SquWin, 8);
+//             if (!HARD_THRESHOLD)
+//                 ZigZagThreshold(sigma, SquWin, 8);
+//             ddct8x8s(1, SquWin);
 
-            ddct8x8s(-1, SquWin);
-            if (HARD_THRESHOLD)
-                HardThreshold(sigma, SquWin, 8);
-            if (!HARD_THRESHOLD)
-                ZigZagThreshold(sigma, SquWin, 8);
-            ddct8x8s(1, SquWin);
+//             x = (i % 8);
+//             y = (j % 8);
+//             pos = ((x * 8) + y);
 
-            x = (i % 8);
-            y = (j % 8);
-            pos = ((x * 8) + y);
+//             for (k = 0; k < 8; k++)
+//                 for (l = 0; l < 8; l++)
+//                 {
+//                     posr = i - 4 + k;
+//                     posc = j - 4 + l;
 
-            for (k = 0; k < 8; k++)
-                for (l = 0; l < 8; l++)
-                {
-                    posr = i - 4 + k;
-                    posc = j - 4 + l;
+//                     if (posr < 0)
+//                         posr += length;
+//                     if (posr > (length - 1))
+//                         posr -= length;
 
-                    if (posr < 0)
-                        posr += length;
-                    if (posr > (length - 1))
-                        posr -= length;
+//                     if (posc < 0)
+//                         posc += width;
+//                     if (posc > (width - 1))
+//                         posc -= width;
 
-                    if (posc < 0)
-                        posc += width;
-                    if (posc > (width - 1))
-                        posc -= width;
+//                     if (mat3d[pos][posr][posc] != -1)
+//                         printf("!");
 
-                    if (mat3d[pos][posr][posc] != -1)
-                        printf("!");
+//                     mat3d[pos][posr][posc] = SquWin[k][l];
+//                 }
+//         }
 
-                    mat3d[pos][posr][posc] = SquWin[k][l];
-                }
-        }
+//     // Averaging
+//     //---------
+//     for (i = 0; i < length; i++)
+//         for (j = 0; j < width; j++)
+//         {
+//             temp = 0.0;
+//             nb = 0.0;
+//             for (k = 0; k < 64; k++)
+//                 if (mat3d[k][i][j] > 0.0)
+//                 {
+//                     nb++;
+//                     temp += mat3d[k][i][j];
+//                 }
 
-    // Averaging
-    //---------
-    for (i = 0; i < length; i++)
-        for (j = 0; j < width; j++)
-        {
-            temp = 0.0;
-            nb = 0.0;
-            for (k = 0; k < 64; k++)
-                if (mat3d[k][i][j] > 0.0)
-                {
-                    nb++;
-                    temp += mat3d[k][i][j];
-                }
-
-            if (nb)
-            {
-                temp /= nb;
-                imgin[i][j] = temp;
-            }
-        }
-}
-
+//             if (nb)
+//             {
+//                 temp /= nb;
+//                 imgin[i][j] = temp;
+//             }
+//         }
+// }
 //----------------------------------------------------------
 //  DCT thresholding
 //----------------------------------------------------------
-void HardThreshold(float sigma, float **coef, int N)
+__device__ void HardThreshold(float sigma, float *coef, int N)
 {
     int i, j;
 
     for (i = 0; i < N; i++)
         for (j = 0; j < N; j++)
-            if (fabs(coef[i][j]) < sigma)
-                coef[i][j] = 0.0;
+            if (fabs(coef[i + N * j]) < sigma)
+                coef[i + N *j] = 0.0;
 }
 
 //----------------------------------------------------------
 //  DCT ZigZag thresholding
 //----------------------------------------------------------
-void ZigZagThreshold(float sigma, float **coef, int N)
+__device__ void ZigZagThreshold(float sigma, float *coef, int N)
 {
     int result[8][8];
     int i = 0;
@@ -395,7 +388,7 @@ void ZigZagThreshold(float sigma, float **coef, int N)
     for (i = 0; i < N; i++)
         for (j = 0; j < N; j++)
             if (result[i][j] >= sigma)
-                coef[i][j] = 0.0;
+                coef[i + N * j] = 0.0;
 }
 
 //---------------------------------------------------------
@@ -414,6 +407,7 @@ int main(int argc, char **argv)
     //>CPU Memory Allocation
     float **ImgDegraded = fmatrix_allocate_2d(length, width);
     float **ImgDenoised = fmatrix_allocate_2d(length, width);
+    float *ImgDenoised_d = fmatrix_allocate_2d_device(length, width);
 
     copy_matrix(ImgDegraded, Img, length, width);
 
@@ -444,7 +438,13 @@ int main(int argc, char **argv)
     //== PROG =================================================
     //=========================================================
 
-    DctDenoise(ImgDegraded, ImgDenoised, Img, length, width, THRESHOLD);
+    printf("bonjour!\n");
+
+    DctDenoise(ImgDegraded, ImgDenoised_d, Img, length, width, THRESHOLD);
+
+    printf("haha :)\n");
+
+    copy_matrix_on_host(ImgDenoised, ImgDenoised_d, length, width);
 
     //---------------------------------------------
     // SAUVEGARDE
@@ -486,6 +486,7 @@ int main(int argc, char **argv)
         free_fmatrix_2d(ImgDegraded);
     if (ImgDenoised)
         free_fmatrix_2d(ImgDenoised);
+        free_matrix_device(ImgDenoised_d);
 
     free_fmatrix_1d(tmp);
     free_fmatrix_1d(ImgDegraded1d);
