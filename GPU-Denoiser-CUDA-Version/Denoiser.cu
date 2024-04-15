@@ -35,6 +35,8 @@ void HardThreshold(float, float *, int);
 void ZigZagThreshold(float, float *, int);
 void copy_matrix_on_device(float *, float **, int, int);
 void copy_matrix_on_host(float **, float *, int , int);
+void copy_matrix_1d_to_2d(float*,float**,int,int);
+
 __global__ void denoise_block(float *, float, int, int, int, float *, float *, void (*)(float, float*, int));
 
 #define SIGMA_NOISE 30
@@ -105,28 +107,33 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
         printf("\n   > MSE >> [%.5f]", computeMMSE(DataFiltered_h, Data, lgth));
     }
 
-    printf("j'ai kiffe \n");
+    // Allocate memory on the host to store mat3d
+    float *mat3d_host = (float *)malloc(SizeWindow * SizeWindow * lgth * wdth * sizeof(float));
+
+    // Copy data from device to host
+    cudaMemcpy(mat3d_host, mat3d, SizeWindow * SizeWindow * lgth * wdth * sizeof(float), cudaMemcpyDeviceToHost);
+
     // TODO : fix le segfault qui arrive qq part par la 
     for (int i = 0; i < lgth; i++)
         for (int j = 0; j < wdth; j++)
         {
-            double temp = 0.0;
+            float temp = 0.0;
             double nb = 0.0;
             for (k = 0; k < 64; k++)
-                if (mat3d[k + lgth * i +  lgth * wdth * j] > 0.0)
+            {
+                if (mat3d_host[i * wdth * SizeWindow * SizeWindow + j * SizeWindow * SizeWindow + k] > 0.0)
                 {
                     nb++;
-                    temp += mat3d[k + lgth * i +  lgth * wdth * j];
+                    temp += mat3d_host[i * wdth * SizeWindow * SizeWindow + j * SizeWindow * SizeWindow + k];
                 }
-
+            }
             if (nb)
             {
                 temp /= nb;
-                DataFiltered_d[i + wdth * j] = temp;
+                DataFiltered_h[i][j] = temp;
             }
         }
 
-    printf("bisoux ;)\n");
     // Free memory
     if (SquWin)
         free_matrix_device(SquWin);
