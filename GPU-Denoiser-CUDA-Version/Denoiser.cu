@@ -31,12 +31,13 @@ void DctDenoise(float **, float **, float **, int, int, float);
 void copy_matrix(float **, float **, int, int);
 void FilteringDCT_8x8_(float **, float, int, int, float **, float ***);
 void FilteringDCT_8x8(float **, float, int, int, float **, float ***);
-void HardThreshold(float, float *, int);
+__global__ void HardThreshold(float, float *, int);
 void ZigZagThreshold(float, float *, int);
 void copy_matrix_on_device(float *, float **, int, int);
 void copy_matrix_on_host(float **, float *, int , int);
 void copy_matrix_1d_to_2d(float*,float**,int,int);
 
+__global__ void denoise_image(float *, float *, int, int, int, int);
 __global__ void denoise_block(float *, float, int, int, int, float *, float *, void (*)(float, float*, int));
 
 #define SIGMA_NOISE 30
@@ -56,6 +57,17 @@ __global__ void denoise_block(float *, float, int, int, int, float *, float *, v
 //----------------------------------------------------------
 // IterDctDenoise
 //----------------------------------------------------------
+
+__global__ void simple_kernel(float *input, float *output, int length, int width) {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    int idy = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (idx < length && idy < width) {
+        int index = idy * length + idx;
+        output[index] = input[index];  // Simply copy input to output
+    }
+}
+
 void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int lgth, int wdth, float Thresh)
 {
     int k;
@@ -79,31 +91,51 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
     printf("\n  Overlap        > [%d]", OVERLAP);
     printf("\n\n");
 
-    printf("oui bonjour \n");
     // Allocation Memoire
     float *SquWin = fmatrix_allocate_2d_device(SizeWindow, SizeWindow);
     float *mat3d = fmatrix_allocate_3d_device(SizeWindow * SizeWindow, lgth, wdth);
     float** DataFiltered_h = fmatrix_allocate_2d(lgth, wdth);
 
-    printf("oui heu non \n");
     // Init
     copy_matrix_on_device(DataFiltered_d, DataDegraded, lgth, wdth);
+    // Define block size
+    int blockSize = 16; // You can adjust this value based on your GPU capabilities
 
-    printf("oui bonjour alors voila\n");
-    int threadsPerBlock = 16;
-    int blocksPerGrid = (lgth + threadsPerBlock - 1) / threadsPerBlock;
-    blocksPerGrid *= (wdth + threadsPerBlock - 1) / threadsPerBlock;
+    // Calculate grid dimensions
+    int blocksX = (wdth + blockSize - 1) / blockSize;
+    int blocksY = (lgth + blockSize - 1) / blockSize;
 
+    // Set up the thread block and grid dimensions
+    dim3 threadsPerBlock(blockSize, blockSize);
+    dim3 blocksPerGrid(blocksX, blocksY);
+
+    printf("Threads Per Block: %d x %d\n", threadsPerBlock.x, threadsPerBlock.y);
+    printf("Blocks Per Grid: %d x %d\n", blocksPerGrid.x, blocksPerGrid.y);
+
+
+    // Temporary buffer to copy data from GPU to CPU
+    float tempData[1];
+
+    // Debug print before denoising
+    cudaMemcpy(tempData, DataFiltered_d, sizeof(float), cudaMemcpyDeviceToHost);
+    printf("Before denoising - First element of DataFiltered_d: %f\n", tempData[0]);
     // Launch kernel for denoising
-
-    //>Loop-DEnoising
     for (k = 0; k < NB_ITERATIONS; k++)
     {
-        printf("time to looooooooop  \n");
-    //    FilteringDCT_8x8_(DataFiltered, THRESHOLD, lgth, wdth, SquWin, mat3d);
-        denoise_block<<<blocksPerGrid, threadsPerBlock>>>(DataFiltered_d, SIGMA_NOISE, lgth, wdth, OVERLAP,SquWin, mat3d, HardThreshold);
+        cudaError_t cudaStatus;
+
+        simple_kernel<<<blocksPerGrid, threadsPerBlock>>>(DataFiltered_d, DataFiltered_d, lgth, wdth);
         cudaDeviceSynchronize();
-        copy_matrix_on_host(DataFiltered_h, DataFiltered_d, lgth, wdth);
+
+        if (cudaStatus != cudaSuccess) {
+            fprintf(stderr, "CUDA kernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
+            // Handle error appropriately
+        }
+
+        cudaMemcpy(tempData, DataFiltered_d, sizeof(float), cudaMemcpyDeviceToHost);
+        printf("After denoising - First element of DataFiltered_d: %f\n", tempData[0]);
+
+
         printf("\n   > MSE >> [%.5f]", computeMMSE(DataFiltered_h, Data, lgth));
     }
 
@@ -112,9 +144,9 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
 
     // Copy data from device to host
     cudaMemcpy(mat3d_host, mat3d, SizeWindow * SizeWindow * lgth * wdth * sizeof(float), cudaMemcpyDeviceToHost);
-
-    // TODO : fix le segfault qui arrive qq part par la 
+/*
     for (int i = 0; i < lgth; i++)
+    {
         for (int j = 0; j < wdth; j++)
         {
             float temp = 0.0;
@@ -133,7 +165,8 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
                 DataFiltered_h[i][j] = temp;
             }
         }
-
+    }
+*/
     // Free memory
     if (SquWin)
         free_matrix_device(SquWin);
@@ -182,7 +215,7 @@ void copy_matrix_on_device(float *mat1, float **mat2, int lgth, int wdth)
 
     for (int i = 0; i < lgth; i++)
         for (int j = 0; j < wdth; j++)
-            buff[wdth * i + j] = mat2[i][j];
+            buff[i + wdth * j] = mat2[i][j];
 
     cudaMemcpy(mat2, buff, lgth * wdth, cudaMemcpyHostToDevice);
 }
@@ -205,6 +238,36 @@ void copy_matrix_on_host(float **mat1, float *mat2, int lgth, int wdth)
 //----------------------------------------------------------
 // Fast FilteringDCT 8x8  <simple & optimise>
 //----------------------------------------------------------
+__global__ void denoise_image(float *Dst, float *Src, int ImgWidth, int ImgHeight, int toroidalShiftX, int toroidalShiftY) {
+  
+  // Block index
+  const int bx = blockIdx.x;
+  const int by = blockIdx.y;
+
+  // Thread index (current coefficient)
+  const int tx = threadIdx.x;
+  const int ty = threadIdx.y;
+
+  // Calculate block offset with toroidal shifting
+  int OffsetXBlocks = (bx * 8 + toroidalShiftX) % ImgWidth;
+  int OffsetYBlocks = (by * 8 + toroidalShiftY) % ImgHeight;
+
+  // Specify grid and block dimensions for CUDAkernel1DCT
+  dim3 blockSize(8, 8);
+  dim3 gridSize((ImgWidth + blockSize.x - 1) / blockSize.x, (ImgHeight + blockSize.y - 1) / blockSize.y);
+
+  // Use previous kernel to process each block
+  //CUDA_DCT8x8<<<gridSize, blockSize>>>(Dst, ImgWidth, OffsetXBlocks, OffsetYBlocks, Src);
+
+  //dim3 thresholdBlockSize(8, 8);
+  //dim3 thresholdGridSize((8 + thresholdBlockSize.x - 1) / thresholdBlockSize.x, (8 + thresholdBlockSize.y - 1) / thresholdBlockSize.y);
+  //HardThreshold<<<thresholdGridSize, thresholdBlockSize>>>(SIGMA_NOISE, Dst, 8);
+
+  // Use inverse DCT kernel to process each block
+//  CUDA_IDCT8x8<<<gridSize, blockSize>>>(Dst, ImgWidth, OffsetXBlocks, OffsetYBlocks, Dst);
+
+}
+
 __global__ void denoise_block(float *imgin, float sigma, int length, int width, int overlap,float *SquWin, float *mat3d, void (*thresh)(float, float*, int)) {
   int i = blockIdx.y * blockDim.y + threadIdx.y;
   int j = blockIdx.x * blockDim.x + threadIdx.x;
@@ -347,16 +410,21 @@ __global__ void denoise_block(float *imgin, float sigma, int length, int width, 
 //----------------------------------------------------------
 //  DCT thresholding
 //----------------------------------------------------------
-__device__ void HardThreshold(float sigma, float *coef, int N)
+__global__ void HardThreshold(float sigma, float *coef, int N)
 {
-    int i, j;
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int j = blockIdx.y * blockDim.y + threadIdx.y;
 
-    for (i = 0; i < N; i++)
-        for (j = 0; j < N; j++)
-            if (fabs(coef[i + N * j]) < sigma)
-                coef[i + N *j] = 0.0;
+    if (i < N && j < N)
+    {
+        int index = i + N * j;
+
+        if (fabs(coef[index]) < sigma)
+        {
+            coef[index] = 0.0;
+        }
+    }
 }
-
 //----------------------------------------------------------
 //  DCT ZigZag thresholding
 //----------------------------------------------------------
@@ -405,6 +473,20 @@ __device__ void ZigZagThreshold(float sigma, float *coef, int N)
 //---------------------------------------------------------
 int main(int argc, char **argv)
 {
+    printf("-------------Current GPU--------------\n");
+
+    cudaSetDevice(0);
+    int deviceId;
+    cudaGetDevice(&deviceId);
+    cudaDeviceProp deviceProp;
+    cudaGetDeviceProperties(&deviceProp, deviceId);
+    printf("Device Name: %s\n", deviceProp.name);
+    printf("Compute Capability: %d.%d\n", deviceProp.major, deviceProp.minor);
+    printf("Max Threads Per Block: %d\n", deviceProp.maxThreadsPerBlock);
+    printf("Max Grid Size: %d x %d x %d\n", deviceProp.maxGridSize[0], deviceProp.maxGridSize[1], deviceProp.maxGridSize[2]);
+    printf("Max Threads Dimension: %d x %d x %d\n", deviceProp.maxThreadsDim[0], deviceProp.maxThreadsDim[1], deviceProp.maxThreadsDim[2]);
+    printf("--------------------------------------\n");
+
     int length, width;
     char BufSystVisuImg[NBCHAR];
 

@@ -50,6 +50,9 @@ void SaveImagePgm(char *, float **, int, int);
 
 //>Fourier
 __device__ void ddct8x8s(int, float *);
+__global__ void CUDA_DCT8x8(float *, int, int, int, float *);
+__global__ void CUDA_IDCT8x8(float *, int, int, int, float *);
+
 
 //>Degradation
 float gaussian_noise(float, float);

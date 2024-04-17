@@ -19,8 +19,22 @@
 #include <string.h>
 #include <time.h>
 #include <curand_kernel.h>
+#include <cooperative_groups.h>
 
 #include "Fonctions.h"
+
+__constant__ float DCTv8matrix[] = {
+  0.3535533905932738f,  0.4903926402016152f,  0.4619397662556434f,  0.4157348061512726f,  0.3535533905932738f,  0.2777851165098011f,  0.1913417161825449f,  0.0975451610080642f,
+  0.3535533905932738f,  0.4157348061512726f,  0.1913417161825449f, -0.0975451610080641f, -0.3535533905932737f, -0.4903926402016152f, -0.4619397662556434f, -0.2777851165098011f,
+  0.3535533905932738f,  0.2777851165098011f, -0.1913417161825449f, -0.4903926402016152f, -0.3535533905932738f,  0.0975451610080642f,  0.4619397662556433f,  0.4157348061512727f,
+  0.3535533905932738f,  0.0975451610080642f, -0.4619397662556434f, -0.2777851165098011f,  0.3535533905932737f,  0.4157348061512727f, -0.1913417161825450f, -0.4903926402016153f,
+  0.3535533905932738f, -0.0975451610080641f, -0.4619397662556434f,  0.2777851165098009f,  0.3535533905932738f, -0.4157348061512726f, -0.1913417161825453f,  0.4903926402016152f,
+  0.3535533905932738f, -0.2777851165098010f, -0.1913417161825452f,  0.4903926402016153f, -0.3535533905932733f, -0.0975451610080649f,  0.4619397662556437f, -0.4157348061512720f,
+  0.3535533905932738f, -0.4157348061512727f,  0.1913417161825450f,  0.0975451610080640f, -0.3535533905932736f,  0.4903926402016152f, -0.4619397662556435f,  0.2777851165098022f,
+  0.3535533905932738f, -0.4903926402016152f,  0.4619397662556433f, -0.4157348061512721f,  0.3535533905932733f, -0.2777851165098008f,  0.1913417161825431f, -0.0975451610080625f
+};
+
+
 
 //--------------------------//
 //-- Matrice de Flottant --//
@@ -334,6 +348,131 @@ function prototypes
 #define C8_4R 0.35355339059327376220
 #define W8_4R 0.70710678118654752440
 
+__global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks,
+                               int OffsetYBlocks, float *Src) {
+    // Block index
+    const int bx = blockIdx.x + OffsetXBlocks;
+    const int by = blockIdx.y + OffsetYBlocks;
+
+    // Thread index (current coefficient)
+    const int tx = threadIdx.x;
+    const int ty = threadIdx.y;
+
+    // Calculate linear index for global memory and shared memory
+    const int global_index = (by * 8 * ImgWidth) + (bx * 8) + (ty * ImgWidth) + tx;
+    const int local_index = (ty * 8) + tx;
+
+    extern __shared__ float shared_memory[];
+
+    float *CurBlockLocal1 = shared_memory;
+    float *CurBlockLocal2 = &shared_memory[64];  // 8 * 8 = 64
+
+    // copy current image pixel to the first block
+    CurBlockLocal1[local_index] = Src[global_index];
+
+    // synchronize threads to make sure the block is copied
+    __syncthreads();
+
+    // calculate the multiplication of DCTv8matrixT * A and place it in the second block
+    float curelem = 0;
+    int DCTv8matrixIndex = ty * 8;
+    int CurBlockLocal1Index = 0 * 8 + tx;
+
+    #pragma unroll
+    for (int i = 0; i < 8; i++) {
+        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
+        DCTv8matrixIndex += 8;
+        CurBlockLocal1Index += 8;
+    }
+
+    CurBlockLocal2[local_index] = curelem;
+
+    // synchronize threads to make sure the first 2 matrices are multiplied and
+    // the result is stored in the second block
+    __syncthreads();
+
+    // calculate the multiplication of (DCTv8matrixT * A) * DCTv8matrix and place
+    // it in the first block
+    curelem = 0;
+    int CurBlockLocal2Index = (ty * 8);
+    DCTv8matrixIndex = 0 * 8 + tx;
+
+    #pragma unroll
+    for (int i = 0; i < 8; i++) {
+        curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrix[DCTv8matrixIndex];
+        CurBlockLocal2Index += 1;
+        DCTv8matrixIndex += 8;
+    }
+
+    CurBlockLocal1[local_index] = curelem;
+
+    // synchronize threads to make sure the matrices are multiplied and the result
+    // is stored back in the first block
+    __syncthreads();
+
+    // copy current coefficient to its place in the result array
+    Dst[global_index] = CurBlockLocal1[local_index];
+}
+
+__global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks,
+                                int OffsetYBlocks, float *TexSrc) {
+  
+    // Block index
+    int bx = blockIdx.x + OffsetXBlocks;
+    int by = blockIdx.y + OffsetYBlocks;
+
+    // Thread index (current image pixel)
+    int tx = threadIdx.x;
+    int ty = threadIdx.y;
+
+    // Shared memory allocation for current block
+    __shared__ float CurBlockLocal1[64];
+    __shared__ float CurBlockLocal2[64];
+
+    // Copy current image pixel to the shared memory
+    int global_index = (by * 8 + ty) * ImgWidth + (bx * 8 + tx);
+    CurBlockLocal1[ty * 8 + tx] = TexSrc[global_index];
+
+    // Wait for all threads to complete copying
+    __syncthreads();
+
+    // Calculate the multiplication of DCTv8matrix * A and place it in the shared memory
+    float curelem = 0;
+    int DCTv8matrixIndex = ty * 8;
+    int CurBlockLocal1Index = tx;
+    
+    #pragma unroll
+    for (int i = 0; i < 8; i++) {
+        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
+        DCTv8matrixIndex++;
+        CurBlockLocal1Index += 8;
+    }
+
+    CurBlockLocal2[ty * 8 + tx] = curelem;
+
+    // Wait for all threads to complete the multiplication
+    __syncthreads();
+
+    // Calculate the multiplication of (DCTv8matrix * A) * DCTv8matrixT and place it in the shared memory
+    curelem = 0;
+    int CurBlockLocal2Index = ty * 8;
+    DCTv8matrixIndex = tx;
+    
+    #pragma unroll
+    for (int i = 0; i < 8; i++) {
+        curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrix[DCTv8matrixIndex];
+        CurBlockLocal2Index++;
+        DCTv8matrixIndex += 8;
+    }
+
+    CurBlockLocal1[ty * 8 + tx] = curelem;
+
+    // Wait for all threads to complete the multiplication
+    __syncthreads();
+
+    // Copy current coefficient to its place in the result array
+    Dst[global_index] = CurBlockLocal1[ty * 8 + tx];
+}
 __device__ void ddct8x8s(int isgn, float *a)
 {
     int j;
