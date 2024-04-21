@@ -349,98 +349,94 @@ function prototypes
 #define W8_4R 0.70710678118654752440
 
 __global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks,
-                               int OffsetYBlocks, float *Src) {
-    // Block index
+                           int OffsetYBlocks, float *Src) {
     const int bx = blockIdx.x + OffsetXBlocks;
     const int by = blockIdx.y + OffsetYBlocks;
 
-    // Thread index (current coefficient)
     const int tx = threadIdx.x;
     const int ty = threadIdx.y;
 
-    // Calculate linear index for global memory and shared memory
-    const int global_index = (by * 8 * ImgWidth) + (bx * 8) + (ty * ImgWidth) + tx;
+    const int global_index_x = (bx * 8) + tx;
+    const int global_index_y = (by * 8) + ty;
+
+    // Check boundary condition
+    if (global_index_x >= ImgWidth || global_index_y >= ImgWidth) return;
+
+    const int global_index = global_index_y * ImgWidth + global_index_x;
     const int local_index = (ty * 8) + tx;
 
     extern __shared__ float shared_memory[];
 
     float *CurBlockLocal1 = shared_memory;
-    float *CurBlockLocal2 = &shared_memory[64];  // 8 * 8 = 64
+    float *CurBlockLocal2 = &shared_memory[64];  // Assuming 2 blocks of 8x8 float
 
-    // copy current image pixel to the first block
     CurBlockLocal1[local_index] = Src[global_index];
 
-    // synchronize threads to make sure the block is copied
     __syncthreads();
 
-    // calculate the multiplication of DCTv8matrixT * A and place it in the second block
     float curelem = 0;
-    int DCTv8matrixIndex = ty * 8;
-    int CurBlockLocal1Index = 0 * 8 + tx;
-
+    int DCTv8matrixIndex = (ty *8);
+    int CurBlockLocal1Index =tx;
     #pragma unroll
+
     for (int i = 0; i < 8; i++) {
-        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
+        curelem +=
+            DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
         DCTv8matrixIndex += 8;
-        CurBlockLocal1Index += 8;
+        CurBlockLocal1Index += 1;
     }
 
-    CurBlockLocal2[local_index] = curelem;
+    CurBlockLocal2[(ty << 3) + tx] = curelem;
 
-    // synchronize threads to make sure the first 2 matrices are multiplied and
-    // the result is stored in the second block
     __syncthreads();
 
-    // calculate the multiplication of (DCTv8matrixT * A) * DCTv8matrix and place
-    // it in the first block
     curelem = 0;
-    int CurBlockLocal2Index = (ty * 8);
-    DCTv8matrixIndex = 0 * 8 + tx;
-
+    int CurBlockLocal2Index = (ty << 3);
+    DCTv8matrixIndex = (tx << 3);
     #pragma unroll
+
     for (int i = 0; i < 8; i++) {
-        curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrix[DCTv8matrixIndex];
+        curelem +=
+            CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrix[DCTv8matrixIndex];
         CurBlockLocal2Index += 1;
         DCTv8matrixIndex += 8;
     }
 
-    CurBlockLocal1[local_index] = curelem;
+    CurBlockLocal1[(ty << 3) + tx] = curelem;
 
-    // synchronize threads to make sure the matrices are multiplied and the result
-    // is stored back in the first block
     __syncthreads();
 
-    // copy current coefficient to its place in the result array
     Dst[global_index] = CurBlockLocal1[local_index];
 }
 
 __global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks,
-                                int OffsetYBlocks, float *TexSrc) {
-  
-    // Block index
+                             int OffsetYBlocks, float *TexSrc) {
     int bx = blockIdx.x + OffsetXBlocks;
     int by = blockIdx.y + OffsetYBlocks;
 
-    // Thread index (current image pixel)
     int tx = threadIdx.x;
     int ty = threadIdx.y;
 
-    // Shared memory allocation for current block
+    const int global_index_x = (bx * 8) + tx;
+    const int global_index_y = (by * 8) + ty;
+
+    // Check boundary condition
+    if (global_index_x >= ImgWidth || global_index_y >= ImgWidth) return;
+
+    const int global_index = global_index_y * ImgWidth + global_index_x;
+    const int local_index = (ty * 8) + tx;
+
     __shared__ float CurBlockLocal1[64];
     __shared__ float CurBlockLocal2[64];
 
-    // Copy current image pixel to the shared memory
-    int global_index = (by * 8 + ty) * ImgWidth + (bx * 8 + tx);
-    CurBlockLocal1[ty * 8 + tx] = TexSrc[global_index];
+    CurBlockLocal1[local_index] = TexSrc[global_index];
 
-    // Wait for all threads to complete copying
     __syncthreads();
 
-    // Calculate the multiplication of DCTv8matrix * A and place it in the shared memory
     float curelem = 0;
-    int DCTv8matrixIndex = ty * 8;
+    int DCTv8matrixIndex = (ty << 3);
     int CurBlockLocal1Index = tx;
-    
+
     #pragma unroll
     for (int i = 0; i < 8; i++) {
         curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
@@ -448,31 +444,28 @@ __global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks,
         CurBlockLocal1Index += 8;
     }
 
-    CurBlockLocal2[ty * 8 + tx] = curelem;
+    CurBlockLocal2[local_index] = curelem;
 
-    // Wait for all threads to complete the multiplication
     __syncthreads();
 
-    // Calculate the multiplication of (DCTv8matrix * A) * DCTv8matrixT and place it in the shared memory
     curelem = 0;
-    int CurBlockLocal2Index = ty * 8;
-    DCTv8matrixIndex = tx;
-    
+    int CurBlockLocal2Index = (ty << 3);
+    DCTv8matrixIndex = tx * 8;
+
     #pragma unroll
     for (int i = 0; i < 8; i++) {
         curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrix[DCTv8matrixIndex];
         CurBlockLocal2Index++;
-        DCTv8matrixIndex += 8;
+        DCTv8matrixIndex++;
     }
 
-    CurBlockLocal1[ty * 8 + tx] = curelem;
+    CurBlockLocal1[local_index] = curelem;
 
-    // Wait for all threads to complete the multiplication
     __syncthreads();
 
-    // Copy current coefficient to its place in the result array
-    Dst[global_index] = CurBlockLocal1[ty * 8 + tx];
+    Dst[global_index] = CurBlockLocal1[local_index];
 }
+
 __device__ void ddct8x8s(int isgn, float *a)
 {
     int j;
@@ -611,35 +604,35 @@ __device__ void ddct8x8s(int isgn, float *a)
 //----------------------------------------------------------
 //  Gaussian noisee
 //----------------------------------------------------------
-// float gaussian_noise(float var, float mean)
-// {
-//     float noise, theta;
+float gaussian_noise(float var, float mean)
+{
+    float noise, theta;
 
-//     // Noise generation
-//     noise = sqrt(-2 * var * log(1.0 - ((float)rand() / RAND_MAX)));
-//     theta = (float)rand() * 1.9175345E-4 - PI;
-//     noise = noise * cos(theta);
-//     noise += mean;
-//     if (noise > GREY_LEVEL)
-//         noise = GREY_LEVEL;
-//     if (noise < 0)
-//         noise = 0;
-//     return noise;
-// }
+    // Noise generation
+    noise = sqrt(-2 * var * log(1.0 - ((float)rand() / RAND_MAX)));
+    theta = (float)rand() * 1.9175345E-4 - PI;
+    noise = noise * cos(theta);
+    noise += mean;
+    if (noise > GREY_LEVEL)
+        noise = GREY_LEVEL;
+    if (noise < 0)
+        noise = 0;
+    return noise;
+}
 
 // ----------------------------------------------------------
 //  Add Gaussian noise
 // ----------------------------------------------------------
-// void add_gaussian_noise(float **mat, int lgth, int wdth, float var)
-// {
-//     int i, j;
+void add_gaussian_noise(float **mat, int lgth, int wdth, float var)
+{
+    int i, j;
 
-//     // Loop
-//     for (i = 0; i < lgth; i++)
-//         for (j = 0; j < wdth; j++)
-//             if (var != 0.0)
-//                 mat[i][j] = gaussian_noise(var, mat[i][j]);
-// }
+    // Loop
+    for (i = 0; i < lgth; i++)
+        for (j = 0; j < wdth; j++)
+            if (var != 0.0)
+                mat[i][j] = gaussian_noise(var, mat[i][j]);
+}
 
 __device__ float gaussian_noise(float var, float mean, curandState *state)
 {

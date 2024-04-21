@@ -31,12 +31,12 @@ void DctDenoise(float **, float **, float **, int, int, float);
 void copy_matrix(float **, float **, int, int);
 void FilteringDCT_8x8_(float **, float, int, int, float **, float ***);
 void FilteringDCT_8x8(float **, float, int, int, float **, float ***);
-__global__ void HardThreshold(float, float *, int);
 void ZigZagThreshold(float, float *, int);
 void copy_matrix_on_device(float *, float **, int, int);
 void copy_matrix_on_host(float **, float *, int , int);
 void copy_matrix_1d_to_2d(float*,float**,int,int);
 
+__global__ void HardThreshold(float, float *, int);
 __global__ void denoise_image(float *, float *, int, int, int, int);
 __global__ void denoise_block(float *, float, int, int, int, float *, float *, void (*)(float, float*, int));
 
@@ -59,12 +59,13 @@ __global__ void denoise_block(float *, float, int, int, int, float *, float *, v
 //----------------------------------------------------------
 
 __global__ void simple_kernel(float *input, float *output, int length, int width) {
+
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     int idy = blockIdx.y * blockDim.y + threadIdx.y;
 
     if (idx < length && idy < width) {
-        int index = idy * length + idx;
-        output[index] = input[index];  // Simply copy input to output
+        int index = idy * width + idx;  // Corrected index calculation
+        output[index] = input[index];   // Simply copy input to output
     }
 }
 
@@ -78,7 +79,6 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
     SizeWindow = 8;
 
     // Info
-    //----;
     printf("\n   ---------------- ");
     printf("\n    IterDctDenoise ");
     printf("\n   ----------------");
@@ -92,18 +92,19 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
     printf("\n\n");
 
     // Allocation Memoire
-    float *SquWin = fmatrix_allocate_2d_device(SizeWindow, SizeWindow);
-    float *mat3d = fmatrix_allocate_3d_device(SizeWindow * SizeWindow, lgth, wdth);
-    float** DataFiltered_h = fmatrix_allocate_2d(lgth, wdth);
+    float*** mat3d = fmatrix_allocate_3d(SizeWindow * SizeWindow, lgth, wdth);
+    float*   DataFilteredDst_d = fmatrix_allocate_2d_device(lgth, wdth);
+    float**  DataFiltered_h = fmatrix_allocate_2d(lgth, wdth);
 
     // Init
     copy_matrix_on_device(DataFiltered_d, DataDegraded, lgth, wdth);
+
     // Define block size
-    int blockSize = 16; // You can adjust this value based on your GPU capabilities
+    int blockSize = SizeWindow; 
 
     // Calculate grid dimensions
-    int blocksX = (wdth + blockSize - 1) / blockSize;
-    int blocksY = (lgth + blockSize - 1) / blockSize;
+    int blocksX = (lgth + blockSize - 1) / blockSize;
+    int blocksY = (wdth + blockSize - 1) / blockSize;
 
     // Set up the thread block and grid dimensions
     dim3 threadsPerBlock(blockSize, blockSize);
@@ -112,38 +113,52 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
     printf("Threads Per Block: %d x %d\n", threadsPerBlock.x, threadsPerBlock.y);
     printf("Blocks Per Grid: %d x %d\n", blocksPerGrid.x, blocksPerGrid.y);
 
-
-    // Temporary buffer to copy data from GPU to CPU
-    float tempData[1];
-
     // Debug print before denoising
-    cudaMemcpy(tempData, DataFiltered_d, sizeof(float), cudaMemcpyDeviceToHost);
-    printf("Before denoising - First element of DataFiltered_d: %f\n", tempData[0]);
     // Launch kernel for denoising
     for (k = 0; k < NB_ITERATIONS; k++)
     {
-        cudaError_t cudaStatus;
+        /*
+        for(int torioidalShiftY = 0; torioidalShiftY < 8; torioidalShiftY++)
+        {
+            for(int torioidalShiftX = 0; torioidalShiftX < 8; torioidalShiftX++)
+            {*/
+                cudaError_t cudaStatus;
 
-        simple_kernel<<<blocksPerGrid, threadsPerBlock>>>(DataFiltered_d, DataFiltered_d, lgth, wdth);
-        cudaDeviceSynchronize();
+                denoise_image<<<blocksPerGrid, threadsPerBlock>>>(DataFiltered_d, DataFilteredDst_d, lgth, wdth, 0,0);
+                cudaStatus = cudaDeviceSynchronize();
 
-        if (cudaStatus != cudaSuccess) {
-            fprintf(stderr, "CUDA kernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
-            // Handle error appropriately
-        }
+                if (cudaStatus != cudaSuccess) {
+                    fprintf(stderr, "CUDA kernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
+                    exit(1);
+                }
+                // Allocate host buffer for the current toroidal shift
+                /*float* tempBuffer = (float*)malloc(lgth * wdth * sizeof(float));
 
-        cudaMemcpy(tempData, DataFiltered_d, sizeof(float), cudaMemcpyDeviceToHost);
-        printf("After denoising - First element of DataFiltered_d: %f\n", tempData[0]);
+                // Copy data from device to the host buffer
+                cudaMemcpy(tempBuffer, DataFilteredDst_d, lgth * wdth * sizeof(float), cudaMemcpyDeviceToHost);
 
+                // Calculate the offset for the current toroidal shift
+                int offset = (torioidalShiftY * 8 + torioidalShiftX);
 
-        printf("\n   > MSE >> [%.5f]", computeMMSE(DataFiltered_h, Data, lgth));
+                // Copy data from the host buffer to the appropriate location in the 3D host array
+                for (int i = 0; i < lgth; i++)
+                {
+                    for (int j = 0; j < wdth; j++)
+                    {
+                        mat3d[offset][i][j] = tempBuffer[i * wdth + j];
+                    }
+                }
+
+                // Free the temporary host buffer
+                free(tempBuffer);*/
+  /*          }
+        }*/
     }
 
-    // Allocate memory on the host to store mat3d
-    float *mat3d_host = (float *)malloc(SizeWindow * SizeWindow * lgth * wdth * sizeof(float));
+                printf("oue\n");
 
-    // Copy data from device to host
-    cudaMemcpy(mat3d_host, mat3d, SizeWindow * SizeWindow * lgth * wdth * sizeof(float), cudaMemcpyDeviceToHost);
+
+    cudaMemcpy(DataFiltered_d, DataFilteredDst_d, lgth*wdth*sizeof(float), cudaMemcpyDeviceToDevice);
 /*
     for (int i = 0; i < lgth; i++)
     {
@@ -153,10 +168,10 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
             double nb = 0.0;
             for (k = 0; k < 64; k++)
             {
-                if (mat3d_host[i * wdth * SizeWindow * SizeWindow + j * SizeWindow * SizeWindow + k] > 0.0)
+                if (mat3d[k][i][j] > 0.0)
                 {
                     nb++;
-                    temp += mat3d_host[i * wdth * SizeWindow * SizeWindow + j * SizeWindow * SizeWindow + k];
+                    temp += mat3d[k][i][j];
                 }
             }
             if (nb)
@@ -166,16 +181,17 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
             }
         }
     }
+    printf("chef ?\n");
+
+    copy_matrix_on_device(DataFiltered_d, DataFiltered_h, lgth, wdth);
+
+    printf("chef ?2\n");
 */
     // Free memory
-    if (SquWin)
-        free_matrix_device(SquWin);
-    if (mat3d)
-        free_matrix_device(mat3d);
     if(DataFiltered_h)
         free_fmatrix_2d(DataFiltered_h);
+    free_matrix_device(DataFilteredDst_d);
 }
-
 //---------------//
 //--- GESTION ---//
 //---------------//
@@ -211,13 +227,21 @@ void copy_matrix_2d_to_1d(float **mat1, float *mat2, int lgth, int wdth)
 
 void copy_matrix_on_device(float *mat1, float **mat2, int lgth, int wdth)
 {
-    float buff[lgth * wdth];
+    // Allocate memory for the temporary buffer on the heap
+    float* buff = new float[lgth * wdth];
 
     for (int i = 0; i < lgth; i++)
         for (int j = 0; j < wdth; j++)
-            buff[i + wdth * j] = mat2[i][j];
+            buff[i * wdth + j] = mat2[i][j];
 
-    cudaMemcpy(mat2, buff, lgth * wdth, cudaMemcpyHostToDevice);
+    // Calculate the size of the memory to copy
+    size_t size = lgth * wdth * sizeof(float);
+
+    // Copy the data from the host buffer (buff) to the device (mat1)
+    cudaMemcpy(mat1, buff, size, cudaMemcpyHostToDevice);
+
+    // Free the allocated memory for the host buffer
+    cudaFree(buff);
 }
 
 void copy_matrix_on_host(float **mat1, float *mat2, int lgth, int wdth)
@@ -238,68 +262,34 @@ void copy_matrix_on_host(float **mat1, float *mat2, int lgth, int wdth)
 //----------------------------------------------------------
 // Fast FilteringDCT 8x8  <simple & optimise>
 //----------------------------------------------------------
-__global__ void denoise_image(float *Dst, float *Src, int ImgWidth, int ImgHeight, int toroidalShiftX, int toroidalShiftY) {
-  
-  // Block index
-  const int bx = blockIdx.x;
-  const int by = blockIdx.y;
+__global__ void denoise_image(float *Src, float *Dst, int ImgWidth, int ImgHeight, int toroidalShiftX, int toroidalShiftY) {
+    const int bx = blockIdx.x;
+    const int by = blockIdx.y;
 
-  // Thread index (current coefficient)
-  const int tx = threadIdx.x;
-  const int ty = threadIdx.y;
+    const int tx = threadIdx.x;
+    const int ty = threadIdx.y;
 
-  // Calculate block offset with toroidal shifting
-  int OffsetXBlocks = (bx * 8 + toroidalShiftX) % ImgWidth;
-  int OffsetYBlocks = (by * 8 + toroidalShiftY) % ImgHeight;
+    int OffsetXBlocks = ((bx * 8 + toroidalShiftX) % 8);
+    int OffsetYBlocks = ((by * 8 + toroidalShiftY) % 8);
 
-  // Specify grid and block dimensions for CUDAkernel1DCT
-  dim3 blockSize(8, 8);
-  dim3 gridSize((ImgWidth + blockSize.x - 1) / blockSize.x, (ImgHeight + blockSize.y - 1) / blockSize.y);
+    dim3 blockSize(8, 8);
+    dim3 gridSize((ImgWidth + 7) / 8, (ImgHeight + 7) / 8);
 
-  // Use previous kernel to process each block
-  //CUDA_DCT8x8<<<gridSize, blockSize>>>(Dst, ImgWidth, OffsetXBlocks, OffsetYBlocks, Src);
+    CUDA_DCT8x8<<<gridSize, blockSize,128>>>(Dst, ImgWidth, OffsetXBlocks, OffsetYBlocks, Src);
 
-  //dim3 thresholdBlockSize(8, 8);
-  //dim3 thresholdGridSize((8 + thresholdBlockSize.x - 1) / thresholdBlockSize.x, (8 + thresholdBlockSize.y - 1) / thresholdBlockSize.y);
-  //HardThreshold<<<thresholdGridSize, thresholdBlockSize>>>(SIGMA_NOISE, Dst, 8);
+    __syncthreads();
 
-  // Use inverse DCT kernel to process each block
-//  CUDA_IDCT8x8<<<gridSize, blockSize>>>(Dst, ImgWidth, OffsetXBlocks, OffsetYBlocks, Dst);
+    dim3 thresholdBlockSize(8, 8);
+    dim3 thresholdGridSize(1, 1);
+    
+    HardThreshold<<<thresholdGridSize, thresholdBlockSize>>>(SIGMA_NOISE, Dst, 8);
 
-}
+    __syncthreads();
 
-__global__ void denoise_block(float *imgin, float sigma, int length, int width, int overlap,float *SquWin, float *mat3d, void (*thresh)(float, float*, int)) {
-  int i = blockIdx.y * blockDim.y + threadIdx.y;
-  int j = blockIdx.x * blockDim.x + threadIdx.x;
+    //CUDA_IDCT8x8<<<gridSize, blockSize,128>>>(Dst, ImgWidth, OffsetXBlocks, OffsetYBlocks, Dst);
 
-  if (i < length && j < width) {
-    // Calculate block coordinates within the image
-    int block_i = i - (i % overlap);
-    int block_j = j - (j % overlap);
+    //__syncthreads();
 
-    // Process each coefficient within the block
-    for (int k = 0; k < 8; k++) {
-      for (int l = 0; l < 8; l++) {
-        int posr = block_i + k;
-        int posc = block_j + l;
-
-        // Handle edge cases
-        posr = (posr + length) % length;
-        posc = (posc + width) % width;
-
-        SquWin[k + 8 * l] = imgin[posr * width + posc];
-      }
-    }
-
-    // Perform DCT, thresholding, and inverse DCT
-    ddct8x8s(-1, SquWin);
-    (*thresh)(sigma, SquWin, 8);
-    ddct8x8s(1, SquWin);
-
-    // Calculate final output position in mat3d
-    int pos = ((i % overlap) * 8 + threadIdx.y) * width + ((j % overlap) * 8 + threadIdx.x);
-    mat3d[pos / (width * 8) + length*(pos % width) + length*width*(pos / width)] = SquWin[threadIdx.y + 8 * threadIdx.x];
-  }
 }
 
 //----------------------------------------------------------
@@ -496,28 +486,15 @@ int main(int argc, char **argv)
     //>CPU Memory Allocation
     float **ImgDegraded = fmatrix_allocate_2d(length, width);
     float **ImgDenoised = fmatrix_allocate_2d(length, width);
+
+    //>GPU Memory Allocation
     float *ImgDenoised_d = fmatrix_allocate_2d_device(length, width);
 
     copy_matrix(ImgDegraded, Img, length, width);
 
-    //>GPU Memory Allocation
-    float *ImgDegraded1d = fmatrix_allocate_1d(length * width);
-    float *cuImgDegraded = fmatrix_allocate_2d_device(length, width);
+    copy_matrix(ImgDegraded, Img, length, width);    
 
-    copy_matrix_2d_to_1d(ImgDegraded, ImgDegraded1d, length, width);
-
-    cudaMemcpy(cuImgDegraded, ImgDegraded1d, width * length * sizeof(float), cudaMemcpyHostToDevice); // copy of the yet to be degraded image on the GPU
-    
-    //>GPU Degradation
-    add_gaussian_noise_to_matrix(cuImgDegraded, length, width, SIGMA_NOISE * SIGMA_NOISE);
-
-    // Allocate memory on CPU to store degraded image
-    float *tmp = (float *)malloc(width * length * sizeof(float));
-
-    // Copy the CUDA array data to CPU buffer
-    cudaMemcpy(tmp, cuImgDegraded, width * length * sizeof(float), cudaMemcpyDeviceToHost);
-
-    copy_matrix_1d_to_2d(tmp, ImgDegraded, length, width);
+    add_gaussian_noise(ImgDegraded,length,width,SIGMA_NOISE*SIGMA_NOISE);
 
     printf("\n\n  Info Noise");
     printf("\n  ------------");
@@ -577,16 +554,6 @@ int main(int argc, char **argv)
         free_fmatrix_2d(ImgDenoised);
         free_matrix_device(ImgDenoised_d);
 
-    free_fmatrix_1d(tmp);
-    free_fmatrix_1d(ImgDegraded1d);
-
-    cudaFree(cuImgDegraded);
-    // cudaFree(cuImgDenoised);
-
-    // cudaUnbindTexture(texImgDegraded);
-    // cudaUnbindTexture(texImgDenoised);
-
-    // Return
     printf("\n C'est fini... \n");
     return 0;
 }
