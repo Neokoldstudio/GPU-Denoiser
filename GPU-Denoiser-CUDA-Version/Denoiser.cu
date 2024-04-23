@@ -10,6 +10,11 @@
 //------------------------------------------------------
 
 //------------------------------------------------
+// LIBRAIRIES ------------------------------------
+//------------------------------------------------
+#include <time.h>
+
+//------------------------------------------------
 // FICHIERS INCLUS -------------------------------
 //------------------------------------------------
 #include "Fonctions.h"
@@ -43,7 +48,7 @@ __global__ void denoise_block(float *, float, int, int, int, float *, float *, v
 #define SIGMA_NOISE 30
 #define NB_ITERATIONS 1
 #define THRESHOLD 90
-#define OVERLAP 1
+#define OVERLAP 2
 #define HARD_THRESHOLD 1
 
 #define ZOOM 1
@@ -79,16 +84,16 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
     SizeWindow = 8;
 
     // Info
-    printf("\n   ---------------- ");
-    printf("\n    IterDctDenoise ");
-    printf("\n   ----------------");
-    printf("\n  Length:Width [%d][%d]", lgth, wdth);
-    printf("\n  -----------------------");
-    printf("\n   >> SigmaNoise = [%d]", SIGMA_NOISE);
-    printf("\n  -----------------------");
-    printf("\n  Threshold_Dct  > [%.1d]", THRESHOLD);
-    printf("\n  Size Window    > [%d]", SizeWindow);
-    printf("\n  Overlap        > [%d]", OVERLAP);
+    printf("\n  --------------------- ");
+    printf("\n      IterDctDenoise ");
+    printf("\n  ---------------------");
+    printf("\n      Length:Width [%d][%d]", lgth, wdth);
+    printf("\n      -----------------------");
+    printf("\n      >> SigmaNoise = [%d]", SIGMA_NOISE);
+    printf("\n      -----------------------");
+    printf("\n      Threshold_Dct  > [%.1d]", THRESHOLD);
+    printf("\n      Size Window    > [%d]", SizeWindow);
+    printf("\n      Overlap        > [%d]", OVERLAP);
     printf("\n\n");
 
     // Allocation Memoire
@@ -110,8 +115,10 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
     dim3 threadsPerBlock(blockSize, blockSize);
     dim3 blocksPerGrid(blocksX, blocksY);
 
-    printf("Threads Per Block: %d x %d\n", threadsPerBlock.x, threadsPerBlock.y);
-    printf("Blocks Per Grid: %d x %d\n", blocksPerGrid.x, blocksPerGrid.y);
+    printf("      --------Kernel Called on :------\n");
+    printf("          Threads Per Block: %d x %d\n", threadsPerBlock.x, threadsPerBlock.y);
+    printf("          Blocks Per Grid: %d x %d\n", blocksPerGrid.x, blocksPerGrid.y);
+    printf("      --------------------------------\n");
 
     // Debug print before denoising
     // Launch kernel for denoising
@@ -125,21 +132,21 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
                 float *DataShifted_d;
                 cudaMalloc((void**)&DataShifted_d, lgth * wdth * sizeof(float));
                 
-                int shiftX = torioidalShiftX;
-                int shiftY = torioidalShiftY;
+                int shiftX = torioidalShiftX * OVERLAP;
+                int shiftY = torioidalShiftY * OVERLAP;
 
                 ToroidalShift<<<blocksPerGrid, threadsPerBlock>>>(DataShifted_d, DataFiltered_d, lgth, wdth, shiftX, shiftY);
                 cudaDeviceSynchronize();
-
+                //Launch Discrete Cosine Transform
                 CUDA_DCT8x8<<<blocksPerGrid, threadsPerBlock>>>(DataFilteredDst_d, wdth, DataShifted_d);
                 cudaDeviceSynchronize();
 
-                // Launch HardThreshold kernel
-                HardThreshold<<<blocksPerGrid, threadsPerBlock>>>(SIGMA_NOISE, DataFilteredDst_d, lgth);
-                cudaDeviceSynchronize();
+                // Launch Quantization kernel (here, a simple Hardthreshold)
+                //HardThreshold<<<blocksPerGrid, threadsPerBlock>>>(SIGMA_NOISE, DataFilteredDst_d, lgth);
+                //cudaDeviceSynchronize();
 
-                // Launch IDCT8x8 kernel
-                //CUDAkernel2IDCT<<<blocksPerGrid, threadsPerBlock>>>(DataFiltered_d, wdth, DataFilteredDst_d);
+                // Launch Inverse Discrete Cosine Transform
+                //CUDA_IDCT8x8<<<blocksPerGrid, threadsPerBlock>>>(DataFilteredDst_d, wdth, DataFilteredDst_d);
                 //cudaDeviceSynchronize();
 
                 // Allocate host buffer for the current toroidal shift
@@ -166,9 +173,6 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
         }
     }
 
-    printf("oue\n");
-
-
     cudaMemcpy(DataFiltered_d, DataFilteredDst_d, lgth*wdth*sizeof(float), cudaMemcpyDeviceToDevice);
 
     for (int i = 0; i < lgth; i++)
@@ -192,13 +196,9 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
             }
         }
     }
-    printf("chef ?\n");
 
     copy_matrix_on_device(DataFiltered_d, DataFiltered_h, lgth, wdth);
 
-    printf("chef ?2\n");
-
-    // Free memory
     if(DataFiltered_h)
         free_fmatrix_2d(DataFiltered_h);
     free_matrix_device(DataFilteredDst_d);
@@ -238,20 +238,16 @@ void copy_matrix_2d_to_1d(float **mat1, float *mat2, int lgth, int wdth)
 
 void copy_matrix_on_device(float *mat1, float **mat2, int lgth, int wdth)
 {
-    // Allocate memory for the temporary buffer on the heap
     float* buff = new float[lgth * wdth];
 
     for (int i = 0; i < lgth; i++)
         for (int j = 0; j < wdth; j++)
             buff[i * wdth + j] = mat2[i][j];
 
-    // Calculate the size of the memory to copy
     size_t size = lgth * wdth * sizeof(float);
 
-    // Copy the data from the host buffer (buff) to the device (mat1)
     cudaMemcpy(mat1, buff, size, cudaMemcpyHostToDevice);
 
-    // Free the allocated memory for the host buffer
     cudaFree(buff);
 }
 
@@ -259,155 +255,15 @@ void copy_matrix_on_host(float **mat1, float *mat2, int lgth, int wdth)
 {
     float *buff = (float *)malloc(lgth * wdth * sizeof(float));
 
-    // Copy matrix data from device to host buffer
     cudaMemcpy(buff, mat2, lgth * wdth * sizeof(float), cudaMemcpyDeviceToHost);
 
-    // Unflatten the 1D buffer to 2D matrix
     for (int i = 0; i < lgth; i++)
         for (int j = 0; j < wdth; j++)
             mat1[i][j] = buff[wdth * i + j];
 
-    // Free the temporary buffer
     free(buff);
 }
-//----------------------------------------------------------
-// Fast FilteringDCT 8x8  <simple & optimise>
-//----------------------------------------------------------
-__global__ void denoise_image(float *Src, float *Dst, int ImgWidth, int ImgHeight, int toroidalShiftX, int toroidalShiftY) {
-    const int bx = blockIdx.x;
-    const int by = blockIdx.y;
 
-    const int tx = threadIdx.x;
-    const int ty = threadIdx.y;
-
-    int OffsetXBlocks = ((bx * 8 + toroidalShiftX));
-    int OffsetYBlocks = ((by * 8 + toroidalShiftY));
-
-    dim3 blockSize(8, 8);
-    dim3 gridSize((ImgWidth + 7) / 8, (ImgHeight + 7) / 8);
-
-    //CUDA_DCT8x8<<<1, blockSize,128>>>(Dst, ImgWidth, OffsetXBlocks, OffsetYBlocks, Src);
-
-    __syncthreads();
-
-    dim3 thresholdBlockSize(8, 8);
-    dim3 thresholdGridSize(1, 1);
-    
-    //HardThreshold<<<thresholdGridSize, thresholdBlockSize>>>(SIGMA_NOISE, Dst, 8);
-
-    __syncthreads();
-
-    //CUDA_IDCT8x8<<<gridSize, blockSize,128>>>(Dst, ImgWidth, OffsetXBlocks, OffsetYBlocks, Dst);
-
-    //__syncthreads();
-
-}
-
-//----------------------------------------------------------
-//----------------------------------------------------------
-// Fast FilteringDCT 8x8  <simple> <ovl>
-//----------------------------------------------------------
-//----------------------------------------------------------
-// void FilteringDCT_8x8_(float **imgin, float sigma, int length, int width, float **SquWin, float ***mat3d)
-// {
-//     int i, j;
-//     int k, l;
-//     int x, y;
-//     int pos;
-//     float temp;
-//     float nb;
-//     int posr, posc;
-//     int overlap;
-
-//     // Initialisation
-//     //--------------
-//     //>Record
-//     overlap = OVERLAP;
-
-//     //>Init
-//     for (k = 0; k < 64; k++)
-//         for (i = 0; i < length; i++)
-//             for (j = 0; j < width; j++)
-//                 mat3d[k][i][j] = -1.0;
-//     // Loop
-//     //----
-//     for (i = 0; i < length; i += overlap)
-//         for (j = 0; j < width; j += overlap)
-//         {
-//             for (k = 0; k < 8; k++)
-//                 for (l = 0; l < 8; l++)
-//                 {
-//                     posr = i - 4 + k;
-//                     posc = j - 4 + l;
-
-//                     if (posr < 0)
-//                         posr += length;
-//                     if (posr > (length - 1))
-//                         posr -= length;
-
-//                     if (posc < 0)
-//                         posc += width;
-//                     if (posc > (width - 1))
-//                         posc -= width;
-
-//                     SquWin[k][l] = imgin[posr][posc];
-//                 }
-
-//             ddct8x8s(-1, SquWin);
-//             if (HARD_THRESHOLD)
-//                 HardThreshold(sigma, SquWin, 8);
-//             if (!HARD_THRESHOLD)
-//                 ZigZagThreshold(sigma, SquWin, 8);
-//             ddct8x8s(1, SquWin);
-
-//             x = (i % 8);
-//             y = (j % 8);
-//             pos = ((x * 8) + y);
-
-//             for (k = 0; k < 8; k++)
-//                 for (l = 0; l < 8; l++)
-//                 {
-//                     posr = i - 4 + k;
-//                     posc = j - 4 + l;
-
-//                     if (posr < 0)
-//                         posr += length;
-//                     if (posr > (length - 1))
-//                         posr -= length;
-
-//                     if (posc < 0)
-//                         posc += width;
-//                     if (posc > (width - 1))
-//                         posc -= width;
-
-//                     if (mat3d[pos][posr][posc] != -1)
-//                         printf("!");
-
-//                     mat3d[pos][posr][posc] = SquWin[k][l];
-//                 }
-//         }
-
-//     // Averaging
-//     //---------
-//     for (i = 0; i < length; i++)
-//         for (j = 0; j < width; j++)
-//         {
-//             temp = 0.0;
-//             nb = 0.0;
-//             for (k = 0; k < 64; k++)
-//                 if (mat3d[k][i][j] > 0.0)
-//                 {
-//                     nb++;
-//                     temp += mat3d[k][i][j];
-//                 }
-
-//             if (nb)
-//             {
-//                 temp /= nb;
-//                 imgin[i][j] = temp;
-//             }
-//         }
-// }
 //----------------------------------------------------------
 //  DCT thresholding
 //----------------------------------------------------------
@@ -467,13 +323,36 @@ __device__ void ZigZagThreshold(float sigma, float *coef, int N)
                 coef[i + N * j] = 0.0;
 }
 
+
+void usage(const char* programName)
+{
+    printf("Usage: %s [<input_image.pgm>]\n", programName);
+    printf("If no input image is provided, the default image will be used.\n");
+}
 //---------------------------------------------------------
 //---------------------------------------------------------
 // PROGRAMME PRINCIPAL   ----------------------------------
 //---------------------------------------------------------
 //---------------------------------------------------------
-int main(int argc, char **argv)
+
+int main(int argc, char** argv)
 {
+    char* inputImage;
+
+    if (argc == 1)
+    {
+        inputImage = NAME_IMG_IN;
+    }
+    else if (argc == 2)
+    {
+        inputImage = argv[1];
+    }
+    else
+    {
+        usage(argv[0]);
+        return 1;
+    }
+
     printf("-------------Current GPU--------------\n");
 
     cudaSetDevice(0);
@@ -492,78 +371,70 @@ int main(int argc, char **argv)
     char BufSystVisuImg[NBCHAR];
 
     //>Lecture Image
-    float **Img = LoadImagePgm(NAME_IMG_IN, &length, &width);
+    float** Img = LoadImagePgm(inputImage, &length, &width);
+
+    if (!Img)
+    {
+        printf("Error loading image %s\n", inputImage);
+        return 1;
+    }
 
     //>CPU Memory Allocation
-    float **ImgDegraded = fmatrix_allocate_2d(length, width);
-    float **ImgDenoised = fmatrix_allocate_2d(length, width);
+    float** ImgDegraded = fmatrix_allocate_2d(length, width);
+    float** ImgDenoised = fmatrix_allocate_2d(length, width);
 
     //>GPU Memory Allocation
-    float *ImgDenoised_d = fmatrix_allocate_2d_device(length, width);
+    float* ImgDenoised_d = fmatrix_allocate_2d_device(length, width);
 
     copy_matrix(ImgDegraded, Img, length, width);
+    add_gaussian_noise(ImgDegraded, length, width, SIGMA_NOISE * SIGMA_NOISE);
 
-    copy_matrix(ImgDegraded, Img, length, width);    
+    printf("\n  Info Noise");
+    printf("\n  ---------------------");
+    printf("\n  Before Denoising :");
+    printf("\n      > MSE = [%.2f]", computeMMSE(ImgDegraded, Img, length));
 
-    add_gaussian_noise(ImgDegraded,length,width,SIGMA_NOISE*SIGMA_NOISE);
-
-    printf("\n\n  Info Noise");
-    printf("\n  ------------");
-    printf("\n    > MSE = [%.2f]", computeMMSE(ImgDegraded, Img, length));
-
-    //=========================================================
-    //== PROG =================================================
-    //=========================================================
-
-    printf("bonjour!\n");
-
+    clock_t start = clock();
     DctDenoise(ImgDegraded, ImgDenoised_d, Img, length, width, THRESHOLD);
+    clock_t end = clock();
 
-    printf("haha :)\n");
+    double duration = (double)(end - start) / CLOCKS_PER_SEC * 1000.0;
 
     copy_matrix_on_host(ImgDenoised, ImgDenoised_d, length, width);
 
-    //---------------------------------------------
-    // SAUVEGARDE
-    // -------------------
-    // L'image d�grad�e             > ImgDegraded
-    // Le resultat du debruitage    > ImgFiltered
-    //----------------------------------------------
+    printf("\n  ---------------------");
+    printf("\n  After Denoising :");
+    printf("\n      > MSE = [%.2f]", computeMMSE(ImgDenoised, Img, length));
+    printf("\n  ---------------------");
+    printf("\n  Duration :");
+    printf("\n  Temps d'exécution de DctDenoise : %.2f ms\n", duration);
+    printf("\n  ---------------------");
+
     SaveImagePgm(NAME_IMG_DEG, ImgDegraded, length, width);
     SaveImagePgm(NAME_IMG_OUT, ImgDenoised, length, width);
 
-    //>Visu Img
     strcpy(BufSystVisuImg, NAME_VISUALISER);
-    strcat(BufSystVisuImg, NAME_IMG_IN);
+    strcat(BufSystVisuImg, inputImage);
     strcat(BufSystVisuImg, ".pgm&");
     printf("\n > %s", BufSystVisuImg);
     system(BufSystVisuImg);
 
-    // Visu ImgDegraded
     strcpy(BufSystVisuImg, NAME_VISUALISER);
     strcat(BufSystVisuImg, NAME_IMG_DEG);
     strcat(BufSystVisuImg, ".pgm&");
     printf("\n > %s", BufSystVisuImg);
     system(BufSystVisuImg);
 
-    // Visu ImgFiltered
     strcpy(BufSystVisuImg, NAME_VISUALISER);
     strcat(BufSystVisuImg, NAME_IMG_OUT);
     strcat(BufSystVisuImg, ".pgm&");
     printf("\n > %s", BufSystVisuImg);
     system(BufSystVisuImg);
 
-    //--------------- End -------------------------------------
-    //----------------------------------------------------------
-
-    // Liberation memoire pour les matrices
-    if (Img)
-        free_fmatrix_2d(Img);
-    if (ImgDegraded)
-        free_fmatrix_2d(ImgDegraded);
-    if (ImgDenoised)
-        free_fmatrix_2d(ImgDenoised);
-        free_matrix_device(ImgDenoised_d);
+    if (Img) free_fmatrix_2d(Img);
+    if (ImgDegraded) free_fmatrix_2d(ImgDegraded);
+    if (ImgDenoised) free_fmatrix_2d(ImgDenoised);
+    free_matrix_device(ImgDenoised_d);
 
     printf("\n C'est fini... \n");
     return 0;

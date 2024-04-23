@@ -368,51 +368,51 @@ __global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, float *Src) {
     const int tx = threadIdx.x;
     const int ty = threadIdx.y;
 
-    const int global_index_x = (bx * 8) + tx;
-    const int global_index_y = (by * 8) + ty;
+    const int global_index_x = (bx * BLOCK_SIZE) + tx;
+    const int global_index_y = (by * BLOCK_SIZE) + ty;
 
     // Check boundary condition
     if (global_index_x >= ImgWidth || global_index_y >= ImgWidth) return;
 
     const int global_index = global_index_y * ImgWidth + global_index_x;
-    const int local_index = (ty * 8) + tx;
+    const int local_index = (ty * BLOCK_SIZE) + tx;
 
     extern __shared__ float shared_memory[];
 
     float *CurBlockLocal1 = shared_memory;
-    float *CurBlockLocal2 = &shared_memory[64];  // Assuming 2 blocks of 8x8 float
+    float *CurBlockLocal2 = &shared_memory[BLOCK_SIZE*BLOCK_SIZE];  // Assuming 2 blocks of 8x8 float
 
-    CurBlockLocal1[local_index] = Src[global_index];
+    CurBlockLocal1[local_index] = Src[global_index]-128.0f;
 
     __syncthreads();
 
     float curelem = 0.0f;
-    int DCTv8matrixIndex = (ty * 8)+tx;
+    int DCTv8matrixIndex = (ty * BLOCK_SIZE)+tx;
     int CurBlockLocal1Index = tx;
     #pragma unroll
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < BLOCK_SIZE; i++) {
         curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
         DCTv8matrixIndex += 1;
-        CurBlockLocal1Index += 1;
+        CurBlockLocal1Index += BLOCK_SIZE;
     }
 
-    CurBlockLocal2[(ty << 3) + tx] = curelem;
+    CurBlockLocal2[(ty << BLOCK_SIZE_LOG2) + tx] = curelem;
 
     __syncthreads();
 
     curelem = 0.0f;
-    int CurBlockLocal2Index = (ty << 3) + tx;
-    DCTv8matrixIndex = (tx << 3);
+    int CurBlockLocal2Index = (ty << BLOCK_SIZE_LOG2) + tx;
+    DCTv8matrixIndex = (tx << BLOCK_SIZE_LOG2);
     #pragma unroll
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < BLOCK_SIZE; i++) {
         curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrixT[DCTv8matrixIndex];
-        CurBlockLocal2Index += 1;
+        CurBlockLocal2Index += BLOCK_SIZE;
         DCTv8matrixIndex += 1;
     }
 
-    CurBlockLocal1[(ty << 3) + tx] = curelem;
+    CurBlockLocal1[(ty << BLOCK_SIZE_LOG2) + tx] = curelem;
 
     __syncthreads();
 
@@ -426,61 +426,67 @@ __global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, float *Src) {
     const int tx = threadIdx.x;
     const int ty = threadIdx.y;
 
-    const int global_index_x = (bx * 8) + tx;
-    const int global_index_y = (by * 8) + ty;
+    const int global_index_x = (bx * BLOCK_SIZE) + tx;
+    const int global_index_y = (by * BLOCK_SIZE) + ty;
 
     // Check boundary condition
     if (global_index_x >= ImgWidth || global_index_y >= ImgWidth) return;
 
     const int global_index = global_index_y * ImgWidth + global_index_x;
-    const int local_index = (ty * 8) + tx;
+    const int local_index = (ty * BLOCK_SIZE) + tx;
 
     extern __shared__ float shared_memory[];
 
     float *CurBlockLocal1 = shared_memory;
-    float *CurBlockLocal2 = &shared_memory[64];  // Assuming 2 blocks of 8x8 float
+    float *CurBlockLocal2 = &shared_memory[BLOCK_SIZE * BLOCK_SIZE];  // Assuming 2 blocks of 8x8 float
 
     CurBlockLocal1[local_index] = Src[global_index];
 
     __syncthreads();
 
     float curelem = 0.0f;
-    int DCTv8matrixIndex = (ty * 8);
+    int DCTv8matrixIndex = (ty * BLOCK_SIZE);
     int CurBlockLocal1Index = tx;
     #pragma unroll
 
-    for (int i = 0; i < 8; i++) {
-        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
-        DCTv8matrixIndex += 8;
-        CurBlockLocal1Index += 1;
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+        curelem += DCTv8matrixT[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
+        DCTv8matrixIndex += 1;
+        CurBlockLocal1Index += BLOCK_SIZE;
     }
 
-    CurBlockLocal2[(ty << 3) + tx] = curelem;
+    CurBlockLocal2[(ty << BLOCK_SIZE_LOG2) + tx] = curelem;
 
     __syncthreads();
 
     curelem = 0.0f;
-    int CurBlockLocal2Index = (ty << 3) + tx;
-    DCTv8matrixIndex = (tx << 3);
+    int CurBlockLocal2Index = (ty << BLOCK_SIZE_LOG2) ;
+    DCTv8matrixIndex = (tx << BLOCK_SIZE_LOG2);
     #pragma unroll
 
-    for (int i = 0; i < 8; i++) {
-        curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrixT[DCTv8matrixIndex];
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+        curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrix[DCTv8matrixIndex];
         CurBlockLocal2Index += 1;
-        DCTv8matrixIndex += 8;
+        DCTv8matrixIndex += BLOCK_SIZE;
     }
 
-    CurBlockLocal1[(ty << 3) + tx] = curelem;
+    CurBlockLocal1[(ty << BLOCK_SIZE_LOG2) + tx] = curelem;
 
     __syncthreads();
 
-    Dst[global_index] = CurBlockLocal1[local_index];
+    Dst[global_index] = CurBlockLocal1[local_index] + 128.0f;
 }
 
 __global__ void ToroidalShift(float *Dst, float *Src, int lgth, int wdth, int shiftX, int shiftY)
 {
-    int x = blockIdx.x * blockDim.x + threadIdx.x;
-    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    const int bx = blockIdx.x;
+    const int by = blockIdx.y;
+
+    const int tx = threadIdx.x;
+    const int ty = threadIdx.y;
+
+    const int x = (bx * BLOCK_SIZE) + tx;
+    const int y = (by * BLOCK_SIZE) + ty;
 
     if (x < lgth && y < wdth)
     {

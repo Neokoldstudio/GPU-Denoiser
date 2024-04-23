@@ -181,4 +181,23 @@ CMakeFiles/Denoiser.dir/Denoiser.cu.o : /u/godbertp/Desktop/Projet\ GPU/projet/G
     /usr/lib/gcc/x86_64-pc-linux-gnu/12/include/g++-v12/utility \
     /usr/lib/gcc/x86_64-pc-linux-gnu/12/include/g++-v12/bits/stl_relops.h \
     /usr/lib/gcc/x86_64-pc-linux-gnu/12/include/g++-v12/initializer_list \
-    /u/godbertp/Desktop/Projet\ GPU/projet/GPU-Denoiser-CUDA-Version/Fonctions.h
+    /u/godbertp/Desktop/Projet\ GPU/projet/GPU-Denoiser-CUDA-Version/Fonctions.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_kernel.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/nv/target \
+    /opt/cuda/bin/../targets/x86_64-linux/include/nv/detail/__target_macros \
+    /opt/cuda/bin/../targets/x86_64-linux/include/nv/detail/__preprocessor \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_discrete.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_precalc.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_mrg32k3a.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_mtgp32_kernel.h \
+    /usr/include/memory.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_mtgp32.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_philox4x32_x.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_globals.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_uniform.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_normal.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_normal_static.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_lognormal.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_poisson.h \
+    /opt/cuda/bin/../targets/x86_64-linux/include/curand_discrete2.h

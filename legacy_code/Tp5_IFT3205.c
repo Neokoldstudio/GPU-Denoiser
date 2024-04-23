@@ -182,8 +182,8 @@ void FilteringDCT_8x8(float** imgin,float sigma,int length,int width,float** Squ
         }
 
      ddct8x8s(-1,SquWin);
-     HardThreshold(sigma,SquWin,8);
-     ddct8x8s(1,SquWin); 
+     //HardThreshold(sigma,SquWin,8);
+     //ddct8x8s(1,SquWin); 
     
      x=(i%8);
      y=(j%8);
@@ -262,7 +262,7 @@ void FilteringDCT_8x8_(float** imgin,float sigma,int length,int width,float** Sq
      ddct8x8s(-1,SquWin);
      if (HARD_THRESHOLD)  HardThreshold(sigma,SquWin,8);
      if (!HARD_THRESHOLD) ZigZagThreshold(sigma,SquWin,8);
-     ddct8x8s(1,SquWin); 
+     ddct8x8s(1,SquWin);
     
      x=(i%8);
      y=(j%8);
@@ -379,7 +379,7 @@ int main(int argc,char** argv)
   //---------------------------------------------
   // SAUVEGARDE 
   // -------------------
-  // L'image dégradée             > ImgDegraded
+  // L'image dï¿½gradï¿½e             > ImgDegraded
   // Le resultat du debruitage    > ImgFiltered
   //----------------------------------------------
   SaveImagePgm(NAME_IMG_DEG,ImgDegraded,length,width);

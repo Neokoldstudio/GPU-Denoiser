@@ -3,6 +3,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/Denoiser.dir/Denoiser.cu.o.d"
   "CMakeFiles/Denoiser.dir/Fonctions.cu.o"
   "CMakeFiles/Denoiser.dir/Fonctions.cu.o.d"
+  "CMakeFiles/Denoiser.dir/cmake_device_link.o"
   "Denoiser"
   "Denoiser.pdb"
 )

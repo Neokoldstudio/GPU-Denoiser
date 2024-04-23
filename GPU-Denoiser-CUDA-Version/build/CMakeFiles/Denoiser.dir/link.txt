@@ -1,1 +1,1 @@
-/usr/bin/g++ @CMakeFiles/Denoiser.dir/objects1.rsp -o Denoiser @CMakeFiles/Denoiser.dir/linkLibs.rsp -L"/opt/cuda/targets/x86_64-linux/lib/stubs" -L"/opt/cuda/targets/x86_64-linux/lib"
+/usr/bin/g++ @CMakeFiles/Denoiser.dir/objects1.rsp CMakeFiles/Denoiser.dir/cmake_device_link.o -o Denoiser @CMakeFiles/Denoiser.dir/linkLibs.rsp -L"/opt/cuda/targets/x86_64-linux/lib/stubs" -L"/opt/cuda/targets/x86_64-linux/lib"
