@@ -34,7 +34,20 @@ __constant__ float DCTv8matrix[] = {
   0.3535533905932738f, -0.4903926402016152f,  0.4619397662556433f, -0.4157348061512721f,  0.3535533905932733f, -0.2777851165098008f,  0.1913417161825431f, -0.0975451610080625f
 };
 
+__constant__ float DCTv8matrixT[] =
+{
+  0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f,
+  0.4903926402016152f, 0.4157348061512726f, 0.2777851165098011f, 0.0975451610080642f, -0.0975451610080641f, -0.2777851165098010f, -0.4157348061512727f, -0.4903926402016152f,
+  0.4619397662556434f, 0.1913417161825449f, -0.1913417161825449f, -0.4619397662556434f, -0.4619397662556434f, -0.1913417161825452f, 0.1913417161825450f, 0.4619397662556433f,
+  0.4157348061512726f, -0.0975451610080641f, -0.4903926402016152f, -0.2777851165098011f, 0.2777851165098009f, 0.4903926402016153f, 0.0975451610080640f, -0.4157348061512721f,
+  0.3535533905932738f, -0.3535533905932737f, -0.3535533905932738f, 0.3535533905932737f, 0.3535533905932738f, -0.3535533905932733f, -0.3535533905932736f, 0.3535533905932733f,
+  0.2777851165098011f, -0.4903926402016152f, 0.0975451610080642f, 0.4157348061512727f, -0.4157348061512726f, -0.0975451610080649f, 0.4903926402016152f, -0.2777851165098008f,
+  0.1913417161825449f, -0.4619397662556434f, 0.4619397662556433f, -0.1913417161825450f, -0.1913417161825453f, 0.4619397662556437f, -0.4619397662556435f, 0.1913417161825431f,
+  0.0975451610080642f, -0.2777851165098011f, 0.4157348061512727f, -0.4903926402016153f, 0.4903926402016152f, -0.4157348061512720f, 0.2777851165098022f, -0.0975451610080625f
+};
 
+__constant__ int BLOCK_SIZE = 8;
+__constant__ int BLOCK_SIZE_LOG2 = 3;
 
 //--------------------------//
 //-- Matrice de Flottant --//
@@ -348,10 +361,9 @@ function prototypes
 #define C8_4R 0.35355339059327376220
 #define W8_4R 0.70710678118654752440
 
-__global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks,
-                           int OffsetYBlocks, float *Src) {
-    const int bx = blockIdx.x + OffsetXBlocks;
-    const int by = blockIdx.y + OffsetYBlocks;
+__global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, float *Src) {
+    const int bx = blockIdx.x;
+    const int by = blockIdx.y;
 
     const int tx = threadIdx.x;
     const int ty = threadIdx.y;
@@ -374,14 +386,71 @@ __global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks,
 
     __syncthreads();
 
-    float curelem = 0;
-    int DCTv8matrixIndex = (ty *8);
-    int CurBlockLocal1Index =tx;
+    float curelem = 0.0f;
+    int DCTv8matrixIndex = (ty * 8)+tx;
+    int CurBlockLocal1Index = tx;
     #pragma unroll
 
     for (int i = 0; i < 8; i++) {
-        curelem +=
-            DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
+        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
+        DCTv8matrixIndex += 1;
+        CurBlockLocal1Index += 1;
+    }
+
+    CurBlockLocal2[(ty << 3) + tx] = curelem;
+
+    __syncthreads();
+
+    curelem = 0.0f;
+    int CurBlockLocal2Index = (ty << 3) + tx;
+    DCTv8matrixIndex = (tx << 3);
+    #pragma unroll
+
+    for (int i = 0; i < 8; i++) {
+        curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrixT[DCTv8matrixIndex];
+        CurBlockLocal2Index += 1;
+        DCTv8matrixIndex += 1;
+    }
+
+    CurBlockLocal1[(ty << 3) + tx] = curelem;
+
+    __syncthreads();
+
+    Dst[global_index] = CurBlockLocal1[local_index];
+}
+
+__global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, float *Src) {
+    const int bx = blockIdx.x;
+    const int by = blockIdx.y;
+
+    const int tx = threadIdx.x;
+    const int ty = threadIdx.y;
+
+    const int global_index_x = (bx * 8) + tx;
+    const int global_index_y = (by * 8) + ty;
+
+    // Check boundary condition
+    if (global_index_x >= ImgWidth || global_index_y >= ImgWidth) return;
+
+    const int global_index = global_index_y * ImgWidth + global_index_x;
+    const int local_index = (ty * 8) + tx;
+
+    extern __shared__ float shared_memory[];
+
+    float *CurBlockLocal1 = shared_memory;
+    float *CurBlockLocal2 = &shared_memory[64];  // Assuming 2 blocks of 8x8 float
+
+    CurBlockLocal1[local_index] = Src[global_index];
+
+    __syncthreads();
+
+    float curelem = 0.0f;
+    int DCTv8matrixIndex = (ty * 8);
+    int CurBlockLocal1Index = tx;
+    #pragma unroll
+
+    for (int i = 0; i < 8; i++) {
+        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
         DCTv8matrixIndex += 8;
         CurBlockLocal1Index += 1;
     }
@@ -390,14 +459,13 @@ __global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks,
 
     __syncthreads();
 
-    curelem = 0;
-    int CurBlockLocal2Index = (ty << 3);
+    curelem = 0.0f;
+    int CurBlockLocal2Index = (ty << 3) + tx;
     DCTv8matrixIndex = (tx << 3);
     #pragma unroll
 
     for (int i = 0; i < 8; i++) {
-        curelem +=
-            CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrix[DCTv8matrixIndex];
+        curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrixT[DCTv8matrixIndex];
         CurBlockLocal2Index += 1;
         DCTv8matrixIndex += 8;
     }
@@ -409,192 +477,19 @@ __global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks,
     Dst[global_index] = CurBlockLocal1[local_index];
 }
 
-__global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks,
-                             int OffsetYBlocks, float *TexSrc) {
-    int bx = blockIdx.x + OffsetXBlocks;
-    int by = blockIdx.y + OffsetYBlocks;
-
-    int tx = threadIdx.x;
-    int ty = threadIdx.y;
-
-    const int global_index_x = (bx * 8) + tx;
-    const int global_index_y = (by * 8) + ty;
-
-    // Check boundary condition
-    if (global_index_x >= ImgWidth || global_index_y >= ImgWidth) return;
-
-    const int global_index = global_index_y * ImgWidth + global_index_x;
-    const int local_index = (ty * 8) + tx;
-
-    __shared__ float CurBlockLocal1[64];
-    __shared__ float CurBlockLocal2[64];
-
-    CurBlockLocal1[local_index] = TexSrc[global_index];
-
-    __syncthreads();
-
-    float curelem = 0;
-    int DCTv8matrixIndex = (ty << 3);
-    int CurBlockLocal1Index = tx;
-
-    #pragma unroll
-    for (int i = 0; i < 8; i++) {
-        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
-        DCTv8matrixIndex++;
-        CurBlockLocal1Index += 8;
-    }
-
-    CurBlockLocal2[local_index] = curelem;
-
-    __syncthreads();
-
-    curelem = 0;
-    int CurBlockLocal2Index = (ty << 3);
-    DCTv8matrixIndex = tx * 8;
-
-    #pragma unroll
-    for (int i = 0; i < 8; i++) {
-        curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrix[DCTv8matrixIndex];
-        CurBlockLocal2Index++;
-        DCTv8matrixIndex++;
-    }
-
-    CurBlockLocal1[local_index] = curelem;
-
-    __syncthreads();
-
-    Dst[global_index] = CurBlockLocal1[local_index];
-}
-
-__device__ void ddct8x8s(int isgn, float *a)
+__global__ void ToroidalShift(float *Dst, float *Src, int lgth, int wdth, int shiftX, int shiftY)
 {
-    int j;
-    float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
-    float xr, xi;
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
 
-    int M = 8; //block dimention 
+    if (x < lgth && y < wdth)
+    {
+        // Calculate toroidal shifted indices
+        int shiftedX = (x + shiftX) % lgth;
+        int shiftedY = (y + shiftY) % wdth;
 
-    if (isgn < 0)
-    {
-        for (j = 0; j <= 7; j++)
-        {
-            x0r = a[0+ M * j] + a[7+ M * j];
-            x1r = a[0+ M * j] - a[7+ M * j];
-            x0i = a[2+ M * j] + a[5+ M * j];
-            x1i = a[2+ M * j] - a[5+ M * j];
-            x2r = a[4+ M * j] + a[3+ M * j];
-            x3r = a[4+ M * j] - a[3+ M * j];
-            x2i = a[6+ M * j] + a[1+ M * j];
-            x3i = a[6+ M * j] - a[1+ M * j];
-            xr = x0r + x2r;
-            xi = x0i + x2i;
-            a[0+ M * j] = C8_4R * (xr + xi);
-            a[4+ M * j] = C8_4R * (xr - xi);
-            xr = x0r - x2r;
-            xi = x0i - x2i;
-            a[2+ M * j] = C8_2R * xr - C8_2I * xi;
-            a[6+ M * j] = C8_2R * xi + C8_2I * xr;
-            xr = W8_4R * (x1i - x3i);
-            x1i = W8_4R * (x1i + x3i);
-            x3i = x1i - x3r;
-            x1i += x3r;
-            x3r = x1r - xr;
-            x1r += xr;
-            a[1+ M * j] = C8_1R * x1r - C8_1I * x1i;
-            a[7+ M * j] = C8_1R * x1i + C8_1I * x1r;
-            a[3+ M * j] = C8_3R * x3r - C8_3I * x3i;
-            a[5+ M * j] = C8_3R * x3i + C8_3I * x3r;
-        }
-        for (j = 0; j <= 7; j++)
-        {
-            x0r = a[j+ M * 0] + a[j+ M * 7];
-            x1r = a[j+ M * 0] - a[j+ M * 7];
-            x0i = a[j+ M * 2] + a[j+ M * 5];
-            x1i = a[j+ M * 2] - a[j+ M * 5];
-            x2r = a[j+ M * 4] + a[j+ M * 3];
-            x3r = a[j+ M * 4] - a[j+ M * 3];
-            x2i = a[j+ M * 6] + a[j+ M * 1];
-            x3i = a[j+ M * 6] - a[j+ M * 1];
-            xr = x0r + x2r;
-            xi = x0i + x2i;
-            a[j+ M * 0] = C8_4R * (xr + xi);
-            a[j+ M * 4] = C8_4R * (xr - xi);
-            xr = x0r - x2r;
-            xi = x0i - x2i;
-            a[j+ M * 2] = C8_2R * xr - C8_2I * xi;
-            a[j+ M * 6] = C8_2R * xi + C8_2I * xr;
-            xr = W8_4R * (x1i - x3i);
-            x1i = W8_4R * (x1i + x3i);
-            x3i = x1i - x3r;
-            x1i += x3r;
-            x3r = x1r - xr;
-            x1r += xr;
-            a[j+ M * 1] = C8_1R * x1r - C8_1I * x1i;
-            a[j+ M * 7] = C8_1R * x1i + C8_1I * x1r;
-            a[j+ M * 3] = C8_3R * x3r - C8_3I * x3i;
-            a[j+ M * 5] = C8_3R * x3i + C8_3I * x3r;
-        }
-    }
-    else
-    {
-        for (j = 0; j <= 7; j++)
-        {
-            x1r = C8_1R * a[1+ M * j] + C8_1I * a[7+ M * j];
-            x1i = C8_1R * a[7+ M * j] - C8_1I * a[1+ M * j];
-            x3r = C8_3R * a[3+ M * j] + C8_3I * a[5+ M * j];
-            x3i = C8_3R * a[5+ M * j] - C8_3I * a[3+ M * j];
-            xr = x1r - x3r;
-            xi = x1i + x3i;
-            x1r += x3r;
-            x3i -= x1i;
-            x1i = W8_4R * (xr + xi);
-            x3r = W8_4R * (xr - xi);
-            xr = C8_2R * a[2+ M * j] + C8_2I * a[6+ M * j];
-            xi = C8_2R * a[6+ M * j] - C8_2I * a[2+ M * j];
-            x0r = C8_4R * (a[0+ M * j] + a[4+ M * j]);
-            x0i = C8_4R * (a[0+ M * j] - a[4+ M * j]);
-            x2r = x0r - xr;
-            x2i = x0i - xi;
-            x0r += xr;
-            x0i += xi;
-            a[0+ M * j] = x0r + x1r;
-            a[7+ M * j] = x0r - x1r;
-            a[2+ M * j] = x0i + x1i;
-            a[5+ M * j] = x0i - x1i;
-            a[4+ M * j] = x2r - x3i;
-            a[3+ M * j] = x2r + x3i;
-            a[6+ M * j] = x2i - x3r;
-            a[1+ M * j] = x2i + x3r;
-        }
-        for (j = 0; j <= 7; j++)
-        {
-            x1r = C8_1R * a[j+ M * 1] + C8_1I * a[j+ M * 7];
-            x1i = C8_1R * a[j+ M * 7] - C8_1I * a[j+ M * 1];
-            x3r = C8_3R * a[j+ M * 3] + C8_3I * a[j+ M * 5];
-            x3i = C8_3R * a[j+ M * 5] - C8_3I * a[j+ M * 3];
-            xr = x1r - x3r;
-            xi = x1i + x3i;
-            x1r += x3r;
-            x3i -= x1i;
-            x1i = W8_4R * (xr + xi);
-            x3r = W8_4R * (xr - xi);
-            xr = C8_2R * a[j+ M * 2] + C8_2I * a[j+ M * 6];
-            xi = C8_2R * a[j+ M * 6] - C8_2I * a[j+ M * 2];
-            x0r = C8_4R * (a[j+ M * 0] + a[j+ M * 4]);
-            x0i = C8_4R * (a[j+ M * 0] - a[j+ M * 4]);
-            x2r = x0r - xr;
-            x2i = x0i - xi;
-            x0r += xr;
-            x0i += xi;
-            a[j+ M * 0] = x0r + x1r;
-            a[j+ M * 7] = x0r - x1r;
-            a[j+ M * 2] = x0i + x1i;
-            a[j+ M * 5] = x0i - x1i;
-            a[j+ M * 4] = x2r - x3i;
-            a[j+ M * 3] = x2r + x3i;
-            a[j+ M * 6] = x2i - x3r;
-            a[j+ M * 1] = x2i + x3r;
-        }
+        // Copy pixel value from the source to the destination
+        Dst[shiftedY * lgth + shiftedX] = Src[y * lgth + x];
     }
 }
 
@@ -634,54 +529,6 @@ void add_gaussian_noise(float **mat, int lgth, int wdth, float var)
                 mat[i][j] = gaussian_noise(var, mat[i][j]);
 }
 
-__device__ float gaussian_noise(float var, float mean, curandState *state)
-{
-    float noise, theta;
-
-    // Noise generation
-    noise = sqrtf(-2 * var * logf(1.0 - curand_uniform(state)));
-    theta = curand_uniform(state) * 1.9175345E-4 - PI;
-    noise = noise * cosf(theta);
-    noise += mean;
-    if (noise > GREY_LEVEL)
-        noise = GREY_LEVEL;
-    if (noise < 0)
-        noise = 0;
-    return noise;
-}
-
-__global__ void add_gaussian_noise_kernel(float *mat, int lgth, int wdth, float var, curandState *states)
-{
-    int x = blockIdx.x * blockDim.x + threadIdx.x;
-    int y = blockIdx.y * blockDim.y + threadIdx.y;
-    int index = x * wdth + y;
-
-    // Each thread gets its own seed based on its global thread ID
-    curand_init(index, 0, 0, &states[index]);
-
-    if (x < lgth && y < wdth)
-    {
-        float noise = gaussian_noise(var, mat[index], &states[index]);
-        mat[index] = noise;
-    }
-}
-
-void add_gaussian_noise_to_matrix(float *cuMat, int width, int height, float var)
-{
-    // Set up CUDA random number generator states
-    curandState *devStates;
-    cudaMalloc((void **)&devStates, width * height * sizeof(curandState));
-
-    // Launch kernel to add Gaussian noise to matrix
-    dim3 blockSize(16, 16);
-    dim3 gridSize((width + blockSize.x - 1) / blockSize.x, (height + blockSize.y - 1) / blockSize.y);
-    add_gaussian_noise_kernel<<<gridSize, blockSize>>>(cuMat, width, height, var, devStates);
-    cudaDeviceSynchronize();
-
-    // Free CUDA random number generator states
-    cudaFree(devStates);
-}
-
 //--------------//
 //--- MESURE ---//
 //--------------//
@@ -703,4 +550,215 @@ float computeMMSE(float **mat1, float **mat2, int sz)
 
     // retour
     return mmse;
+}
+
+
+//NVIDIA SECRET PART >:)
+
+// Used in forward and inverse DCT
+#define C_a 1.387039845322148f  //!< a = (2^0.5) * cos(    pi / 16);
+#define C_b 1.306562964876377f  //!< b = (2^0.5) * cos(    pi /  8);
+#define C_c 1.175875602419359f  //!< c = (2^0.5) * cos(3 * pi / 16);
+#define C_d 0.785694958387102f  //!< d = (2^0.5) * cos(5 * pi / 16);
+#define C_e 0.541196100146197f  //!< e = (2^0.5) * cos(3 * pi /  8);
+#define C_f 0.275899379282943f  //!< f = (2^0.5) * cos(7 * pi / 16);
+
+/**
+*  Normalization constant that is used in forward and inverse DCT
+*/
+#define C_norm 0.3535533905932737f  // 1 / (8^0.5)
+
+
+/**
+**************************************************************************
+*  Performs in-place DCT of vector of 8 elements.
+*
+* \param Vect0          [IN/OUT] - Pointer to the first element of vector
+* \param Step           [IN/OUT] - Value to add to ptr to access other elements
+*
+* \return None
+*/
+__device__ void CUDAsubroutineInplaceDCTvector(float *Vect0, int Step) {
+  float *Vect1 = Vect0 + Step;
+  float *Vect2 = Vect1 + Step;
+  float *Vect3 = Vect2 + Step;
+  float *Vect4 = Vect3 + Step;
+  float *Vect5 = Vect4 + Step;
+  float *Vect6 = Vect5 + Step;
+  float *Vect7 = Vect6 + Step;
+
+  float X07P = (*Vect0) + (*Vect7);
+  float X16P = (*Vect1) + (*Vect6);
+  float X25P = (*Vect2) + (*Vect5);
+  float X34P = (*Vect3) + (*Vect4);
+
+  float X07M = (*Vect0) - (*Vect7);
+  float X61M = (*Vect6) - (*Vect1);
+  float X25M = (*Vect2) - (*Vect5);
+  float X43M = (*Vect4) - (*Vect3);
+
+  float X07P34PP = X07P + X34P;
+  float X07P34PM = X07P - X34P;
+  float X16P25PP = X16P + X25P;
+  float X16P25PM = X16P - X25P;
+
+  (*Vect0) = C_norm * (X07P34PP + X16P25PP);
+  (*Vect2) = C_norm * (C_b * X07P34PM + C_e * X16P25PM);
+  (*Vect4) = C_norm * (X07P34PP - X16P25PP);
+  (*Vect6) = C_norm * (C_e * X07P34PM - C_b * X16P25PM);
+
+  (*Vect1) = C_norm * (C_a * X07M - C_c * X61M + C_d * X25M - C_f * X43M);
+  (*Vect3) = C_norm * (C_c * X07M + C_f * X61M - C_a * X25M + C_d * X43M);
+  (*Vect5) = C_norm * (C_d * X07M + C_a * X61M + C_f * X25M - C_c * X43M);
+  (*Vect7) = C_norm * (C_f * X07M + C_d * X61M + C_c * X25M + C_a * X43M);
+}
+
+/**
+**************************************************************************
+*  Performs in-place IDCT of vector of 8 elements.
+*
+* \param Vect0          [IN/OUT] - Pointer to the first element of vector
+* \param Step           [IN/OUT] - Value to add to ptr to access other elements
+*
+* \return None
+*/
+__device__ void CUDAsubroutineInplaceIDCTvector(float *Vect0, int Step) {
+  float *Vect1 = Vect0 + Step;
+  float *Vect2 = Vect1 + Step;
+  float *Vect3 = Vect2 + Step;
+  float *Vect4 = Vect3 + Step;
+  float *Vect5 = Vect4 + Step;
+  float *Vect6 = Vect5 + Step;
+  float *Vect7 = Vect6 + Step;
+
+  float Y04P = (*Vect0) + (*Vect4);
+  float Y2b6eP = C_b * (*Vect2) + C_e * (*Vect6);
+
+  float Y04P2b6ePP = Y04P + Y2b6eP;
+  float Y04P2b6ePM = Y04P - Y2b6eP;
+  float Y7f1aP3c5dPP =
+      C_f * (*Vect7) + C_a * (*Vect1) + C_c * (*Vect3) + C_d * (*Vect5);
+  float Y7a1fM3d5cMP =
+      C_a * (*Vect7) - C_f * (*Vect1) + C_d * (*Vect3) - C_c * (*Vect5);
+
+  float Y04M = (*Vect0) - (*Vect4);
+  float Y2e6bM = C_e * (*Vect2) - C_b * (*Vect6);
+
+  float Y04M2e6bMP = Y04M + Y2e6bM;
+  float Y04M2e6bMM = Y04M - Y2e6bM;
+  float Y1c7dM3f5aPM =
+      C_c * (*Vect1) - C_d * (*Vect7) - C_f * (*Vect3) - C_a * (*Vect5);
+  float Y1d7cP3a5fMM =
+      C_d * (*Vect1) + C_c * (*Vect7) - C_a * (*Vect3) + C_f * (*Vect5);
+
+  (*Vect0) = C_norm * (Y04P2b6ePP + Y7f1aP3c5dPP);
+  (*Vect7) = C_norm * (Y04P2b6ePP - Y7f1aP3c5dPP);
+  (*Vect4) = C_norm * (Y04P2b6ePM + Y7a1fM3d5cMP);
+  (*Vect3) = C_norm * (Y04P2b6ePM - Y7a1fM3d5cMP);
+
+  (*Vect1) = C_norm * (Y04M2e6bMP + Y1c7dM3f5aPM);
+  (*Vect5) = C_norm * (Y04M2e6bMM - Y1d7cP3a5fMM);
+  (*Vect2) = C_norm * (Y04M2e6bMM + Y1d7cP3a5fMM);
+  (*Vect6) = C_norm * (Y04M2e6bMP - Y1c7dM3f5aPM);
+}
+
+/**
+**************************************************************************
+*  Performs 8x8 block-wise Forward Discrete Cosine Transform of the given
+*  image plane and outputs result to the array of coefficients. 2nd
+*implementation.
+*  This kernel is designed to process image by blocks of blocks8x8 that
+*  utilizes maximum warps capacity, assuming that it is enough of 8 threads
+*  per block8x8.
+*
+* \param SrcDst                     [OUT] - Coefficients plane
+* \param ImgStride                  [IN] - Stride of SrcDst
+*
+* \return None
+*/
+
+__global__ void CUDAkernel2DCT(float *dst, int ImgStride,float *src) {
+
+  __shared__ float block[8 * 8];
+
+  int OffsThreadInRow = threadIdx.y * 64 + threadIdx.x;
+  int OffsThreadInCol = threadIdx.z * 64;
+  src += (blockIdx.y * 8 + OffsThreadInCol, ImgStride) +
+         blockIdx.x * 8 + OffsThreadInRow;
+  dst += (blockIdx.y * 8 + OffsThreadInCol, ImgStride) +
+         blockIdx.x * 8 + OffsThreadInRow;
+  float *bl_ptr =
+      block + OffsThreadInCol * 8 + OffsThreadInRow;
+
+#pragma unroll
+
+  for (unsigned int i = 0; i < 64; i++)
+    bl_ptr[i * 8] = src[i * ImgStride];
+
+  __syncthreads();
+
+  // process rows
+  CUDAsubroutineInplaceDCTvector(
+      block + (OffsThreadInCol + threadIdx.x) * 8 +
+          OffsThreadInRow - threadIdx.x,
+      1);
+
+  __syncthreads();
+
+  // process columns
+  CUDAsubroutineInplaceDCTvector(bl_ptr, 8);
+
+  __syncthreads();
+
+  for (unsigned int i = 0; i < BLOCK_SIZE; i++)
+    dst[i * ImgStride] = bl_ptr[i * 8];
+}
+
+/**
+**************************************************************************
+*  Performs 8x8 block-wise Inverse Discrete Cosine Transform of the given
+*  coefficients plane and outputs result to the image. 2nd implementation.
+*  This kernel is designed to process image by blocks of blocks8x8 that
+*  utilizes maximum warps capacity, assuming that it is enough of 8 threads
+*  per block8x8.
+*
+* \param SrcDst                     [OUT] - Coefficients plane
+* \param ImgStride                  [IN] - Stride of SrcDst
+*
+* \return None
+*/
+
+__global__ void CUDAkernel2IDCT(float *dst, int ImgStride,float *src) {
+
+  __shared__ float block[8 * 8];
+
+  int OffsThreadInRow = threadIdx.y * 64 + threadIdx.x;
+  int OffsThreadInCol = threadIdx.z * 64;
+  src += (blockIdx.y * 8 + OffsThreadInCol, ImgStride) +
+         blockIdx.x * 8 + OffsThreadInRow;
+  dst += (blockIdx.y * 8 + OffsThreadInCol, ImgStride) +
+         blockIdx.x * 8 + OffsThreadInRow;
+  float *bl_ptr =
+      block + OffsThreadInCol * 8 + OffsThreadInRow;
+
+#pragma unroll
+
+  for (unsigned int i = 0; i < BLOCK_SIZE; i++)
+    bl_ptr[i * 8] = src[i * ImgStride];
+
+  __syncthreads();
+  // process rows
+  CUDAsubroutineInplaceIDCTvector(
+      block + (OffsThreadInCol + threadIdx.x) * 8 +
+          OffsThreadInRow - threadIdx.x,
+      1);
+
+  __syncthreads();
+  // process columns
+  CUDAsubroutineInplaceIDCTvector(bl_ptr, 8);
+
+  __syncthreads();
+
+  for (unsigned int i = 0; i < BLOCK_SIZE; i++)
+    dst[i * ImgStride] = bl_ptr[i * 8];
 }

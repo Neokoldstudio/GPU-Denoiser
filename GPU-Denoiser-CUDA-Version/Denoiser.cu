@@ -117,22 +117,33 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
     // Launch kernel for denoising
     for (k = 0; k < NB_ITERATIONS; k++)
     {
-        /*
         for(int torioidalShiftY = 0; torioidalShiftY < 8; torioidalShiftY++)
         {
             for(int torioidalShiftX = 0; torioidalShiftX < 8; torioidalShiftX++)
-            {*/
-                cudaError_t cudaStatus;
+            {
+                // Toroidal Shift
+                float *DataShifted_d;
+                cudaMalloc((void**)&DataShifted_d, lgth * wdth * sizeof(float));
+                
+                int shiftX = torioidalShiftX;
+                int shiftY = torioidalShiftY;
 
-                denoise_image<<<blocksPerGrid, threadsPerBlock>>>(DataFiltered_d, DataFilteredDst_d, lgth, wdth, 0,0);
-                cudaStatus = cudaDeviceSynchronize();
+                ToroidalShift<<<blocksPerGrid, threadsPerBlock>>>(DataShifted_d, DataFiltered_d, lgth, wdth, shiftX, shiftY);
+                cudaDeviceSynchronize();
 
-                if (cudaStatus != cudaSuccess) {
-                    fprintf(stderr, "CUDA kernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
-                    exit(1);
-                }
+                CUDA_DCT8x8<<<blocksPerGrid, threadsPerBlock>>>(DataFilteredDst_d, wdth, DataShifted_d);
+                cudaDeviceSynchronize();
+
+                // Launch HardThreshold kernel
+                HardThreshold<<<blocksPerGrid, threadsPerBlock>>>(SIGMA_NOISE, DataFilteredDst_d, lgth);
+                cudaDeviceSynchronize();
+
+                // Launch IDCT8x8 kernel
+                //CUDAkernel2IDCT<<<blocksPerGrid, threadsPerBlock>>>(DataFiltered_d, wdth, DataFilteredDst_d);
+                //cudaDeviceSynchronize();
+
                 // Allocate host buffer for the current toroidal shift
-                /*float* tempBuffer = (float*)malloc(lgth * wdth * sizeof(float));
+                float* tempBuffer = (float*)malloc(lgth * wdth * sizeof(float));
 
                 // Copy data from device to the host buffer
                 cudaMemcpy(tempBuffer, DataFilteredDst_d, lgth * wdth * sizeof(float), cudaMemcpyDeviceToHost);
@@ -150,16 +161,16 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
                 }
 
                 // Free the temporary host buffer
-                free(tempBuffer);*/
-  /*          }
-        }*/
+                free(tempBuffer);
+            }
+        }
     }
 
-                printf("oue\n");
+    printf("oue\n");
 
 
     cudaMemcpy(DataFiltered_d, DataFilteredDst_d, lgth*wdth*sizeof(float), cudaMemcpyDeviceToDevice);
-/*
+
     for (int i = 0; i < lgth; i++)
     {
         for (int j = 0; j < wdth; j++)
@@ -186,7 +197,7 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, float **Data, int l
     copy_matrix_on_device(DataFiltered_d, DataFiltered_h, lgth, wdth);
 
     printf("chef ?2\n");
-*/
+
     // Free memory
     if(DataFiltered_h)
         free_fmatrix_2d(DataFiltered_h);
@@ -269,20 +280,20 @@ __global__ void denoise_image(float *Src, float *Dst, int ImgWidth, int ImgHeigh
     const int tx = threadIdx.x;
     const int ty = threadIdx.y;
 
-    int OffsetXBlocks = ((bx * 8 + toroidalShiftX) % 8);
-    int OffsetYBlocks = ((by * 8 + toroidalShiftY) % 8);
+    int OffsetXBlocks = ((bx * 8 + toroidalShiftX));
+    int OffsetYBlocks = ((by * 8 + toroidalShiftY));
 
     dim3 blockSize(8, 8);
     dim3 gridSize((ImgWidth + 7) / 8, (ImgHeight + 7) / 8);
 
-    CUDA_DCT8x8<<<gridSize, blockSize,128>>>(Dst, ImgWidth, OffsetXBlocks, OffsetYBlocks, Src);
+    //CUDA_DCT8x8<<<1, blockSize,128>>>(Dst, ImgWidth, OffsetXBlocks, OffsetYBlocks, Src);
 
     __syncthreads();
 
     dim3 thresholdBlockSize(8, 8);
     dim3 thresholdGridSize(1, 1);
     
-    HardThreshold<<<thresholdGridSize, thresholdBlockSize>>>(SIGMA_NOISE, Dst, 8);
+    //HardThreshold<<<thresholdGridSize, thresholdBlockSize>>>(SIGMA_NOISE, Dst, 8);
 
     __syncthreads();
 
