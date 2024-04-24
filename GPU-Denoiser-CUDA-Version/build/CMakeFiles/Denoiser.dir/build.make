@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version"
+CMAKE_SOURCE_DIR = /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build"
+CMAKE_BINARY_DIR = /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/Denoiser.dir/depend.make
@@ -70,10 +70,10 @@ include CMakeFiles/Denoiser.dir/progress.make
 include CMakeFiles/Denoiser.dir/flags.make
 
 CMakeFiles/Denoiser.dir/Denoiser.cu.o: CMakeFiles/Denoiser.dir/flags.make
-CMakeFiles/Denoiser.dir/Denoiser.cu.o: /u/godbertp/Desktop/Projet\ GPU/projet/GPU-Denoiser-CUDA-Version/Denoiser.cu
+CMakeFiles/Denoiser.dir/Denoiser.cu.o: /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/Denoiser.cu
 CMakeFiles/Denoiser.dir/Denoiser.cu.o: CMakeFiles/Denoiser.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CUDA object CMakeFiles/Denoiser.dir/Denoiser.cu.o"
-	/opt/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/Denoiser.dir/Denoiser.cu.o -MF CMakeFiles/Denoiser.dir/Denoiser.cu.o.d -x cu -rdc=true -c "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/Denoiser.cu" -o CMakeFiles/Denoiser.dir/Denoiser.cu.o
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CUDA object CMakeFiles/Denoiser.dir/Denoiser.cu.o"
+	/usr/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/Denoiser.dir/Denoiser.cu.o -MF CMakeFiles/Denoiser.dir/Denoiser.cu.o.d -x cu -rdc=true -c /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/Denoiser.cu -o CMakeFiles/Denoiser.dir/Denoiser.cu.o
 
 CMakeFiles/Denoiser.dir/Denoiser.cu.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CUDA source to CMakeFiles/Denoiser.dir/Denoiser.cu.i"
@@ -84,10 +84,10 @@ CMakeFiles/Denoiser.dir/Denoiser.cu.s: cmake_force
 	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_ASSEMBLY_SOURCE
 
 CMakeFiles/Denoiser.dir/Fonctions.cu.o: CMakeFiles/Denoiser.dir/flags.make
-CMakeFiles/Denoiser.dir/Fonctions.cu.o: /u/godbertp/Desktop/Projet\ GPU/projet/GPU-Denoiser-CUDA-Version/Fonctions.cu
+CMakeFiles/Denoiser.dir/Fonctions.cu.o: /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/Fonctions.cu
 CMakeFiles/Denoiser.dir/Fonctions.cu.o: CMakeFiles/Denoiser.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CUDA object CMakeFiles/Denoiser.dir/Fonctions.cu.o"
-	/opt/cuda/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/Denoiser.dir/Fonctions.cu.o -MF CMakeFiles/Denoiser.dir/Fonctions.cu.o.d -x cu -rdc=true -c "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/Fonctions.cu" -o CMakeFiles/Denoiser.dir/Fonctions.cu.o
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CUDA object CMakeFiles/Denoiser.dir/Fonctions.cu.o"
+	/usr/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/Denoiser.dir/Fonctions.cu.o -MF CMakeFiles/Denoiser.dir/Fonctions.cu.o.d -x cu -rdc=true -c /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/Fonctions.cu -o CMakeFiles/Denoiser.dir/Fonctions.cu.o
 
 CMakeFiles/Denoiser.dir/Fonctions.cu.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CUDA source to CMakeFiles/Denoiser.dir/Fonctions.cu.i"
@@ -111,7 +111,7 @@ CMakeFiles/Denoiser.dir/cmake_device_link.o: CMakeFiles/Denoiser.dir/build.make
 CMakeFiles/Denoiser.dir/cmake_device_link.o: CMakeFiles/Denoiser.dir/deviceLinkLibs.rsp
 CMakeFiles/Denoiser.dir/cmake_device_link.o: CMakeFiles/Denoiser.dir/deviceObjects1.rsp
 CMakeFiles/Denoiser.dir/cmake_device_link.o: CMakeFiles/Denoiser.dir/dlink.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Linking CUDA device code CMakeFiles/Denoiser.dir/cmake_device_link.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CUDA device code CMakeFiles/Denoiser.dir/cmake_device_link.o"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Denoiser.dir/dlink.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -133,7 +133,7 @@ Denoiser: CMakeFiles/Denoiser.dir/cmake_device_link.o
 Denoiser: CMakeFiles/Denoiser.dir/linkLibs.rsp
 Denoiser: CMakeFiles/Denoiser.dir/objects1.rsp
 Denoiser: CMakeFiles/Denoiser.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Linking CUDA executable Denoiser"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CUDA executable Denoiser"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Denoiser.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -145,6 +145,6 @@ CMakeFiles/Denoiser.dir/clean:
 .PHONY : CMakeFiles/Denoiser.dir/clean
 
 CMakeFiles/Denoiser.dir/depend:
-	cd "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version" "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version" "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build" "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build" "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build/CMakeFiles/Denoiser.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/build /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/build /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/build/CMakeFiles/Denoiser.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/Denoiser.dir/depend
 

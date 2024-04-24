@@ -4,14 +4,14 @@
 
 
 # Configuration directories and files
-SourceDirectory: /u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version
-BuildDirectory: /u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version/build
+SourceDirectory: /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version
+BuildDirectory: /net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version/build
 
 # Where to place the cost data store
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: blg41
+Site: voisin
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: Linux-c++
@@ -27,7 +27,7 @@ SubmitInactivityTimeout:
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/usr/bin/cmake" "/u/godbertp/Desktop/Projet GPU/projet/GPU-Denoiser-CUDA-Version"
+ConfigureCommand: "/usr/bin/cmake" "/net/cremi/pgodbert/espaces/travail/GPU-Denoiser/GPU-Denoiser-CUDA-Version"
 MakeCommand: /usr/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 
@@ -64,7 +64,7 @@ UpdateType:
 
 # Compiler info
 Compiler: /usr/bin/c++
-CompilerVersion: 12.3.1
+CompilerVersion: 12.2.0
 
 # Dynamic analysis (MemCheck)
 PurifyCommand: 

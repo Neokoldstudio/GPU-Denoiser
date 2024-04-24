@@ -2,11 +2,9 @@
 // module  : Fonctions.c
 // auteur original  : Mignotte Max
 // portage sur GPU : Godbert Paul
-// date    :
 // version : 1.0
 // langage : CUDA C
 // labo    : DIRO
-// note    :
 //------------------------------------------------------
 //
 
@@ -23,31 +21,27 @@
 
 #include "Fonctions.h"
 
-__constant__ float DCTv8matrix[] = {
-  0.3535533905932738f,  0.4903926402016152f,  0.4619397662556434f,  0.4157348061512726f,  0.3535533905932738f,  0.2777851165098011f,  0.1913417161825449f,  0.0975451610080642f,
-  0.3535533905932738f,  0.4157348061512726f,  0.1913417161825449f, -0.0975451610080641f, -0.3535533905932737f, -0.4903926402016152f, -0.4619397662556434f, -0.2777851165098011f,
-  0.3535533905932738f,  0.2777851165098011f, -0.1913417161825449f, -0.4903926402016152f, -0.3535533905932738f,  0.0975451610080642f,  0.4619397662556433f,  0.4157348061512727f,
-  0.3535533905932738f,  0.0975451610080642f, -0.4619397662556434f, -0.2777851165098011f,  0.3535533905932737f,  0.4157348061512727f, -0.1913417161825450f, -0.4903926402016153f,
-  0.3535533905932738f, -0.0975451610080641f, -0.4619397662556434f,  0.2777851165098009f,  0.3535533905932738f, -0.4157348061512726f, -0.1913417161825453f,  0.4903926402016152f,
-  0.3535533905932738f, -0.2777851165098010f, -0.1913417161825452f,  0.4903926402016153f, -0.3535533905932733f, -0.0975451610080649f,  0.4619397662556437f, -0.4157348061512720f,
-  0.3535533905932738f, -0.4157348061512727f,  0.1913417161825450f,  0.0975451610080640f, -0.3535533905932736f,  0.4903926402016152f, -0.4619397662556435f,  0.2777851165098022f,
-  0.3535533905932738f, -0.4903926402016152f,  0.4619397662556433f, -0.4157348061512721f,  0.3535533905932733f, -0.2777851165098008f,  0.1913417161825431f, -0.0975451610080625f
-};
+__constant__ float DCTv8matrix[] =
+    {
+        0.3535533905932738f, 0.4903926402016152f, 0.4619397662556434f, 0.4157348061512726f, 0.3535533905932738f, 0.2777851165098011f, 0.1913417161825449f, 0.0975451610080642f,
+        0.3535533905932738f, 0.4157348061512726f, 0.1913417161825449f, -0.0975451610080641f, -0.3535533905932737f, -0.4903926402016152f, -0.4619397662556434f, -0.2777851165098011f,
+        0.3535533905932738f, 0.2777851165098011f, -0.1913417161825449f, -0.4903926402016152f, -0.3535533905932738f, 0.0975451610080642f, 0.4619397662556433f, 0.4157348061512727f,
+        0.3535533905932738f, 0.0975451610080642f, -0.4619397662556434f, -0.2777851165098011f, 0.3535533905932737f, 0.4157348061512727f, -0.1913417161825450f, -0.4903926402016153f,
+        0.3535533905932738f, -0.0975451610080641f, -0.4619397662556434f, 0.2777851165098009f, 0.3535533905932738f, -0.4157348061512726f, -0.1913417161825453f, 0.4903926402016152f,
+        0.3535533905932738f, -0.2777851165098010f, -0.1913417161825452f, 0.4903926402016153f, -0.3535533905932733f, -0.0975451610080649f, 0.4619397662556437f, -0.4157348061512720f,
+        0.3535533905932738f, -0.4157348061512727f, 0.1913417161825450f, 0.0975451610080640f, -0.3535533905932736f, 0.4903926402016152f, -0.4619397662556435f, 0.2777851165098022f,
+        0.3535533905932738f, -0.4903926402016152f, 0.4619397662556433f, -0.4157348061512721f, 0.3535533905932733f, -0.2777851165098008f, 0.1913417161825431f, -0.0975451610080625f};
 
 __constant__ float DCTv8matrixT[] =
-{
-  0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f,
-  0.4903926402016152f, 0.4157348061512726f, 0.2777851165098011f, 0.0975451610080642f, -0.0975451610080641f, -0.2777851165098010f, -0.4157348061512727f, -0.4903926402016152f,
-  0.4619397662556434f, 0.1913417161825449f, -0.1913417161825449f, -0.4619397662556434f, -0.4619397662556434f, -0.1913417161825452f, 0.1913417161825450f, 0.4619397662556433f,
-  0.4157348061512726f, -0.0975451610080641f, -0.4903926402016152f, -0.2777851165098011f, 0.2777851165098009f, 0.4903926402016153f, 0.0975451610080640f, -0.4157348061512721f,
-  0.3535533905932738f, -0.3535533905932737f, -0.3535533905932738f, 0.3535533905932737f, 0.3535533905932738f, -0.3535533905932733f, -0.3535533905932736f, 0.3535533905932733f,
-  0.2777851165098011f, -0.4903926402016152f, 0.0975451610080642f, 0.4157348061512727f, -0.4157348061512726f, -0.0975451610080649f, 0.4903926402016152f, -0.2777851165098008f,
-  0.1913417161825449f, -0.4619397662556434f, 0.4619397662556433f, -0.1913417161825450f, -0.1913417161825453f, 0.4619397662556437f, -0.4619397662556435f, 0.1913417161825431f,
-  0.0975451610080642f, -0.2777851165098011f, 0.4157348061512727f, -0.4903926402016153f, 0.4903926402016152f, -0.4157348061512720f, 0.2777851165098022f, -0.0975451610080625f
-};
-
-__constant__ int BLOCK_SIZE = 8;
-__constant__ int BLOCK_SIZE_LOG2 = 3;
+    {
+        0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f, 0.3535533905932738f,
+        0.4903926402016152f, 0.4157348061512726f, 0.2777851165098011f, 0.0975451610080642f, -0.0975451610080641f, -0.2777851165098010f, -0.4157348061512727f, -0.4903926402016152f,
+        0.4619397662556434f, 0.1913417161825449f, -0.1913417161825449f, -0.4619397662556434f, -0.4619397662556434f, -0.1913417161825452f, 0.1913417161825450f, 0.4619397662556433f,
+        0.4157348061512726f, -0.0975451610080641f, -0.4903926402016152f, -0.2777851165098011f, 0.2777851165098009f, 0.4903926402016153f, 0.0975451610080640f, -0.4157348061512721f,
+        0.3535533905932738f, -0.3535533905932737f, -0.3535533905932738f, 0.3535533905932737f, 0.3535533905932738f, -0.3535533905932733f, -0.3535533905932736f, 0.3535533905932733f,
+        0.2777851165098011f, -0.4903926402016152f, 0.0975451610080642f, 0.4157348061512727f, -0.4157348061512726f, -0.0975451610080649f, 0.4903926402016152f, -0.2777851165098008f,
+        0.1913417161825449f, -0.4619397662556434f, 0.4619397662556433f, -0.1913417161825450f, -0.1913417161825453f, 0.4619397662556437f, -0.4619397662556435f, 0.1913417161825431f,
+        0.0975451610080642f, -0.2777851165098011f, 0.4157348061512727f, -0.4903926402016153f, 0.4903926402016152f, -0.4157348061512720f, 0.2777851165098022f, -0.0975451610080625f};
 
 //--------------------------//
 //-- Matrice de Flottant --//
@@ -175,7 +169,7 @@ void free_fmatrix_2d(float **pmat)
 }
 
 //----------------------------------------------------------
-// Free Memory 3d de float
+// Libere la memoire de la matrice 3d de float
 //----------------------------------------------------------
 void free_fmatrix_3d(float ***pmat, int dsize)
 {
@@ -189,11 +183,167 @@ void free_fmatrix_3d(float ***pmat, int dsize)
 }
 
 //----------------------------------------------------------
-// Free Device Memory of matrices
+// Libere la memoire de la matrice sur le device
 //----------------------------------------------------------
 void free_matrix_device(float *pmat)
 {
     cudaFree(pmat);
+}
+
+//----------------------------------------------------------
+// va chercher les slices d'une matrice 3D
+//----------------------------------------------------------
+void setSlice(float ***matrix3D, float **slice, int dim1, int dim2, int dim3, int index, char dimension)
+{
+    if (dimension == 'x')
+    {
+        slice = fmatrix_allocate_2d(dim2, dim3);
+        for (int i = 0; i < dim2; ++i)
+        {
+            for (int j = 0; j < dim3; ++j)
+            {
+                matrix3D[index][i][j] = slice[i][j];
+            }
+        }
+    }
+    else if (dimension == 'y')
+    {
+        slice = fmatrix_allocate_2d(dim1, dim3);
+
+        for (int i = 0; i < dim1; ++i)
+        {
+            for (int j = 0; j < dim3; ++j)
+            {
+                matrix3D[i][index][j] = slice[i][j];
+            }
+        }
+    }
+    else if (dimension == 'z')
+    {
+        slice = fmatrix_allocate_2d(dim1, dim2);
+
+        for (int i = 0; i < dim1; ++i)
+        {
+            for (int j = 0; j < dim2; ++j)
+            {
+                matrix3D[i][j][index] = slice[i][j];
+            }
+        }
+    }
+
+    free_fmatrix_2d(slice);
+}
+
+float **getSlice(float ***matrix3D, int dim1, int dim2, int dim3, int index, char dimension)
+{
+    float **slice = NULL;
+
+    if (dimension == 'x')
+    {
+        slice = fmatrix_allocate_2d(dim2, dim3);
+        for (int i = 0; i < dim2; ++i)
+        {
+            for (int j = 0; j < dim3; ++j)
+            {
+                slice[i][j] = matrix3D[index][i][j];
+            }
+        }
+    }
+    else if (dimension == 'y')
+    {
+        slice = fmatrix_allocate_2d(dim1, dim3);
+
+        for (int i = 0; i < dim1; ++i)
+        {
+            for (int j = 0; j < dim3; ++j)
+            {
+                slice[i][j] = matrix3D[i][index][j];
+            }
+        }
+    }
+    else if (dimension == 'z')
+    {
+        slice = fmatrix_allocate_2d(dim1, dim2);
+
+        for (int i = 0; i < dim1; ++i)
+        {
+            for (int j = 0; j < dim2; ++j)
+            {
+                slice[i][j] = matrix3D[i][j][index];
+            }
+        }
+    }
+
+    return slice;
+}
+
+//---------------//
+//--- GESTION ---//
+//---------------//
+//----------------------------------------------------------
+// copy matrix
+//----------------------------------------------------------
+void copy_matrix(float **mat1, float **mat2, int lgth, int wdth)
+{
+    int i, j;
+
+    for (i = 0; i < lgth; i++)
+        for (j = 0; j < wdth; j++)
+            mat1[i][j] = mat2[i][j];
+}
+//----------------------------------------------------------
+// copy matrix 1d to 2d
+//----------------------------------------------------------
+void copy_matrix_1d_to_2d(float *mat1, float **mat2, int lgth, int wdth)
+{
+    int i, j;
+
+    for (i = 0; i < lgth; i++)
+        for (j = 0; j < wdth; j++)
+            mat2[i][j] = mat1[i * wdth + j];
+}
+//----------------------------------------------------------
+// copy matrix 2d to 1d
+//----------------------------------------------------------
+void copy_matrix_2d_to_1d(float **mat1, float *mat2, int lgth, int wdth)
+{
+    int i, j;
+
+    for (i = 0; i < lgth; i++)
+        for (j = 0; j < wdth; j++)
+            mat2[i * wdth + j] = mat1[i][j];
+}
+//----------------------------------------------------------
+// allocate an array on the GPU and copies the original array there
+//----------------------------------------------------------
+void copy_matrix_on_device(float *mat1, float **mat2, int lgth, int wdth)
+{
+    float *buff = new float[lgth * wdth];
+
+    for (int i = 0; i < lgth; i++)
+        for (int j = 0; j < wdth; j++)
+            buff[i * wdth + j] = mat2[i][j];
+
+    size_t size = lgth * wdth * sizeof(float);
+
+    cudaMemcpy(mat1, buff, size, cudaMemcpyHostToDevice);
+
+    cudaFree(buff);
+}
+//----------------------------------------------------------
+// retrieve array from GPU to RAM
+//----------------------------------------------------------
+void copy_matrix_on_host(float **mat1, float *mat2, int lgth, int wdth)
+{
+    float *buff = (float *)malloc(lgth * wdth * sizeof(float));
+
+    cudaMemcpy(buff, mat2, lgth * wdth * sizeof(float), cudaMemcpyDeviceToHost);
+
+    for (int i = 0; i < lgth; i++)
+        for (int j = 0; j < wdth; j++)
+            mat1[i][j] = buff[wdth * i + j];
+
+    free(buff);
 }
 
 //--------------------//
@@ -299,71 +449,10 @@ void SaveImagePgm(char *name, float **mat, int length, int width)
     fclose(fic);
 }
 
-//-------------//
-//-- FOURIER --//
-//-------------//
-//----------------//
-//-FAST DCT 8x8 --//
-//----------------//
-//----------------------//
-// Made by T. OORA      //
-//                      //
-//----------------------//
-
-/*
-Short Discrete Cosine Transform
-    data length :8x8, 16x16
-    method      :row-column, radix 4 FFT
-functions
-    ddct8x8s  : 8x8 DCT
-    ddct16x16s: 16x16 DCT
-function prototypes
-    void ddct8x8s(int isgn, double **a);
-    void ddct16x16s(int isgn, double **a);
-*/
-
-/*
--------- 8x8 DCT (Discrete Cosine Transform) / Inverse of DCT --------
-    [definition]
-        <case1> Normalized 8x8 IDCT
-            C[k1][k2] = (1/4) * sum_j1=0^7 sum_j2=0^7
-                            a[j1][j2] * s[j1] * s[j2] *
-                            cos(pi*j1*(k1+1/2)/8) *
-                            cos(pi*j2*(k2+1/2)/8), 0<=k1<8, 0<=k2<8
-                            (s[0] = 1/sqrt(2), s[j] = 1, j > 0)
-        <case2> Normalized 8x8 DCT
-            C[k1][k2] = (1/4) * s[k1] * s[k2] * sum_j1=0^7 sum_j2=0^7
-                            a[j1][j2] *
-                            cos(pi*(j1+1/2)*k1/8) *
-                            cos(pi*(j2+1/2)*k2/8), 0<=k1<8, 0<=k2<8
-                            (s[0] = 1/sqrt(2), s[j] = 1, j > 0)
-    [usage]
-        <case1>
-            ddct8x8s(1, a);
-        <case2>
-            ddct8x8s(-1, a);
-    [parameters]
-        a[0...7][0...7] :input/output data (double **)
-                         output data
-                             a[k1][k2] = C[k1][k2], 0<=k1<8, 0<=k2<8
-*/
-
-/* Cn_kR = sqrt(2.0/n) * cos(pi/2*k/n) */
-/* Cn_kI = sqrt(2.0/n) * sin(pi/2*k/n) */
-/* Wn_kR = cos(pi/2*k/n) */
-/* Wn_kI = sin(pi/2*k/n) */
-#define C8_1R 0.49039264020161522456
-#define C8_1I 0.09754516100806413392
-#define C8_2R 0.46193976625564337806
-#define C8_2I 0.19134171618254488586
-#define C8_3R 0.41573480615127261854
-#define C8_3I 0.27778511650980111237
-#define C8_4R 0.35355339059327376220
-#define W8_4R 0.70710678118654752440
-
-__global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, float *Src) {
-    const int bx = blockIdx.x;
-    const int by = blockIdx.y;
+__global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks, int OffsetYBlocks, float *Src)
+{
+    const int bx = blockIdx.x + OffsetXBlocks;
+    const int by = blockIdx.y + OffsetYBlocks;
 
     const int tx = threadIdx.x;
     const int ty = threadIdx.y;
@@ -372,7 +461,8 @@ __global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, float *Src) {
     const int global_index_y = (by * BLOCK_SIZE) + ty;
 
     // Check boundary condition
-    if (global_index_x >= ImgWidth || global_index_y >= ImgWidth) return;
+    if (global_index_x >= ImgWidth || global_index_y >= ImgWidth)
+        return;
 
     const int global_index = global_index_y * ImgWidth + global_index_x;
     const int local_index = (ty * BLOCK_SIZE) + tx;
@@ -380,36 +470,37 @@ __global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, float *Src) {
     extern __shared__ float shared_memory[];
 
     float *CurBlockLocal1 = shared_memory;
-    float *CurBlockLocal2 = &shared_memory[BLOCK_SIZE*BLOCK_SIZE];  // Assuming 2 blocks of 8x8 float
+    float *CurBlockLocal2 = &shared_memory[BLOCK_SIZE * BLOCK_SIZE]; // Assuming 2 blocks of 8x8 float
 
-    CurBlockLocal1[local_index] = Src[global_index]-128.0f;
+    CurBlockLocal1[local_index] = Src[global_index] - 128.0f;
 
     __syncthreads();
 
     float curelem = 0.0f;
-    int DCTv8matrixIndex = (ty * BLOCK_SIZE)+tx;
+    int DCTv8matrixIndex = ty; // Adjust index to use the transposed matrix
     int CurBlockLocal1Index = tx;
-    #pragma unroll
+#pragma unroll
 
-    for (int i = 0; i < BLOCK_SIZE; i++) {
+    for (int i = 0; i < BLOCK_SIZE; i++)
+    {
         curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
-        DCTv8matrixIndex += 1;
+        DCTv8matrixIndex += BLOCK_SIZE; // Increment by BLOCK_SIZE for the transposed matrix
         CurBlockLocal1Index += BLOCK_SIZE;
     }
 
     CurBlockLocal2[(ty << BLOCK_SIZE_LOG2) + tx] = curelem;
-
     __syncthreads();
 
     curelem = 0.0f;
-    int CurBlockLocal2Index = (ty << BLOCK_SIZE_LOG2) + tx;
-    DCTv8matrixIndex = (tx << BLOCK_SIZE_LOG2);
-    #pragma unroll
+    DCTv8matrixIndex = ty; // Adjust index to use the DCT matrix
+    int CurBlockLocal2Index = tx;
+#pragma unroll
 
-    for (int i = 0; i < BLOCK_SIZE; i++) {
-        curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrixT[DCTv8matrixIndex];
+    for (int i = 0; i < BLOCK_SIZE; i++)
+    {
+        curelem += DCTv8matrixT[DCTv8matrixIndex] * CurBlockLocal2[CurBlockLocal2Index];
+        DCTv8matrixIndex += BLOCK_SIZE; // Increment by BLOCK_SIZE for the DCT matrix
         CurBlockLocal2Index += BLOCK_SIZE;
-        DCTv8matrixIndex += 1;
     }
 
     CurBlockLocal1[(ty << BLOCK_SIZE_LOG2) + tx] = curelem;
@@ -419,9 +510,10 @@ __global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, float *Src) {
     Dst[global_index] = CurBlockLocal1[local_index];
 }
 
-__global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, float *Src) {
-    const int bx = blockIdx.x;
-    const int by = blockIdx.y;
+__global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks, int OffsetYBlocks, float *Src)
+{
+    const int bx = blockIdx.x + OffsetXBlocks;
+    const int by = blockIdx.y + OffsetYBlocks;
 
     const int tx = threadIdx.x;
     const int ty = threadIdx.y;
@@ -430,7 +522,8 @@ __global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, float *Src) {
     const int global_index_y = (by * BLOCK_SIZE) + ty;
 
     // Check boundary condition
-    if (global_index_x >= ImgWidth || global_index_y >= ImgWidth) return;
+    if (global_index_x >= ImgWidth || global_index_y >= ImgWidth)
+        return;
 
     const int global_index = global_index_y * ImgWidth + global_index_x;
     const int local_index = (ty * BLOCK_SIZE) + tx;
@@ -438,36 +531,37 @@ __global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, float *Src) {
     extern __shared__ float shared_memory[];
 
     float *CurBlockLocal1 = shared_memory;
-    float *CurBlockLocal2 = &shared_memory[BLOCK_SIZE * BLOCK_SIZE];  // Assuming 2 blocks of 8x8 float
+    float *CurBlockLocal2 = &shared_memory[BLOCK_SIZE * BLOCK_SIZE]; // Assuming 2 blocks of 8x8 float
 
     CurBlockLocal1[local_index] = Src[global_index];
 
     __syncthreads();
 
     float curelem = 0.0f;
-    int DCTv8matrixIndex = (ty * BLOCK_SIZE);
+    int DCTv8matrixIndex = ty; // Adjust index to use the transposed matrix
     int CurBlockLocal1Index = tx;
-    #pragma unroll
+#pragma unroll
 
-    for (int i = 0; i < BLOCK_SIZE; i++) {
+    for (int i = 0; i < BLOCK_SIZE; i++)
+    {
         curelem += DCTv8matrixT[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
-        DCTv8matrixIndex += 1;
+        DCTv8matrixIndex += BLOCK_SIZE; // Increment by BLOCK_SIZE for the transposed matrix
         CurBlockLocal1Index += BLOCK_SIZE;
     }
 
     CurBlockLocal2[(ty << BLOCK_SIZE_LOG2) + tx] = curelem;
-
     __syncthreads();
 
     curelem = 0.0f;
-    int CurBlockLocal2Index = (ty << BLOCK_SIZE_LOG2) ;
-    DCTv8matrixIndex = (tx << BLOCK_SIZE_LOG2);
-    #pragma unroll
+    DCTv8matrixIndex = ty; // Adjust index to use the DCT matrix
+    int CurBlockLocal2Index = tx;
+#pragma unroll
 
-    for (int i = 0; i < BLOCK_SIZE; i++) {
-        curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrix[DCTv8matrixIndex];
-        CurBlockLocal2Index += 1;
-        DCTv8matrixIndex += BLOCK_SIZE;
+    for (int i = 0; i < BLOCK_SIZE; i++)
+    {
+        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal2[CurBlockLocal2Index];
+        DCTv8matrixIndex += BLOCK_SIZE; // Increment by BLOCK_SIZE for the DCT matrix
+        CurBlockLocal2Index += BLOCK_SIZE;
     }
 
     CurBlockLocal1[(ty << BLOCK_SIZE_LOG2) + tx] = curelem;
@@ -490,11 +584,11 @@ __global__ void ToroidalShift(float *Dst, float *Src, int lgth, int wdth, int sh
 
     if (x < lgth && y < wdth)
     {
-        // Calculate toroidal shifted indices
-        int shiftedX = (x + shiftX) % lgth;
-        int shiftedY = (y + shiftY) % wdth;
+        // Calcule le nouvel indice après le décalage
+        int shiftedX = (x + shiftX) % lgth; // le modulo permet le décalage torioidal, si on dépasse de l'image, on revient de l'autre côté
+        int shiftedY = (y + shiftY) % wdth; // même choses
 
-        // Copy pixel value from the source to the destination
+        // on update l'image de destination
         Dst[shiftedY * lgth + shiftedX] = Src[y * lgth + x];
     }
 }
@@ -546,7 +640,6 @@ float computeMMSE(float **mat1, float **mat2, int sz)
     int i, j;
     float mmse;
 
-    // Boucle
     mmse = 0.0;
     for (i = 0; i < sz; i++)
         for (j = 0; j < sz; j++)
@@ -554,217 +647,48 @@ float computeMMSE(float **mat1, float **mat2, int sz)
 
     mmse /= (CARRE(sz));
 
-    // retour
     return mmse;
 }
 
-
-//NVIDIA SECRET PART >:)
-
-// Used in forward and inverse DCT
-#define C_a 1.387039845322148f  //!< a = (2^0.5) * cos(    pi / 16);
-#define C_b 1.306562964876377f  //!< b = (2^0.5) * cos(    pi /  8);
-#define C_c 1.175875602419359f  //!< c = (2^0.5) * cos(3 * pi / 16);
-#define C_d 0.785694958387102f  //!< d = (2^0.5) * cos(5 * pi / 16);
-#define C_e 0.541196100146197f  //!< e = (2^0.5) * cos(3 * pi /  8);
-#define C_f 0.275899379282943f  //!< f = (2^0.5) * cos(7 * pi / 16);
-
-/**
-*  Normalization constant that is used in forward and inverse DCT
-*/
-#define C_norm 0.3535533905932737f  // 1 / (8^0.5)
-
+__constant__ short Q[] = {
+    32, 33, 51, 81, 66, 39, 34, 17,
+    33, 36, 48, 47, 28, 23, 12, 12,
+    51, 48, 47, 28, 23, 12, 12, 12,
+    81, 47, 28, 23, 12, 12, 12, 12,
+    66, 28, 23, 12, 12, 12, 12, 12,
+    39, 23, 12, 12, 12, 12, 12, 12,
+    34, 12, 12, 12, 12, 12, 12, 12,
+    17, 12, 12, 12, 12, 12, 12, 12};
 
 /**
 **************************************************************************
-*  Performs in-place DCT of vector of 8 elements.
+*  Performs in-place quantization of given DCT coefficients plane using
+*  predefined quantization matrices (for floats plane). Unoptimized.
 *
-* \param Vect0          [IN/OUT] - Pointer to the first element of vector
-* \param Step           [IN/OUT] - Value to add to ptr to access other elements
-*
-* \return None
-*/
-__device__ void CUDAsubroutineInplaceDCTvector(float *Vect0, int Step) {
-  float *Vect1 = Vect0 + Step;
-  float *Vect2 = Vect1 + Step;
-  float *Vect3 = Vect2 + Step;
-  float *Vect4 = Vect3 + Step;
-  float *Vect5 = Vect4 + Step;
-  float *Vect6 = Vect5 + Step;
-  float *Vect7 = Vect6 + Step;
-
-  float X07P = (*Vect0) + (*Vect7);
-  float X16P = (*Vect1) + (*Vect6);
-  float X25P = (*Vect2) + (*Vect5);
-  float X34P = (*Vect3) + (*Vect4);
-
-  float X07M = (*Vect0) - (*Vect7);
-  float X61M = (*Vect6) - (*Vect1);
-  float X25M = (*Vect2) - (*Vect5);
-  float X43M = (*Vect4) - (*Vect3);
-
-  float X07P34PP = X07P + X34P;
-  float X07P34PM = X07P - X34P;
-  float X16P25PP = X16P + X25P;
-  float X16P25PM = X16P - X25P;
-
-  (*Vect0) = C_norm * (X07P34PP + X16P25PP);
-  (*Vect2) = C_norm * (C_b * X07P34PM + C_e * X16P25PM);
-  (*Vect4) = C_norm * (X07P34PP - X16P25PP);
-  (*Vect6) = C_norm * (C_e * X07P34PM - C_b * X16P25PM);
-
-  (*Vect1) = C_norm * (C_a * X07M - C_c * X61M + C_d * X25M - C_f * X43M);
-  (*Vect3) = C_norm * (C_c * X07M + C_f * X61M - C_a * X25M + C_d * X43M);
-  (*Vect5) = C_norm * (C_d * X07M + C_a * X61M + C_f * X25M - C_c * X43M);
-  (*Vect7) = C_norm * (C_f * X07M + C_d * X61M + C_c * X25M + C_a * X43M);
-}
-
-/**
-**************************************************************************
-*  Performs in-place IDCT of vector of 8 elements.
-*
-* \param Vect0          [IN/OUT] - Pointer to the first element of vector
-* \param Step           [IN/OUT] - Value to add to ptr to access other elements
+* \param SrcDst         [IN/OUT] - DCT coefficients plane
+* \param Stride         [IN] - Stride of SrcDst
 *
 * \return None
 */
-__device__ void CUDAsubroutineInplaceIDCTvector(float *Vect0, int Step) {
-  float *Vect1 = Vect0 + Step;
-  float *Vect2 = Vect1 + Step;
-  float *Vect3 = Vect2 + Step;
-  float *Vect4 = Vect3 + Step;
-  float *Vect5 = Vect4 + Step;
-  float *Vect6 = Vect5 + Step;
-  float *Vect7 = Vect6 + Step;
+__global__ void CUDAkernelQuantizationFloat(float *SrcDst, int Stride)
+{
+    // Block index
+    int bx = blockIdx.x;
+    int by = blockIdx.y;
 
-  float Y04P = (*Vect0) + (*Vect4);
-  float Y2b6eP = C_b * (*Vect2) + C_e * (*Vect6);
+    // Thread index (current coefficient)
+    int tx = threadIdx.x;
+    int ty = threadIdx.y;
 
-  float Y04P2b6ePP = Y04P + Y2b6eP;
-  float Y04P2b6ePM = Y04P - Y2b6eP;
-  float Y7f1aP3c5dPP =
-      C_f * (*Vect7) + C_a * (*Vect1) + C_c * (*Vect3) + C_d * (*Vect5);
-  float Y7a1fM3d5cMP =
-      C_a * (*Vect7) - C_f * (*Vect1) + C_d * (*Vect3) - C_c * (*Vect5);
+    // copy current coefficient to the local variable
+    float curCoef =
+        SrcDst[(by * BLOCK_SIZE + ty) * Stride + (bx * BLOCK_SIZE + tx)];
+    float curQuant = (float)Q[ty * BLOCK_SIZE + tx];
 
-  float Y04M = (*Vect0) - (*Vect4);
-  float Y2e6bM = C_e * (*Vect2) - C_b * (*Vect6);
+    // quantize the current coefficient
+    float quantized = roundf(curCoef / curQuant);
+    curCoef = quantized * curQuant;
 
-  float Y04M2e6bMP = Y04M + Y2e6bM;
-  float Y04M2e6bMM = Y04M - Y2e6bM;
-  float Y1c7dM3f5aPM =
-      C_c * (*Vect1) - C_d * (*Vect7) - C_f * (*Vect3) - C_a * (*Vect5);
-  float Y1d7cP3a5fMM =
-      C_d * (*Vect1) + C_c * (*Vect7) - C_a * (*Vect3) + C_f * (*Vect5);
-
-  (*Vect0) = C_norm * (Y04P2b6ePP + Y7f1aP3c5dPP);
-  (*Vect7) = C_norm * (Y04P2b6ePP - Y7f1aP3c5dPP);
-  (*Vect4) = C_norm * (Y04P2b6ePM + Y7a1fM3d5cMP);
-  (*Vect3) = C_norm * (Y04P2b6ePM - Y7a1fM3d5cMP);
-
-  (*Vect1) = C_norm * (Y04M2e6bMP + Y1c7dM3f5aPM);
-  (*Vect5) = C_norm * (Y04M2e6bMM - Y1d7cP3a5fMM);
-  (*Vect2) = C_norm * (Y04M2e6bMM + Y1d7cP3a5fMM);
-  (*Vect6) = C_norm * (Y04M2e6bMP - Y1c7dM3f5aPM);
-}
-
-/**
-**************************************************************************
-*  Performs 8x8 block-wise Forward Discrete Cosine Transform of the given
-*  image plane and outputs result to the array of coefficients. 2nd
-*implementation.
-*  This kernel is designed to process image by blocks of blocks8x8 that
-*  utilizes maximum warps capacity, assuming that it is enough of 8 threads
-*  per block8x8.
-*
-* \param SrcDst                     [OUT] - Coefficients plane
-* \param ImgStride                  [IN] - Stride of SrcDst
-*
-* \return None
-*/
-
-__global__ void CUDAkernel2DCT(float *dst, int ImgStride,float *src) {
-
-  __shared__ float block[8 * 8];
-
-  int OffsThreadInRow = threadIdx.y * 64 + threadIdx.x;
-  int OffsThreadInCol = threadIdx.z * 64;
-  src += (blockIdx.y * 8 + OffsThreadInCol, ImgStride) +
-         blockIdx.x * 8 + OffsThreadInRow;
-  dst += (blockIdx.y * 8 + OffsThreadInCol, ImgStride) +
-         blockIdx.x * 8 + OffsThreadInRow;
-  float *bl_ptr =
-      block + OffsThreadInCol * 8 + OffsThreadInRow;
-
-#pragma unroll
-
-  for (unsigned int i = 0; i < 64; i++)
-    bl_ptr[i * 8] = src[i * ImgStride];
-
-  __syncthreads();
-
-  // process rows
-  CUDAsubroutineInplaceDCTvector(
-      block + (OffsThreadInCol + threadIdx.x) * 8 +
-          OffsThreadInRow - threadIdx.x,
-      1);
-
-  __syncthreads();
-
-  // process columns
-  CUDAsubroutineInplaceDCTvector(bl_ptr, 8);
-
-  __syncthreads();
-
-  for (unsigned int i = 0; i < BLOCK_SIZE; i++)
-    dst[i * ImgStride] = bl_ptr[i * 8];
-}
-
-/**
-**************************************************************************
-*  Performs 8x8 block-wise Inverse Discrete Cosine Transform of the given
-*  coefficients plane and outputs result to the image. 2nd implementation.
-*  This kernel is designed to process image by blocks of blocks8x8 that
-*  utilizes maximum warps capacity, assuming that it is enough of 8 threads
-*  per block8x8.
-*
-* \param SrcDst                     [OUT] - Coefficients plane
-* \param ImgStride                  [IN] - Stride of SrcDst
-*
-* \return None
-*/
-
-__global__ void CUDAkernel2IDCT(float *dst, int ImgStride,float *src) {
-
-  __shared__ float block[8 * 8];
-
-  int OffsThreadInRow = threadIdx.y * 64 + threadIdx.x;
-  int OffsThreadInCol = threadIdx.z * 64;
-  src += (blockIdx.y * 8 + OffsThreadInCol, ImgStride) +
-         blockIdx.x * 8 + OffsThreadInRow;
-  dst += (blockIdx.y * 8 + OffsThreadInCol, ImgStride) +
-         blockIdx.x * 8 + OffsThreadInRow;
-  float *bl_ptr =
-      block + OffsThreadInCol * 8 + OffsThreadInRow;
-
-#pragma unroll
-
-  for (unsigned int i = 0; i < BLOCK_SIZE; i++)
-    bl_ptr[i * 8] = src[i * ImgStride];
-
-  __syncthreads();
-  // process rows
-  CUDAsubroutineInplaceIDCTvector(
-      block + (OffsThreadInCol + threadIdx.x) * 8 +
-          OffsThreadInRow - threadIdx.x,
-      1);
-
-  __syncthreads();
-  // process columns
-  CUDAsubroutineInplaceIDCTvector(bl_ptr, 8);
-
-  __syncthreads();
-
-  for (unsigned int i = 0; i < BLOCK_SIZE; i++)
-    dst[i * ImgStride] = bl_ptr[i * 8];
+    // copy quantized coefficient back to the DCT-plane
+    SrcDst[(by * BLOCK_SIZE + ty) * Stride + (bx * BLOCK_SIZE + tx)] = curCoef;
 }
