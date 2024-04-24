@@ -113,7 +113,7 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, int lgth, int wdth,
 
     // Set up the thread block and grid dimensions
     dim3 threadsPerBlock(blockSize, blockSize);
-    dim3 blocksPerGrid(blocksX, blocksY);
+    dim3 blocksPerGrid(lgth, wdth);
 
     printf("      --------Kernel Called on :------\n");
     printf("          Threads Per Block: %d x %d\n", threadsPerBlock.x, threadsPerBlock.y);
@@ -142,8 +142,8 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, int lgth, int wdth,
                 cudaDeviceSynchronize();
 
                 // Launch Quantization kernel (here, a simple Hardthreshold)
-                // HardThreshold<<<blocksPerGrid, threadsPerBlock>>>(SIGMA_NOISE, DataFilteredDst_d, lgth);
-                CUDAkernelQuantizationFloat<<<blocksPerGrid, threadsPerBlock>>>(DataFilteredDst_d, lgth);
+                HardThreshold<<<blocksPerGrid, threadsPerBlock>>>(SIGMA_NOISE, DataFilteredDst_d, lgth);
+                // CUDAkernelQuantizationFloat<<<blocksPerGrid, threadsPerBlock>>>(DataFilteredDst_d, lgth);
                 cudaDeviceSynchronize();
 
                 // Launch Inverse Discrete Cosine Transform
@@ -352,7 +352,7 @@ void Denoise3D(char *inputImage)
     {
         float *ImgDenoised_d = fmatrix_allocate_2d_device(width, depth);
 
-        float **slice = getSlice(Img3D, length, width, depth, x, 'x');
+        float **slice = getSlice(Img3D, depth, length, width, x, 'x');
         DctDenoise(slice, ImgDenoised_d, width, depth, THRESHOLD);
         setSlice(Img3D, slice, depth, length, width, x, 'x');
 
@@ -364,7 +364,7 @@ void Denoise3D(char *inputImage)
     {
         float *ImgDenoised_d = fmatrix_allocate_2d_device(length, depth);
 
-        float **slice = getSlice(Img3D, length, width, depth, y, 'y');
+        float **slice = getSlice(Img3D, depth, length, width, y, 'y');
         DctDenoise(slice, ImgDenoised_d, length, depth, THRESHOLD);
         setSlice(Img3D, slice, depth, length, width, y, 'y');
 
