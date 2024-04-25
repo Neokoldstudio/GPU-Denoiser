@@ -483,7 +483,7 @@ __global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks, int Off
 
     for (int i = 0; i < BLOCK_SIZE; i++)
     {
-        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
+        curelem += DCTv8matrixT[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
         DCTv8matrixIndex += BLOCK_SIZE; // Increment by BLOCK_SIZE for the transposed matrix
         CurBlockLocal1Index += BLOCK_SIZE;
     }
@@ -498,7 +498,7 @@ __global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks, int Off
 
     for (int i = 0; i < BLOCK_SIZE; i++)
     {
-        curelem += DCTv8matrixT[DCTv8matrixIndex] * CurBlockLocal2[CurBlockLocal2Index];
+        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal2[CurBlockLocal2Index];
         DCTv8matrixIndex += BLOCK_SIZE; // Increment by BLOCK_SIZE for the DCT matrix
         CurBlockLocal2Index += BLOCK_SIZE;
     }
@@ -534,6 +534,7 @@ __global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks, int Of
     float *CurBlockLocal2 = &shared_memory[BLOCK_SIZE * BLOCK_SIZE]; // Assuming 2 blocks of 8x8 float
 
     CurBlockLocal1[local_index] = Src[global_index];
+    ;
 
     __syncthreads();
 
@@ -544,7 +545,7 @@ __global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks, int Of
 
     for (int i = 0; i < BLOCK_SIZE; i++)
     {
-        curelem += DCTv8matrixT[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
+        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
         DCTv8matrixIndex += BLOCK_SIZE; // Increment by BLOCK_SIZE for the transposed matrix
         CurBlockLocal1Index += BLOCK_SIZE;
     }
@@ -559,7 +560,7 @@ __global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks, int Of
 
     for (int i = 0; i < BLOCK_SIZE; i++)
     {
-        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal2[CurBlockLocal2Index];
+        curelem += DCTv8matrixT[DCTv8matrixIndex] * CurBlockLocal2[CurBlockLocal2Index];
         DCTv8matrixIndex += BLOCK_SIZE; // Increment by BLOCK_SIZE for the DCT matrix
         CurBlockLocal2Index += BLOCK_SIZE;
     }
@@ -584,11 +585,11 @@ __global__ void ToroidalShift(float *Dst, float *Src, int lgth, int wdth, int sh
 
     if (x < lgth && y < wdth)
     {
-        // Calcule le nouvel indice après le décalage
-        int shiftedX = (x + shiftX) % lgth; // le modulo permet le décalage torioidal, si on dépasse de l'image, on revient de l'autre côté
-        int shiftedY = (y + shiftY) % wdth; // même choses
+        // compute the new index after shifting, modulo the dimentions of the image.
+        int shiftedX = (x + shiftX) % lgth;
+        int shiftedY = (y + shiftY) % wdth;
 
-        // on update l'image de destination
+        // then we update the destination image
         Dst[shiftedY * lgth + shiftedX] = Src[y * lgth + x];
     }
 }
@@ -650,11 +651,38 @@ float computeMMSE(float **mat1, float **mat2, int sz)
     return mmse;
 }
 
+/* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *  * Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *  * Neither the name of NVIDIA CORPORATION nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 __constant__ short Q[] = {
-    32, 33, 51, 81, 66, 39, 34, 17,
-    33, 36, 48, 47, 28, 23, 12, 12,
-    51, 48, 47, 28, 23, 12, 12, 12,
-    81, 47, 28, 23, 12, 12, 12, 12,
+    32, 33, 51, 81, 66, 39, 34, 17, // this is Nvidia's quantization table. as you can see, the coefficient in the bottom right corner
+    33, 36, 48, 47, 28, 23, 12, 12, // are much lower than the ones in the upper left corner. This indicates that the higher frenquencies
+    51, 48, 47, 28, 23, 12, 12, 12, // will be prefered, which is not always what we aim for when using this technique for denoising.
+    81, 47, 28, 23, 12, 12, 12, 12, // I used this one because it gave me the less harsh results, but you can find and use another one if you like
     66, 28, 23, 12, 12, 12, 12, 12,
     39, 23, 12, 12, 12, 12, 12, 12,
     34, 12, 12, 12, 12, 12, 12, 12,

@@ -61,27 +61,16 @@ __global__ void denoise_block(float *, float, int, int, int, float *, float *, v
 // IterDctDenoise
 //----------------------------------------------------------
 
-__global__ void simple_kernel(float *input, float *output, int length, int width)
-{
-
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    int idy = blockIdx.y * blockDim.y + threadIdx.y;
-
-    if (idx < length && idy < width)
-    {
-        int index = idy * width + idx; // Corrected index calculation
-        output[index] = input[index];  // Simply copy input to output
-    }
-}
-
 void DctDenoise(float **DataDegraded, float *DataFiltered_d, int lgth, int wdth, float Thresh)
 {
     int k;
     int SizeWindow;
+    int maxShifting;
     char Name_img[NBCHAR];
 
     // Parameter
     SizeWindow = 8;
+    maxShifting = 8;
 
     // Info
     printf("\n  --------------------- ");
@@ -97,7 +86,7 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, int lgth, int wdth,
     printf("\n\n");
 
     // Allocation Memoire
-    float ***mat3d = fmatrix_allocate_3d(SizeWindow * SizeWindow, lgth, wdth);
+    float ***mat3d = fmatrix_allocate_3d(maxShifting * maxShifting, lgth, wdth);
     float *DataFilteredDst_d = fmatrix_allocate_2d_device(lgth, wdth);
     float **DataFiltered_h = fmatrix_allocate_2d(lgth, wdth);
 
@@ -113,7 +102,7 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, int lgth, int wdth,
 
     // Set up the thread block and grid dimensions
     dim3 threadsPerBlock(blockSize, blockSize);
-    dim3 blocksPerGrid(lgth, wdth);
+    dim3 blocksPerGrid(blocksX, blocksY);
 
     printf("      --------Kernel Called on :------\n");
     printf("          Threads Per Block: %d x %d\n", threadsPerBlock.x, threadsPerBlock.y);
@@ -124,9 +113,9 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, int lgth, int wdth,
     // Launch kernel for denoising
     for (k = 0; k < NB_ITERATIONS; k++)
     {
-        for (int torioidalShiftY = 0; torioidalShiftY < 8; torioidalShiftY++)
+        for (int torioidalShiftY = 0; torioidalShiftY < maxShifting; torioidalShiftY++)
         {
-            for (int torioidalShiftX = 0; torioidalShiftX < 8; torioidalShiftX++)
+            for (int torioidalShiftX = 0; torioidalShiftX < maxShifting; torioidalShiftX++)
             {
                 // Toroidal Shift
                 float *DataShifted_d;
@@ -142,8 +131,8 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, int lgth, int wdth,
                 cudaDeviceSynchronize();
 
                 // Launch Quantization kernel (here, a simple Hardthreshold)
-                HardThreshold<<<blocksPerGrid, threadsPerBlock>>>(SIGMA_NOISE, DataFilteredDst_d, lgth);
-                // CUDAkernelQuantizationFloat<<<blocksPerGrid, threadsPerBlock>>>(DataFilteredDst_d, lgth);
+                // HardThreshold<<<blocksPerGrid, threadsPerBlock>>>(SIGMA_NOISE, DataFilteredDst_d, lgth);
+                CUDAkernelQuantizationFloat<<<blocksPerGrid, threadsPerBlock>>>(DataFilteredDst_d, lgth);
                 cudaDeviceSynchronize();
 
                 // Launch Inverse Discrete Cosine Transform
@@ -157,7 +146,7 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, int lgth, int wdth,
                 cudaMemcpy(tempBuffer, DataFilteredDst_d, lgth * wdth * sizeof(float), cudaMemcpyDeviceToHost);
 
                 // Calculate the offset for the current toroidal shift
-                int offset = (torioidalShiftY * 8 + torioidalShiftX);
+                int offset = (torioidalShiftY * maxShifting + torioidalShiftX);
 
                 // Copy data from the host buffer to the appropriate location in the 3D host array
                 for (int i = 0; i < lgth; i++)
@@ -182,7 +171,7 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, int lgth, int wdth,
         {
             float temp = 0.0;
             double nb = 0.0;
-            for (k = 0; k < 64; k++)
+            for (k = 0; k < maxShifting * maxShifting; k++)
             {
                 if (mat3d[k][i][j] > 0.0)
                 {
