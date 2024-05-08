@@ -21,6 +21,15 @@
 
 #include "Fonctions.h"
 
+/**
+ *  Wrapper to the fastest integer multiplication function on CUDA
+ */
+#ifdef __MUL24_FASTER_THAN_ASTERIX
+#define FMUL(x, y) (__mul24(x, y))
+#else
+#define FMUL(x, y) ((x) * (y))
+#endif
+
 __constant__ float DCTv8matrix[] =
     {
         0.3535533905932738f, 0.4903926402016152f, 0.4619397662556434f, 0.4157348061512726f, 0.3535533905932738f, 0.2777851165098011f, 0.1913417161825449f, 0.0975451610080642f,
@@ -42,6 +51,10 @@ __constant__ float DCTv8matrixT[] =
         0.2777851165098011f, -0.4903926402016152f, 0.0975451610080642f, 0.4157348061512727f, -0.4157348061512726f, -0.0975451610080649f, 0.4903926402016152f, -0.2777851165098008f,
         0.1913417161825449f, -0.4619397662556434f, 0.4619397662556433f, -0.1913417161825450f, -0.1913417161825453f, 0.4619397662556437f, -0.4619397662556435f, 0.1913417161825431f,
         0.0975451610080642f, -0.2777851165098011f, 0.4157348061512727f, -0.4903926402016153f, 0.4903926402016152f, -0.4157348061512720f, 0.2777851165098022f, -0.0975451610080625f};
+
+// Temporary blocks
+__shared__ float CurBlockLocal1[BLOCK_SIZE * BLOCK_SIZE];
+__shared__ float CurBlockLocal2[BLOCK_SIZE * BLOCK_SIZE];
 
 //--------------------------//
 //-- Matrice de Flottant --//
@@ -449,6 +462,33 @@ void SaveImagePgm(char *name, float **mat, int length, int width)
     fclose(fic);
 }
 
+/* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *  * Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *  * Neither the name of NVIDIA CORPORATION nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 __global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks, int OffsetYBlocks, float *Src)
 {
     const int bx = blockIdx.x + OffsetXBlocks;
@@ -467,47 +507,51 @@ __global__ void CUDA_DCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks, int Off
     const int global_index = global_index_y * ImgWidth + global_index_x;
     const int local_index = (ty * BLOCK_SIZE) + tx;
 
-    extern __shared__ float shared_memory[];
-
-    float *CurBlockLocal1 = shared_memory;
-    float *CurBlockLocal2 = &shared_memory[BLOCK_SIZE * BLOCK_SIZE]; // Assuming 2 blocks of 8x8 float
+    __shared__ float CurBlockLocal1[BLOCK_SIZE * BLOCK_SIZE];
+    __shared__ float CurBlockLocal2[BLOCK_SIZE * BLOCK_SIZE];
 
     CurBlockLocal1[local_index] = Src[global_index] - 128.0f;
 
     __syncthreads();
 
-    float curelem = 0.0f;
-    int DCTv8matrixIndex = ty; // Adjust index to use the transposed matrix
-    int CurBlockLocal1Index = tx;
+    // calculate the multiplication of DCTv8matrixT * A and place it in the second block
+    float curelem = 0;
+    int DCTv8matrixIndex = 0 * BLOCK_SIZE + ty;
+    int CurBlockLocal1Index = 0 * BLOCK_SIZE + tx;
 #pragma unroll
 
     for (int i = 0; i < BLOCK_SIZE; i++)
     {
-        curelem += DCTv8matrixT[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
-        DCTv8matrixIndex += BLOCK_SIZE; // Increment by BLOCK_SIZE for the transposed matrix
+        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
+        DCTv8matrixIndex += BLOCK_SIZE;
         CurBlockLocal1Index += BLOCK_SIZE;
     }
 
-    CurBlockLocal2[(ty << BLOCK_SIZE_LOG2) + tx] = curelem;
+    CurBlockLocal2[local_index] = curelem;
+
+    // synchronize threads to make sure the first 2 matrices are multiplied and the result is stored in the second block
     __syncthreads();
 
-    curelem = 0.0f;
-    DCTv8matrixIndex = ty; // Adjust index to use the DCT matrix
-    int CurBlockLocal2Index = tx;
+    // calculate the multiplication of (DCTv8matrixT * A) * DCTv8matrix and place it in the first block
+    curelem = 0;
+    int CurBlockLocal2Index = (ty << BLOCK_SIZE_LOG2) + 0;
+    DCTv8matrixIndex = 0 * BLOCK_SIZE + tx;
 #pragma unroll
 
     for (int i = 0; i < BLOCK_SIZE; i++)
     {
-        curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal2[CurBlockLocal2Index];
-        DCTv8matrixIndex += BLOCK_SIZE; // Increment by BLOCK_SIZE for the DCT matrix
-        CurBlockLocal2Index += BLOCK_SIZE;
+        curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrix[DCTv8matrixIndex];
+        CurBlockLocal2Index += 1;
+        DCTv8matrixIndex += BLOCK_SIZE;
     }
 
-    CurBlockLocal1[(ty << BLOCK_SIZE_LOG2) + tx] = curelem;
+    CurBlockLocal1[local_index] = curelem;
 
+    // synchronize threads to make sure the matrices are multiplied and the result is stored back in the first block
     __syncthreads();
 
-    Dst[global_index] = CurBlockLocal1[local_index];
+    // copy current coefficient to its place in the result array
+    Dst[((by << BLOCK_SIZE_LOG2) + ty) * ImgWidth + ((bx << BLOCK_SIZE_LOG2) + tx)] = CurBlockLocal1[local_index];
 }
 
 __global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks, int OffsetYBlocks, float *Src)
@@ -528,51 +572,59 @@ __global__ void CUDA_IDCT8x8(float *Dst, int ImgWidth, int OffsetXBlocks, int Of
     const int global_index = global_index_y * ImgWidth + global_index_x;
     const int local_index = (ty * BLOCK_SIZE) + tx;
 
-    extern __shared__ float shared_memory[];
-
-    float *CurBlockLocal1 = shared_memory;
-    float *CurBlockLocal2 = &shared_memory[BLOCK_SIZE * BLOCK_SIZE]; // Assuming 2 blocks of 8x8 float
-
-    CurBlockLocal1[local_index] = Src[global_index];
-    ;
+    CurBlockLocal1[(ty << BLOCK_SIZE_LOG2) + tx] = Src[global_index];
 
     __syncthreads();
 
-    float curelem = 0.0f;
-    int DCTv8matrixIndex = ty; // Adjust index to use the transposed matrix
-    int CurBlockLocal1Index = tx;
+    // calculate the multiplication of DCTv8matrix * A and place it in the second block
+    float curelem = 0;
+    int DCTv8matrixIndex = (ty << BLOCK_SIZE_LOG2) + 0;
+    int CurBlockLocal1Index = 0 * BLOCK_SIZE + tx;
 #pragma unroll
 
     for (int i = 0; i < BLOCK_SIZE; i++)
     {
         curelem += DCTv8matrix[DCTv8matrixIndex] * CurBlockLocal1[CurBlockLocal1Index];
-        DCTv8matrixIndex += BLOCK_SIZE; // Increment by BLOCK_SIZE for the transposed matrix
+        DCTv8matrixIndex += 1;
         CurBlockLocal1Index += BLOCK_SIZE;
     }
 
     CurBlockLocal2[(ty << BLOCK_SIZE_LOG2) + tx] = curelem;
+
+    // synchronize threads to make sure the first 2 matrices are multiplied and the result is stored in the second block
     __syncthreads();
 
-    curelem = 0.0f;
-    DCTv8matrixIndex = ty; // Adjust index to use the DCT matrix
-    int CurBlockLocal2Index = tx;
+    // calculate the multiplication of (DCTv8matrix * A) * DCTv8matrixT and place it in the first block
+    curelem = 0;
+    int CurBlockLocal2Index = (ty << BLOCK_SIZE_LOG2) + 0;
+    DCTv8matrixIndex = (tx << BLOCK_SIZE_LOG2) + 0;
 #pragma unroll
 
     for (int i = 0; i < BLOCK_SIZE; i++)
     {
-        curelem += DCTv8matrixT[DCTv8matrixIndex] * CurBlockLocal2[CurBlockLocal2Index];
-        DCTv8matrixIndex += BLOCK_SIZE; // Increment by BLOCK_SIZE for the DCT matrix
-        CurBlockLocal2Index += BLOCK_SIZE;
+        curelem += CurBlockLocal2[CurBlockLocal2Index] * DCTv8matrix[DCTv8matrixIndex];
+        CurBlockLocal2Index += 1;
+        DCTv8matrixIndex += 1;
     }
 
-    CurBlockLocal1[(ty << BLOCK_SIZE_LOG2) + tx] = curelem;
+    CurBlockLocal1[(ty << BLOCK_SIZE_LOG2) + tx] = curelem + 128.0f;
 
+    // synchronize threads to make sure the matrices are multiplied and the result is stored back in the first block
     __syncthreads();
 
-    Dst[global_index] = CurBlockLocal1[local_index] + 128.0f;
+    // copy current coefficient to its place in the result array
+    Dst[FMUL(((by << BLOCK_SIZE_LOG2) + ty), ImgWidth) + ((bx << BLOCK_SIZE_LOG2) + tx)] = CurBlockLocal1[(ty << BLOCK_SIZE_LOG2) + tx];
 }
 
-__global__ void ToroidalShift(float *Dst, float *Src, int lgth, int wdth, int shiftX, int shiftY)
+/**
+**************************************************************************
+*  Performs Image shifting
+*
+* \param shiftByBlocks  [IN] - [0:the image is shifted in its entierity / 1 : the image is shifted block by block]
+*
+* \return None
+*/
+__global__ void ToroidalShift(float *Dst, float *Src, int lgth, int wdth, int shiftX, int shiftY, int shiftByBlocks)
 {
     const int bx = blockIdx.x;
     const int by = blockIdx.y;
@@ -583,15 +635,22 @@ __global__ void ToroidalShift(float *Dst, float *Src, int lgth, int wdth, int sh
     const int x = (bx * BLOCK_SIZE) + tx;
     const int y = (by * BLOCK_SIZE) + ty;
 
-    if (x < lgth && y < wdth)
+    int shiftedX;
+    int shiftedY;
+    // compute the new index after shifting, modulo the dimentions of the image.
+    if (shiftByBlocks)
     {
-        // compute the new index after shifting, modulo the dimentions of the image.
-        int shiftedX = (x + shiftX) % lgth;
-        int shiftedY = (y + shiftY) % wdth;
-
-        // then we update the destination image
-        Dst[shiftedY * lgth + shiftedX] = Src[y * lgth + x];
+        shiftedX = (bx * BLOCK_SIZE) + (tx + shiftX) % wdth;
+        shiftedY = (by * BLOCK_SIZE) + (ty + shiftY) % lgth;
     }
+    else
+    {
+        shiftedX = (x + shiftX) % wdth;
+        shiftedY = (y + shiftY) % lgth;
+    }
+
+    // then we update the destination image
+    Dst[shiftedY * lgth + shiftedX] = Src[y * lgth + x];
 }
 
 //-------------------//
@@ -678,15 +737,25 @@ float computeMMSE(float **mat1, float **mat2, int sz)
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// __constant__ short Q[] = {
+//     32, 33, 51, 81, 66, 39, 34, 17, // this is Nvidia's quantization table. as you can see, the coefficient in the bottom right corner
+//     33, 36, 48, 47, 28, 23, 12, 12, // are much lower than the ones in the upper left corner. This indicates that the higher frenquencies
+//     51, 48, 47, 28, 23, 12, 12, 12, // will be prefered, which is not always what we aim for when using this technique for denoising.
+//     81, 47, 28, 23, 12, 12, 12, 12, // I used this one because it gave me the less harsh results, but you can find and use another one if you like
+//     66, 28, 23, 12, 12, 12, 12, 12,
+//     39, 23, 12, 12, 12, 12, 12, 12,
+//     34, 12, 12, 12, 12, 12, 12, 12,
+//     17, 12, 12, 12, 12, 12, 12, 12};
+
 __constant__ short Q[] = {
-    32, 33, 51, 81, 66, 39, 34, 17, // this is Nvidia's quantization table. as you can see, the coefficient in the bottom right corner
-    33, 36, 48, 47, 28, 23, 12, 12, // are much lower than the ones in the upper left corner. This indicates that the higher frenquencies
-    51, 48, 47, 28, 23, 12, 12, 12, // will be prefered, which is not always what we aim for when using this technique for denoising.
-    81, 47, 28, 23, 12, 12, 12, 12, // I used this one because it gave me the less harsh results, but you can find and use another one if you like
-    66, 28, 23, 12, 12, 12, 12, 12,
-    39, 23, 12, 12, 12, 12, 12, 12,
-    34, 12, 12, 12, 12, 12, 12, 12,
-    17, 12, 12, 12, 12, 12, 12, 12};
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1};
 
 /**
 **************************************************************************

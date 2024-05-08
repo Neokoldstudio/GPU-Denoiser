@@ -57,6 +57,7 @@ float **LoadImagePgm(char *, int *, int *);
 void SaveImagePgm(char *, float **, int, int);
 
 //>Fourier
+void ddct8x8s(int, float **);
 __global__ void CUDA_DCT8x8(float *, int, int, int, float *);
 __global__ void CUDA_IDCT8x8(float *, int, int, int, float *);
 __global__ void CUDAkernel2DCT(float *, int, float *);
@@ -72,4 +73,4 @@ void add_gaussian_noise(float **, int, int, float);
 float computeMMSE(float **, float **, int);
 
 // Image Processing
-__global__ void ToroidalShift(float *, float *, int, int, int, int);
+__global__ void ToroidalShift(float *, float *, int, int, int, int, int);

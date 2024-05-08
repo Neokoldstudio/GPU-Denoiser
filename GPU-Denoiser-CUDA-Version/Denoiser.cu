@@ -106,16 +106,16 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, int lgth, int wdth,
 
     printf("      --------Kernel Called on :------\n");
     printf("          Threads Per Block: %d x %d\n", threadsPerBlock.x, threadsPerBlock.y);
-    printf("          Blocks Per Grid: %d x %d\n", blocksPerGrid.x, blocksPerGrid.y);
+    printf("          Blocks Per Image: %d x %d\n", blocksPerGrid.x, blocksPerGrid.y);
     printf("      --------------------------------\n");
 
     // Debug print before denoising
     // Launch kernel for denoising
     for (k = 0; k < NB_ITERATIONS; k++)
     {
-        for (int torioidalShiftY = 0; torioidalShiftY < maxShifting; torioidalShiftY++)
+        for (int torioidalShiftY = -maxShifting / 2; torioidalShiftY < maxShifting / 2; torioidalShiftY++)
         {
-            for (int torioidalShiftX = 0; torioidalShiftX < maxShifting; torioidalShiftX++)
+            for (int torioidalShiftX = -maxShifting / 2; torioidalShiftX < maxShifting / 2; torioidalShiftX++)
             {
                 // Toroidal Shift
                 float *DataShifted_d;
@@ -124,15 +124,15 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, int lgth, int wdth,
                 int shiftX = torioidalShiftX;
                 int shiftY = torioidalShiftY;
 
-                ToroidalShift<<<blocksPerGrid, threadsPerBlock>>>(DataShifted_d, DataFiltered_d, lgth, wdth, shiftX, shiftY);
+                ToroidalShift<<<blocksPerGrid, threadsPerBlock>>>(DataShifted_d, DataFiltered_d, lgth, wdth, shiftX, shiftY, 1);
                 cudaDeviceSynchronize();
                 //  Launch Discrete Cosine Transform
                 CUDA_DCT8x8<<<blocksPerGrid, threadsPerBlock>>>(DataFilteredDst_d, wdth, 0, 0, DataShifted_d);
                 cudaDeviceSynchronize();
 
                 // Launch Quantization kernel (here, a simple Hardthreshold)
-                // HardThreshold<<<blocksPerGrid, threadsPerBlock>>>(SIGMA_NOISE, DataFilteredDst_d, lgth);
-                CUDAkernelQuantizationFloat<<<blocksPerGrid, threadsPerBlock>>>(DataFilteredDst_d, lgth);
+                HardThreshold<<<blocksPerGrid, threadsPerBlock>>>(SIGMA_NOISE, DataFilteredDst_d, lgth);
+                // CUDAkernelQuantizationFloat<<<blocksPerGrid, threadsPerBlock>>>(DataFilteredDst_d, lgth);
                 cudaDeviceSynchronize();
 
                 // Launch Inverse Discrete Cosine Transform
@@ -146,7 +146,7 @@ void DctDenoise(float **DataDegraded, float *DataFiltered_d, int lgth, int wdth,
                 cudaMemcpy(tempBuffer, DataFilteredDst_d, lgth * wdth * sizeof(float), cudaMemcpyDeviceToHost);
 
                 // Calculate the offset for the current toroidal shift
-                int offset = (torioidalShiftY * maxShifting + torioidalShiftX);
+                int offset = ((torioidalShiftY + maxShifting / 2) * maxShifting + (torioidalShiftX + maxShifting / 2));
 
                 // Copy data from the host buffer to the appropriate location in the 3D host array
                 for (int i = 0; i < lgth; i++)
@@ -305,12 +305,9 @@ void Denoise2D(char *inputImage)
     printf("\n > %s", BufSystVisuImg);
     system(BufSystVisuImg);
 
-    if (Img)
-        free_fmatrix_2d(Img);
-    if (ImgDegraded)
-        free_fmatrix_2d(ImgDegraded);
-    if (ImgDenoised)
-        free_fmatrix_2d(ImgDenoised);
+    free_fmatrix_2d(Img);
+    free_fmatrix_2d(ImgDegraded);
+    free_fmatrix_2d(ImgDenoised);
     free_matrix_device(ImgDenoised_d);
 }
 
